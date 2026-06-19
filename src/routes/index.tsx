@@ -64,6 +64,19 @@ function Endpoint({ method, url }: { method: string; url: string }) {
   );
 }
 
+function VideoLink({ href }: { href: string }) {
+  return (
+    <a
+      href={href}
+      target="_blank"
+      rel="noreferrer"
+      className="font-medium text-foreground underline underline-offset-4 hover:opacity-70"
+    >
+      Ver vídeo no YouTube
+    </a>
+  );
+}
+
 function Callout({
   tone = "info",
   children,
@@ -222,7 +235,26 @@ const sections: Section[] = [
           A atualização das certidões é realizada através do Assistente
           CADBRASIL.
         </H>
-        <H>Assista ao vídeo: [LINK DO VÍDEO DE ATUALIZAÇÃO DE CERTIDÕES]</H>
+        <H>
+          Assista ao vídeo:{" "}
+          <VideoLink href="https://www.youtube.com/watch?v=HzfZo8MkLd0&list=PL9q-Qi-YGxp8eiPxVI3iDU5mWTba8i43u" />
+        </H>
+      </>
+    ),
+  },
+  {
+    id: "atualizar-sicaf",
+    title: "Como atualizar o SICAF?",
+    body: (
+      <>
+        <H>
+          A atualização do SICAF é realizada através do Assistente CADBRASIL,
+          mantendo cadastro e documentação em dia.
+        </H>
+        <H>
+          Assista ao vídeo:{" "}
+          <VideoLink href="https://www.youtube.com/watch?v=HzfZo8MkLd0&list=PL9q-Qi-YGxp8eiPxVI3iDU5mWTba8i43u" />
+        </H>
       </>
     ),
   },
@@ -235,7 +267,10 @@ const sections: Section[] = [
           Os documentos devem ser enviados através da Área do Fornecedor ou pelo
           Assistente CADBRASIL.
         </H>
-        <H>Assista ao vídeo: [LINK DO VÍDEO DE ENVIO DE DOCUMENTOS]</H>
+        <H>
+          Assista ao vídeo:{" "}
+          <VideoLink href="https://www.youtube.com/watch?v=XF9oV31fOt4&list=PL9q-Qi-YGxp8eiPxVI3iDU5mWTba8i43u" />
+        </H>
       </>
     ),
   },
@@ -248,7 +283,58 @@ const sections: Section[] = [
           O Assistente CADBRASIL é um aplicativo desenvolvido para facilitar a
           comunicação com nossa equipe e a atualização dos documentos.
         </H>
-        <H>Vídeo de instalação: [LINK DO VÍDEO DE INSTALAÇÃO]</H>
+        <H>
+          Vídeo de instalação:{" "}
+          <VideoLink href="https://www.youtube.com/watch?v=9EdnP0bMHlg&list=PL9q-Qi-YGxp8eiPxVI3iDU5mWTba8i43u" />
+        </H>
+      </>
+    ),
+  },
+  {
+    id: "usar-assistente",
+    title: "Como usar o Assistente CADBRASIL?",
+    body: (
+      <>
+        <H>
+          O Assistente CADBRASIL permite enviar documentos, atualizar certidões
+          e falar com nossa equipe de forma prática.
+        </H>
+        <H>
+          Assista ao vídeo:{" "}
+          <VideoLink href="https://www.youtube.com/watch?v=9EdnP0bMHlg&list=PL9q-Qi-YGxp8eiPxVI3iDU5mWTba8i43u" />
+        </H>
+      </>
+    ),
+  },
+  {
+    id: "ativar-manutencao",
+    title: "Como ativar a manutenção?",
+    body: (
+      <>
+        <H>
+          A manutenção CADBRASIL mantém seu SICAF e documentação sempre
+          atualizados após o período inicial de credenciamento.
+        </H>
+        <H>
+          Assista ao vídeo:{" "}
+          <VideoLink href="https://www.youtube.com/watch?v=tpVaxYwPhsc&list=PL9q-Qi-YGxp8eiPxVI3iDU5mWTba8i43u" />
+        </H>
+      </>
+    ),
+  },
+  {
+    id: "usar-manutencao",
+    title: "Como usar a Manutenção?",
+    body: (
+      <>
+        <H>
+          Saiba como acompanhar e utilizar os serviços de manutenção CADBRASIL
+          pela plataforma e pelo Assistente.
+        </H>
+        <H>
+          Assista ao vídeo:{" "}
+          <VideoLink href="https://www.youtube.com/watch?v=tpVaxYwPhsc&list=PL9q-Qi-YGxp8eiPxVI3iDU5mWTba8i43u" />
+        </H>
       </>
     ),
   },
@@ -490,7 +576,7 @@ const sections: Section[] = [
         <H>Consultar a API com o CNPJ do cliente:</H>
         <Endpoint
           method="GET"
-          url="https://fornecedor.cadbrasil.com.br/api/clients/consulta-cnpj?cnpj=14435319000154"
+          url="https://fornecedor.cadbrasil.com.br/api/clients/consulta-cnpj?cnpj=CNPJ"
         />
         <p className="mt-4 text-sm font-medium text-muted-foreground">
           Exemplo de retorno
