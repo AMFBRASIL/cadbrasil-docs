@@ -163,3 +163,80 @@ export function DataTable({
     </div>
   );
 }
+
+export function ScenarioBlock({
+  title,
+  badge,
+  when,
+  fields,
+  children,
+  clientMessage,
+  iaDo,
+  iaDont,
+  tone = "info",
+}: {
+  title: string;
+  badge?: string;
+  when: React.ReactNode;
+  fields?: React.ReactNode;
+  children?: React.ReactNode;
+  clientMessage?: React.ReactNode;
+  iaDo?: React.ReactNode;
+  iaDont?: React.ReactNode;
+  tone?: "info" | "warn" | "ok";
+}) {
+  const badgeTone: Record<string, string> = {
+    info: "bg-muted text-foreground",
+    warn: "bg-destructive/10 text-destructive",
+    ok: "bg-emerald-500/10 text-emerald-700 dark:text-emerald-400",
+  };
+  return (
+    <div className="my-8 scroll-mt-24 rounded-lg border border-border p-5">
+      <div className="mb-3 flex flex-wrap items-center gap-2">
+        <h3 className="text-base font-semibold tracking-tight text-foreground">
+          {title}
+        </h3>
+        {badge ? (
+          <span
+            className={`rounded px-2 py-0.5 font-mono text-[11px] ${badgeTone[tone]}`}
+          >
+            {badge}
+          </span>
+        ) : null}
+      </div>
+      <p className="mb-2 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
+        Quando ocorre
+      </p>
+      <div className="mb-4 text-[14px] leading-relaxed text-foreground">{when}</div>
+      {fields ? (
+        <>
+          <p className="mb-2 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
+            Campos principais
+          </p>
+          <div className="mb-4 text-[14px] leading-relaxed text-foreground">{fields}</div>
+        </>
+      ) : null}
+      {children}
+      {clientMessage ? (
+        <div className="my-4 rounded-md border border-border bg-muted/20 px-4 py-3 text-[14px] leading-relaxed">
+          <p className="mb-1.5 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
+            Mensagem para o cliente (WhatsApp)
+          </p>
+          {clientMessage}
+        </div>
+      ) : null}
+      {iaDo ? (
+        <div className="mt-3 text-[14px] leading-relaxed">
+          <p className="mb-1 font-medium text-foreground">O que a IA deve fazer</p>
+          {iaDo}
+        </div>
+      ) : null}
+      {iaDont ? (
+        <div className="mt-3 text-[14px] leading-relaxed">
+          <p className="mb-1 font-medium text-foreground">O que a IA NÃO deve fazer</p>
+          {iaDont}
+        </div>
+      ) : null}
+    </div>
+  );
+}

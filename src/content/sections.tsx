@@ -12,20 +12,10 @@ import {
   WaLink,
 } from "@/lib/docs-ui";
 import { consultaCnpjSection } from "@/content/consulta-cnpj-api";
+import { sicafProcessSections } from "@/content/sicaf-processo-sections";
+import { VIDEOS } from "@/content/videos";
 
-/** Links de vídeo — preencha boletoSicaf e boletoManutencao quando disponíveis. */
-export const VIDEOS = {
-  certidoes:
-    "https://www.youtube.com/watch?v=HzfZo8MkLd0&list=PL9q-Qi-YGxp8eiPxVI3iDU5mWTba8i43u",
-  assistente:
-    "https://www.youtube.com/watch?v=9EdnP0bMHlg&list=PL9q-Qi-YGxp8eiPxVI3iDU5mWTba8i43u",
-  manutencao:
-    "https://www.youtube.com/watch?v=tpVaxYwPhsc&list=PL9q-Qi-YGxp8eiPxVI3iDU5mWTba8i43u",
-  enviarDocumentos:
-    "https://www.youtube.com/watch?v=XF9oV31fOt4&list=PL9q-Qi-YGxp8eiPxVI3iDU5mWTba8i43u",
-  boletoSicaf: "",
-  boletoManutencao: "",
-} as const;
+export { VIDEOS };
 
 export const sections: Section[] = [
   {
@@ -63,34 +53,52 @@ export const sections: Section[] = [
           </a>
           .
         </H>
+        <H>
+          <strong>Após consultar GET /api/clients/consulta-cnpj?cnpj=...</strong>{" "}
+          use o campo <code>situacaoCadastro</code>:
+        </H>
         <List
           items={[
             <>
-              <code>possuiCadastro: true</code> (Cenário 1) → cliente na base;
-              use <code>sicaf</code>, <code>renovacao</code>,{" "}
-              <code>manutencao</code>.
+              <code>cnpj_invalido</code> → pedir 14 dígitos (somente números)
             </>,
             <>
-              <code>possuiCadastro: false</code> +{" "}
-              <code>encontradoNaReceitaFederal: true</code> (Cenário 2) → use{" "}
-              <code>orientacaoIA</code> e <code>urlCadastro</code>.
+              <code>nao_encontrado</code> → verificar CNPJ; oferecer{" "}
+              <code>urlCadastro</code> (cadastro.cadbrasil.com.br)
             </>,
             <>
-              <code>possuiCadastro: false</code> +{" "}
-              <code>encontradoNaReceitaFederal: false</code> (Cenário 3) →
-              verificar CNPJ ou escalar após 2 tentativas.
+              <code>cadastro_pendente</code> → empresa na Receita, sem CADBRASIL;
+              enviar <code>urlCadastro</code> + taxa R$ 985
             </>,
             <>
-              <code>pendentePagamento: false</code> (boleto SICAF) → informar
-              que não há taxa SICAF em aberto.
+              <code>aguardando_pagamento</code> → cadastro OK, pagamento
+              pendente; <code>urlPortal</code> + boleto (
+              <code>pagamentosResumo</code> ou API boleto-sicaf)
             </>,
             <>
-              <code>sicafValido: false</code> ou{" "}
-              <code>sicaf.status: &quot;Vencido&quot;</code> → orientar
-              renovação/atualização com urgência.
+              <code>sicaf_vencido</code> → renovação urgente;{" "}
+              <code>urlPortal</code> + vídeo atualizar SICAF
             </>,
             <>
-              Com boleto disponível → enviar <code>linkPdf</code> ou{" "}
+              <code>cadastro_sem_sicaf</code> → iniciar processo SICAF no portal
+              ou cadastro
+            </>,
+            <>
+              <code>sicaf_incompleto</code> → pendências no portal (
+              <code>sicaf.completude</code>, <code>sicaf.status</code>)
+            </>,
+            <>
+              <code>ativo</code> → cumprimentar; informar níveis (
+              <code>niveisSicaf</code>); <code>pagamentosEmDia</code>;{" "}
+              <code>renovacaoProxima</code>/<code>renovacaoUrgente</code>;{" "}
+              <code>urlAjuda</code> + <code>urlVideoAtualizacaoSicaf</code>
+            </>,
+            <>
+              Sempre priorizar <code>orientacaoUsuario</code> quando existir.
+              Nunca inventar status, valores ou links de boleto.
+            </>,
+            <>
+              Com boleto disponível → enviar <code>pdfBoleto</code> ou{" "}
               <code>linkBoleto</code> retornado pela API.
             </>,
           ]}
@@ -122,6 +130,12 @@ export const sections: Section[] = [
             "concorrente / preço / valor do certame → Preços de licitações de concorrentes",
             "certidão vencendo / alerta / e-mail → Alertas de certidões por e-mail",
             "plataforma / o que vocês oferecem → O que é a CADBRASIL (plataforma completa)",
+            "atualizar sicaf / renovar cadastro → Como atualizar o SICAF",
+            "gov.br / conta gov → Preciso acessar o GOV.BR?",
+            "situação fornecedor / painel desatualizado → Situação do Fornecedor",
+            "falta documento / pendência → Como sei se falta algum documento?",
+            "cadastro sicaf / fazem para mim → A CADBRASIL faz o cadastro?",
+            "vídeo / tutorial / central de ajuda → Central de Ajuda",
           ]}
         />
       </>
@@ -604,44 +618,57 @@ export const sections: Section[] = [
         <H>
           Assista ao vídeo: <VideoLink href={VIDEOS.certidoes} />
         </H>
-      </>
-    ),
-  },
-  {
-    id: "atualizar-sicaf",
-    title: "Como atualizar o SICAF?",
-    body: (
-      <>
-        <ShortAnswer>
-          Use o Assistente CADBRASIL para manter cadastro e documentos em dia.
-          Vídeo tutorial disponível.
-        </ShortAnswer>
         <H>
-          A atualização do SICAF é realizada através do Assistente CADBRASIL,
-          mantendo cadastro e documentação em dia.
-        </H>
-        <H>
-          Assista ao vídeo: <VideoLink href={VIDEOS.certidoes} />
+          Para o fluxo completo de atualização do SICAF, veja também:{" "}
+          <a href="#atualizar-sicaf" className="underline underline-offset-4">
+            Como atualizar o SICAF?
+          </a>
         </H>
       </>
     ),
   },
+  ...sicafProcessSections,
   {
     id: "enviar-documentos",
     title: "Como enviar documentos?",
     body: (
       <>
         <ShortAnswer>
-          Pela Área do Fornecedor ou Assistente CADBRASIL. Vídeo tutorial
-          disponível.
+          Pelo Assistente CADBRASIL ou pela Área do Fornecedor. O sistema informa
+          quais documentos são necessários em cada etapa.
         </ShortAnswer>
         <H>
-          Os documentos devem ser enviados através da Área do Fornecedor ou pelo
-          Assistente CADBRASIL.
+          Todos os documentos são enviados diretamente pelo{" "}
+          <strong>Assistente CADBRASIL</strong> ou pela{" "}
+          <a
+            href="https://fornecedor.cadbrasil.com.br"
+            className="font-medium underline underline-offset-4 hover:opacity-70"
+          >
+            Área do Fornecedor
+          </a>
+          .
         </H>
         <H>
-          Assista ao vídeo:{" "}
-          <VideoLink href={VIDEOS.enviarDocumentos} />
+          O sistema informará quais documentos são necessários para cada etapa do
+          credenciamento ou atualização do SICAF.
+        </H>
+        <H>
+          O Assistente também verifica pendências — veja{" "}
+          <a href="#documentos-pendentes" className="underline underline-offset-4">
+            Como sei se falta algum documento?
+          </a>
+        </H>
+        <H>
+          Vídeo: <VideoLink href={VIDEOS.enviarDocumentos} />
+        </H>
+        <H>
+          Tutoriais:{" "}
+          <a
+            href="https://fornecedor.cadbrasil.com.br/ajuda"
+            className="font-medium underline underline-offset-4 hover:opacity-70"
+          >
+            Central de Ajuda
+          </a>
         </H>
       </>
     ),
@@ -652,12 +679,19 @@ export const sections: Section[] = [
     body: (
       <>
         <ShortAnswer>
-          Assistente CADBRASIL é um app para enviar docs e falar com a equipe.
-          Veja o vídeo de instalação.
+          Primeiro passo do processo SICAF. Instale o Assistente — ele orienta
+          cadastro, documentos e atualizações. Vídeo na Central de Ajuda.
         </ShortAnswer>
         <H>
-          O Assistente CADBRASIL é um aplicativo desenvolvido para facilitar a
-          comunicação com nossa equipe e a atualização dos documentos.
+          O Assistente CADBRASIL é o aplicativo que conduz todo o processo de
+          credenciamento e atualização do SICAF — instalação, envio de
+          documentos, orientações GOV.BR e Situação do Fornecedor.
+        </H>
+        <H>
+          É o <strong>passo 1</strong> do processo — veja{" "}
+          <a href="#processo-cadastro-sicaf" className="underline underline-offset-4">
+            Como funciona o processo de cadastro e atualização no SICAF?
+          </a>
         </H>
         <H>
           Vídeo de instalação: <VideoLink href={VIDEOS.assistente} />
@@ -671,15 +705,27 @@ export const sections: Section[] = [
     body: (
       <>
         <ShortAnswer>
-          Pelo app você envia documentos, atualiza certidões e fala com a
-          equipe. Vídeo tutorial disponível.
+          Siga as orientações passo a passo: envie docs, acesse GOV.BR quando
+          pedido, atualize a Situação do Fornecedor. Não precisa ser expert em
+          licitações.
         </ShortAnswer>
         <H>
-          O Assistente CADBRASIL permite enviar documentos, atualizar certidões
-          e falar com nossa equipe de forma prática.
+          O Assistente CADBRASIL permite enviar documentos, atualizar certidões,
+          acompanhar pendências, atualizar a Situação do Fornecedor e receber
+          orientações sobre o GOV.BR.
         </H>
         <H>
-          Assista ao vídeo: <VideoLink href={VIDEOS.assistente} />
+          Detalhes:{" "}
+          <a href="#assistente-papel" className="underline underline-offset-4">
+            O Assistente faz tudo sozinho?
+          </a>{" "}
+          ·{" "}
+          <a href="#situacao-fornecedor" className="underline underline-offset-4">
+            Situação do Fornecedor
+          </a>
+        </H>
+        <H>
+          Vídeo: <VideoLink href={VIDEOS.assistente} />
         </H>
       </>
     ),
@@ -753,20 +799,36 @@ export const sections: Section[] = [
     body: (
       <>
         <ShortAnswer>
-          Tudo pela Área do Fornecedor: status SICAF, docs, certidões,
-          pendências e solicitações.
+          Pela Área do Fornecedor e pelo Assistente CADBRASIL: docs enviados,
+          pendências, solicitações, atualizações e status do SICAF.
         </ShortAnswer>
-        <H>Você pode acompanhar:</H>
+        <H>Através da Área do Fornecedor você acompanha:</H>
         <List
           items={[
-            "Status do SICAF",
             "Documentos enviados",
-            "Certidões",
             "Pendências",
             "Solicitações",
+            "Atualizações realizadas",
+            "Status do SICAF",
+            "Certidões",
           ]}
         />
-        <H>Tudo pela Área do Fornecedor.</H>
+        <H>
+          Mantenha a <strong>Situação do Fornecedor</strong> atualizada no
+          Assistente para o painel refletir o andamento correto — veja{" "}
+          <a href="#situacao-fornecedor" className="underline underline-offset-4">
+            Como atualizar a Situação do Fornecedor?
+          </a>
+        </H>
+        <H>
+          Dúvidas:{" "}
+          <a
+            href="https://fornecedor.cadbrasil.com.br/ajuda"
+            className="font-medium underline underline-offset-4 hover:opacity-70"
+          >
+            Central de Ajuda
+          </a>
+        </H>
       </>
     ),
   },
@@ -802,12 +864,15 @@ export const sections: Section[] = [
         />
         <H>
           Status possíveis em <code>sicaf.status</code>: Ativo, Vencendo,
-          Vencido, Pendente, Inativo, Sem SICAF. Consulte a API{" "}
+          Vencido, Pendente, Inativo, Sem SICAF. Na API consulta-cnpj, use{" "}
+          <code>situacaoCadastro</code> para o cenário geral:{" "}
+          <code>ativo</code>, <code>sicaf_vencido</code>,{" "}
+          <code>aguardando_pagamento</code>, <code>sicaf_incompleto</code>,{" "}
+          <code>cadastro_sem_sicaf</code>. Detalhes em{" "}
           <a href="#api-consulta-cnpj" className="underline underline-offset-4">
-            consulta-cnpj
-          </a>{" "}
-          — campos <code>sicafValido</code>, <code>sicaf.valido</code>,{" "}
-          <code>sicaf.diasValidade</code>.
+            API consulta-cnpj
+          </a>
+          .
         </H>
       </>
     ),
@@ -848,8 +913,10 @@ export const sections: Section[] = [
     body: (
       <>
         <ShortAnswer>
-          Consulte o CNPJ na API consulta-cnpj. Precisa: possuiCadastro=true,
-          cadastroValido=true, sicafValido=true e certidões em dia.
+          Consulte o CNPJ na API consulta-cnpj. Precisa{" "}
+          <code>situacaoCadastro: ativo</code>, com{" "}
+          <code>sicafValido: true</code>, <code>pagamentosEmDia: true</code> e
+          níveis SICAF regulares (sem certidões vencidas).
         </ShortAnswer>
         <H>
           Documentação completa:{" "}
@@ -861,29 +928,32 @@ export const sections: Section[] = [
           method="GET"
           url="https://fornecedor.cadbrasil.com.br/api/clients/consulta-cnpj?cnpj=CNPJ"
         />
-        <H>Indicadores de aptidão (Cenário 1 — cliente cadastrado):</H>
+        <H>Indicadores de aptidão (situacaoCadastro: ativo):</H>
         <List
           items={[
             <>
-              <code>possuiCadastro: true</code> e{" "}
-              <code>cadastroConcluido: true</code>
+              <code>situacaoCadastro: &quot;ativo&quot;</code> e{" "}
+              <code>sicafValido: true</code>
             </>,
             <>
-              <code>cadastroValido: true</code> — SICAF válido ou renovação
-              paga
+              <code>pagamentosEmDia: true</code> — sem boletos pendentes
             </>,
             <>
-              <code>sicafValido: true</code> — licença SICAF ativa/vencendo
+              <code>niveisSicaf[]</code> — todos com ícone ✅ ou status
+              Habilitado/Válido
             </>,
             <>
-              <code>sicaf.valido: true</code> — status Ativo ou Vencendo
+              <code>certidaoVencendoOuVencida: false</code> — sem certidões
+              vencidas
             </>,
             <>
-              <code>sicaf.diasValidade</code> — dias restantes de validade
+              <code>sicaf.diasValidade</code> / <code>diasParaRenovacao</code> —
+              dias restantes de validade
             </>,
             <>
-              <code>sicaf.completude</code> — quanto maior, mais completo o
-              cadastro (0–100)
+              Se <code>renovacaoUrgente</code> ou{" "}
+              <code>certidaoVencendoOuVencida: true</code> → alertar antes de
+              licitar
             </>,
           ]}
         />
@@ -1346,35 +1416,31 @@ export const sections: Section[] = [
           method="GET"
           url="https://fornecedor.cadbrasil.com.br/api/clients/consulta-cnpj?cnpj=CNPJ"
         />
-        <H>Interpretação para a IA — Cenário 1 (cadastrado):</H>
+        <H>Interpretação para a IA — por situacaoCadastro:</H>
         <List
           items={[
             <>
-              <code>cadastroValido: false</code> → cadastro/SICAF irregular;
-              orientar regularização
+              <code>ativo</code> com <code>certidaoVencendoOuVencida: true</code>{" "}
+              → regularizar certidões antes de licitar
             </>,
             <>
-              <code>sicafValido: false</code> ou <code>sicaf.status</code>{" "}
-              Vencido/Pendente → renovação urgente
+              <code>sicaf_vencido</code> → renovação urgente; escalar se
+              licitação iminente
             </>,
             <>
-              <code>sicaf.completude</code> baixo → pendências documentais
+              <code>aguardando_pagamento</code> ou{" "}
+              <code>sicaf_incompleto</code> → não apto; orientar regularização
+            </>,
+            <>
+              <code>cadastro_pendente</code> ou <code>cadastro_sem_sicaf</code>{" "}
+              → processo não iniciado/concluído
+            </>,
+            <>
+              <code>situacaoReceitaFederal</code> Baixada/Inapta → escalar
+              consultor
             </>,
             <>
               Restrições graves informadas pelo cliente → escalar consultor
-            </>,
-          ]}
-        />
-        <H>Interpretação — Cenários 2 e 3 (não cadastrado):</H>
-        <List
-          items={[
-            <>
-              Cenário 2: empresa existe na Receita — orientar cadastro em{" "}
-              <code>urlCadastro</code> (https://cadastro.cadbrasil.com.br)
-            </>,
-            <>
-              Cenário 3: CNPJ não encontrado — verificar dígitos; usar{" "}
-              <code>orientacaoIA</code>
             </>,
           ]}
         />

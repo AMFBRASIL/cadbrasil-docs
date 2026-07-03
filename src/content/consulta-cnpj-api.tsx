@@ -9,18 +9,42 @@ import {
   ShortAnswer,
   SubTitle,
 } from "@/lib/docs-ui";
+import { ConsultaCnpjScenarios } from "@/content/consulta-cnpj-scenarios";
+import { LINKS, VIDEOS } from "@/content/videos";
 
-/** Seção completa da API consulta-cnpj para documentação e IA. */
+/** Seção completa da API consulta-cnpj v3.0 — documentação e roteiro para IA. */
 export const consultaCnpjSection: Section = {
   id: "api-consulta-cnpj",
-  title: "API consulta-cnpj — documentação completa",
+  title: "API consulta-cnpj — documentação completa (v3.0)",
   body: (
     <>
       <ShortAnswer>
         GET /api/clients/consulta-cnpj?cnpj=CNPJ — consulta situação do cliente
-        na CADBRASIL e, se necessário, na Receita Federal. Use{" "}
-        <code>orientacaoIA</code> quando disponível.
+        na CADBRASIL e, se necessário, na Receita Federal. Leia{" "}
+        <code>situacaoCadastro</code> para definir o cenário. Priorize{" "}
+        <code>orientacaoUsuario</code> na resposta ao cliente.
       </ShortAnswer>
+
+      <Callout tone="info">
+        <strong>Como a IA deve usar esta API:</strong>
+        <List
+          items={[
+            "Sempre peça o CNPJ com 14 dígitos (somente números) antes de consultar.",
+            "Chame a API e leia situacaoCadastro — ele define o cenário.",
+            <>
+              Prioridade de mensagens: <code>orientacaoUsuario</code> (base da
+              resposta) → <code>orientacaoIA</code> (roteiro interno) →{" "}
+              <code>message</code> (resumo).
+            </>,
+            "Nunca invente valores, prazos, links de boleto ou status.",
+            <>
+              Não trate como cliente ativo quem tem{" "}
+              <code>possuiCadastro: false</code>, mesmo que{" "}
+              <code>encontradoNaReceitaFederal: true</code>.
+            </>,
+          ]}
+        />
+      </Callout>
 
       <SubTitle>Endpoint</SubTitle>
       <DataTable
@@ -45,235 +69,191 @@ export const consultaCnpjSection: Section = {
 
       <SubTitle>Códigos HTTP</SubTitle>
       <DataTable
-        headers={["Status", "Quando"]}
+        headers={["Status", "Quando", "situacaoCadastro"]}
         rows={[
-          ["200", "Consulta processada com sucesso (ok: true)"],
-          ["400", "CNPJ inválido (menos ou mais de 14 dígitos)"],
-          ["401", "API Key ausente ou inválida"],
-          ["500", "Erro interno ou banco indisponível"],
+          ["200", "Consulta processada", "conforme cenário abaixo"],
+          ["400", "CNPJ inválido (≠ 14 dígitos)", "cnpj_invalido"],
+          ["401", "API Key ausente ou inválida", "—"],
+          ["500", "Erro interno / banco indisponível", "—"],
         ]}
       />
 
-      <SubTitle>Fluxo de decisão (para a IA)</SubTitle>
+      <SubTitle>Fluxo de decisão (campo situacaoCadastro)</SubTitle>
       <Code>{`GET /api/clients/consulta-cnpj?cnpj=...
         │
-        ├─ API Key inválida ──────────────► 401
-        ├─ CNPJ ≠ 14 dígitos ─────────────► 400
-        ├─ Erro DB/servidor ──────────────► 500
+        ├─ HTTP 400 ─────────────────────────► cnpj_invalido
+        ├─ HTTP 401 / 500 ───────────────────► erro (ok: false)
         │
-        └─ ok: true
+        └─ HTTP 200 + ok: true
               │
-              ├─ possuiCadastro: true ────► Cenário 1 (cliente + sicaf + renovacao + manutencao)
+              ├─ possuiCadastro: false
+              │     ├─ encontradoNaReceitaFederal: true  ► cadastro_pendente
+              │     └─ encontradoNaReceitaFederal: false ► nao_encontrado
               │
-              └─ possuiCadastro: false
+              └─ possuiCadastro: true (cliente na base CADBRASIL)
                     │
-                    ├─ encontradoNaReceitaFederal: true ──► Cenário 2 (+ receitaFederal + orientacaoIA)
-                    └─ encontradoNaReceitaFederal: false ─► Cenário 3 (erroReceitaFederal)`}</Code>
-
-      <Callout tone="info">
-        <strong>Regra para a IA:</strong> quando existir o campo{" "}
-        <code>orientacaoIA</code>, use-o como base da resposta ao cliente
-        (pode adaptar para tom WhatsApp). Quando existir{" "}
-        <code>orientacaoUsuario</code>, pode enviá-lo diretamente ao cliente.
-      </Callout>
-
-      <SubTitle>
-        Cenário 1 — CNPJ cadastrado na CADBRASIL
-      </SubTitle>
+                    ├─ sicafValido: true ─────────────────► ativo
+                    ├─ pagamento SICAF em aberto ──────────► aguardando_pagamento
+                    ├─ sicaf.status = Vencido ─────────────► sicaf_vencido
+                    ├─ sicaf = null ───────────────────────► cadastro_sem_sicaf
+                    └─ demais casos SICAF incompleto ──────► sicaf_incompleto`}</Code>
       <H>
-        <code>possuiCadastro: true</code> ·{" "}
-        <code>cadastroConcluido: true</code>
+        <strong>Ordem de avaliação no backend (cliente cadastrado):</strong>{" "}
+        1) sicafValido → ativo · 2) taxa/boleto pendente → aguardando_pagamento
+        · 3) SICAF vencido → sicaf_vencido · 4) sem registro SICAF →
+        cadastro_sem_sicaf · 5) demais → sicaf_incompleto
       </H>
-      <Code>{`{
-  "ok": true,
-  "cnpj": "23250168000150",
-  "possuiCadastro": true,
-  "cadastroConcluido": true,
-  "cadastroValido": false,
-  "sicafValido": false,
-  "possuiRenovacao": false,
-  "possuiManutencao": false,
-  "razaoSocial": "EMPRESA EXEMPLO LTDA",
-  "cliente": {
-    "id": 192281,
-    "razaoSocial": "EMPRESA EXEMPLO LTDA",
-    "nomeFantasia": "EXEMPLO",
-    "tipoDocumento": "CNPJ",
-    "documento": "23250168000150",
-    "email": "contato@empresa.com.br",
-    "telefone": "(11) 2122-0202",
-    "celular": null,
-    "endereco": "RUA EXEMPLO, 100",
-    "cidade": "SAO PAULO",
-    "estado": "SP",
-    "cep": "05711001",
-    "porte": "ME",
-    "ramoAtividade": "Atividade principal",
-    "status": "Ativo",
-    "createdAt": "2026-06-20T17:11:05.000Z",
-    "updatedAt": "2026-06-20T17:11:05.000Z"
-  },
-  "sicaf": {
-    "id": 192280,
-    "status": "Pendente",
-    "valido": false,
-    "dataValidade": null,
-    "diasValidade": 0,
-    "completude": 0
-  },
-  "renovacao": {
-    "id": 6138,
-    "status": "Pendente",
-    "anoReferencia": 2026,
-    "createdAt": "2026-06-20T17:11:05.000Z"
-  },
-  "manutencao": {
-    "id": 42,
-    "status": "Ativo",
-    "dataInicio": "2026-01-01",
-    "dataFim": "2026-12-31",
-    "valor": 155.0,
-    "diasRestantes": 180
-  }
-}`}</Code>
-      <List
-        items={[
-          <>
-            <code>sicaf</code>, <code>renovacao</code> e <code>manutencao</code>{" "}
-            podem ser <code>null</code> se não existirem.
-          </>,
-          <>
-            <code>cadastroValido</code> = <code>sicafValido</code> ou renovação
-            concluída/aprovada/paga.
-          </>,
-          <>
-            <code>sicaf.status</code> possíveis: Ativo, Vencendo, Vencido,
-            Pendente, Inativo, Sem SICAF.
-          </>,
-          <>
-            <code>sicaf.valido</code> = <code>true</code> quando status é Ativo
-            ou Vencendo.
-          </>,
+
+      <SubTitle>Valores de situacaoCadastro</SubTitle>
+      <DataTable
+        headers={["Valor", "Significado"]}
+        rows={[
+          ["cnpj_invalido", "CNPJ com formato inválido (erro 400)"],
+          [
+            "nao_encontrado",
+            "Não está na CADBRASIL nem confirmado na Receita",
+          ],
+          [
+            "cadastro_pendente",
+            "Achou na Receita Federal, cadastro CADBRASIL não concluído",
+          ],
+          [
+            "aguardando_pagamento",
+            "Cadastro na CADBRASIL, taxa SICAF não quitada",
+          ],
+          ["sicaf_vencido", "Cadastro na CADBRASIL, credenciamento expirado"],
+          [
+            "cadastro_sem_sicaf",
+            "Cliente na base, sem processo SICAF iniciado",
+          ],
+          ["sicaf_incompleto", "SICAF iniciado, ainda não concluído"],
+          ["ativo", "Credenciamento SICAF válido e em ordem"],
+        ]}
+      />
+
+      <SubTitle>Campos comuns (respostas de sucesso)</SubTitle>
+      <DataTable
+        headers={["Campo", "Tipo", "Descrição"]}
+        rows={[
+          ["ok", "boolean", "true = sucesso"],
+          ["cnpj", "string", "14 dígitos, sem máscara"],
+          [
+            "situacaoCadastro",
+            "string",
+            "Identificador do cenário — campo principal para a IA",
+          ],
+          ["message", "string", "Resumo curto da situação"],
+          ["orientacaoUsuario", "string", "Texto completo para o cliente"],
+          ["orientacaoIA", "string", "Texto para a IA montar o atendimento"],
+          [
+            "possuiCadastro",
+            "boolean",
+            "Existe na base clientes da CADBRASIL",
+          ],
+          [
+            "possuiPagamentoPendente",
+            "boolean",
+            "Há taxa/boleto SICAF ou manutenção em aberto",
+          ],
+          ["cadastroConcluido", "boolean", "true se cadastrado na base"],
+          [
+            "cadastroValido",
+            "boolean",
+            "SICAF válido ou renovação paga",
+          ],
+          ["sicafValido", "boolean", "Licença SICAF ativa/vencendo"],
+          ["razaoSocial", "string|null", "Da base ou da Receita"],
+          ["valorTaxaAnual", "number", "Taxa credenciamento (padrão R$ 985)"],
+          ["valorTotalPendente", "number", "Soma de boletos em aberto"],
+          ["urlCadastro", "string", "https://cadastro.cadbrasil.com.br"],
+          ["urlPortal", "string", "https://fornecedor.cadbrasil.com.br"],
+        ]}
+      />
+
+      <SubTitle>Tabela rápida — O que a IA responde por cenário</SubTitle>
+      <DataTable
+        headers={["situacaoCadastro", "Tom", "Ação principal", "Link principal"]}
+        rows={[
+          ["cnpj_invalido", "Neutro", "Pedir 14 dígitos", "—"],
+          [
+            "nao_encontrado",
+            "Neutro",
+            "Confirmar CNPJ / cadastro novo",
+            "cadastro.cadbrasil.com.br",
+          ],
+          [
+            "cadastro_pendente",
+            "Acolhedor",
+            "Concluir cadastro + taxa R$ 985",
+            "cadastro.cadbrasil.com.br",
+          ],
+          [
+            "aguardando_pagamento",
+            "Objetivo",
+            "Pagar taxa SICAF",
+            "fornecedor.cadbrasil.com.br + boleto",
+          ],
+          [
+            "sicaf_vencido",
+            "Urgente",
+            "Renovar SICAF",
+            "fornecedor.cadbrasil.com.br + vídeo",
+          ],
+          [
+            "cadastro_sem_sicaf",
+            "Orientativo",
+            "Iniciar SICAF",
+            "fornecedor / cadastro",
+          ],
+          [
+            "sicaf_incompleto",
+            "Orientativo",
+            "Ver pendências no portal",
+            "fornecedor.cadbrasil.com.br",
+          ],
+          [
+            "ativo",
+            "Positivo",
+            "Confirmar status + níveis + links",
+            "portal + ajuda + vídeo",
+          ],
+        ]}
+      />
+
+      <SubTitle>Cenários detalhados (A a H)</SubTitle>
+      <ConsultaCnpjScenarios />
+
+      <SubTitle>Interpretação de manutencao (quando presente)</SubTitle>
+      <DataTable
+        headers={["Campo", "Uso para IA"]}
+        rows={[
+          ["status", "Ativo, A vencer, Vencendo = manutenção contratada"],
+          ["valor", "Geralmente R$ 155,00/mês"],
+          ["diasRestantes", "Dias até fim do período atual"],
+          ["dataFim", "Data de término do ciclo"],
         ]}
       />
       <H>
-        <strong>IA — o que fazer no Cenário 1:</strong> cumprimente pelo{" "}
-        <code>razaoSocial</code>, informe status do SICAF (
-        <code>sicaf.status</code>), se <code>sicafValido</code> e pendências.
-        Oriente próximo passo conforme status (documentos, renovação, etc.).
+        <code>possuiManutencao: true</code> → cliente tem manutenção CADBRASIL
+        ativa. Boletos de manutenção →{" "}
+        <code>GET /api/clients/consulta-boletos?cnpj=CNPJ</code>
       </H>
 
-      <SubTitle>
-        Cenário 2 — Não cadastrado na CADBRASIL, mas encontrado na Receita
-        Federal
-      </SubTitle>
-      <H>
-        <code>possuiCadastro: false</code> ·{" "}
-        <code>encontradoNaReceitaFederal: true</code>
-      </H>
-      <H>
-        Consulta automática via OpenCNPJ (
-        <code>OPENCNPJ_API_URL</code> no backend).
-      </H>
-      <Code>{`{
-  "ok": true,
-  "cnpj": "06990590000123",
-  "possuiCadastro": false,
-  "cadastroConcluido": false,
-  "cadastroValido": false,
-  "sicafValido": false,
-  "possuiRenovacao": false,
-  "possuiManutencao": false,
-  "razaoSocial": "GOOGLE BRASIL INTERNET LTDA.",
-  "cliente": null,
-  "sicaf": null,
-  "renovacao": null,
-  "manutencao": null,
-  "urlCadastro": "https://cadastro.cadbrasil.com.br",
-  "podeConcluirCadastro": true,
-  "encontradoNaReceitaFederal": true,
-  "situacaoReceitaFederal": "Ativa",
-  "receitaFederal": {
-    "cnpj": "06990590000123",
-    "razaoSocial": "GOOGLE BRASIL INTERNET LTDA.",
-    "nomeFantasia": null,
-    "situacaoCadastral": "Ativa",
-    "atividadePrincipal": "Portais, provedores de conteúdo...",
-    "email": "GOOGLEBRASIL@GOOGLE.COM",
-    "telefone": "(11) 23958400",
-    "logradouro": "AVENIDA BRIG FARIA LIMA",
-    "numero": "3477",
-    "complemento": "ANDAR 17A20",
-    "bairro": "ITAIM BIBI",
-    "cidade": "SAO PAULO",
-    "estado": "SP",
-    "cep": "04538133",
-    "porte": null,
-    "naturezaJuridica": "Sociedade Empresária Limitada (2062)"
-  },
-  "message": "CNPJ localizado na Receita Federal, porém o cadastro na CADBRASIL ainda não foi concluído.",
-  "orientacaoUsuario": "Para concluir o cadastro e dar sequência ao processo, acesse: https://cadastro.cadbrasil.com.br",
-  "orientacaoIA": "O CNPJ 06990590000123 corresponde a GOOGLE BRASIL INTERNET LTDA. (situação cadastral: Ativa) mas NÃO possui cadastro concluído na plataforma CADBRASIL. Informe ao cliente que ele pode finalizar o cadastro em https://cadastro.cadbrasil.com.br para continuar o processo SICAF."
-}`}</Code>
-      <H>
-        Campos exclusivos: <code>encontradoNaReceitaFederal</code>,{" "}
-        <code>situacaoReceitaFederal</code>, <code>receitaFederal</code>,{" "}
-        <code>urlCadastro</code>, <code>podeConcluirCadastro</code>,{" "}
-        <code>message</code>, <code>orientacaoUsuario</code>,{" "}
-        <code>orientacaoIA</code>.
-      </H>
-      <H>
-        <strong>IA — o que fazer no Cenário 2:</strong> use{" "}
-        <code>orientacaoIA</code> ou <code>orientacaoUsuario</code>. Envie{" "}
-        <code>urlCadastro</code> (https://cadastro.cadbrasil.com.br). Não trate
-        como cliente ativo — cadastro ainda não concluído.
-      </H>
-
-      <SubTitle>
-        Cenário 3 — Não cadastrado na CADBRASIL e não confirmado na Receita
-      </SubTitle>
-      <H>
-        <code>possuiCadastro: false</code> ·{" "}
-        <code>encontradoNaReceitaFederal: false</code>
-      </H>
-      <Code>{`{
-  "ok": true,
-  "cnpj": "00000000000000",
-  "possuiCadastro": false,
-  "cadastroConcluido": false,
-  "cadastroValido": false,
-  "sicafValido": false,
-  "possuiRenovacao": false,
-  "possuiManutencao": false,
-  "razaoSocial": null,
-  "cliente": null,
-  "sicaf": null,
-  "renovacao": null,
-  "manutencao": null,
-  "urlCadastro": "https://cadastro.cadbrasil.com.br",
-  "podeConcluirCadastro": true,
-  "encontradoNaReceitaFederal": false,
-  "receitaFederal": null,
-  "message": "CNPJ não encontrado na base de clientes CADBRASIL.",
-  "orientacaoUsuario": "Caso a empresa ainda não tenha se cadastrado, acesse https://cadastro.cadbrasil.com.br para concluir o cadastro.",
-  "orientacaoIA": "O CNPJ 00000000000000 não foi encontrado na base CADBRASIL. Consulta à Receita Federal: CNPJ não encontrado na base da Receita Federal. Oriente o cliente a verificar o número informado ou concluir o cadastro em https://cadastro.cadbrasil.com.br.",
-  "erroReceitaFederal": "CNPJ não encontrado na base da Receita Federal."
-}`}</Code>
-      <H>
-        <code>erroReceitaFederal</code> — possíveis valores:
-      </H>
-      <List
-        items={[
-          "CNPJ não encontrado na base da Receita Federal.",
-          "CNPJ deve ter 14 dígitos.",
-          "Resposta inválida da API OpenCNPJ.",
-          "Limite de consultas atingido (100/min). Tente novamente em instantes.",
+      <SubTitle>Interpretação de renovacao</SubTitle>
+      <DataTable
+        headers={["Campo", "Uso para IA"]}
+        rows={[
+          ["status", "Concluída, Pendente, etc."],
+          ["anoReferencia", "Ano da renovação"],
+          [
+            "possuiRenovacao: true",
+            "Última renovação concluída/aprovada/paga",
+          ],
         ]}
       />
       <H>
-        <strong>IA — o que fazer no Cenário 3:</strong> peça ao cliente para
-        verificar os 14 dígitos do CNPJ. Se persistir após 2 tentativas,
-        escalar humano. Ofereça <code>urlCadastro</code> se for empresa nova.
+        Renovação <strong>Concluída</strong> + <code>sicafValido: true</code> =
+        cliente regularizado para o ano.
       </H>
 
       <SubTitle>Respostas de erro (ok: false)</SubTitle>
@@ -284,7 +264,7 @@ export const consultaCnpjSection: Section = {
       <p className="mt-4 text-sm font-medium text-muted-foreground">
         400 — CNPJ inválido
       </p>
-      <Code>{`{ "ok": false, "error": "CNPJ inválido. Informe 14 dígitos." }`}</Code>
+      <Code>{`{ "ok": false, "error": "CNPJ inválido. Informe 14 dígitos.", "situacaoCadastro": "cnpj_invalido" }`}</Code>
       <p className="mt-4 text-sm font-medium text-muted-foreground">
         500 — Erro interno
       </p>
@@ -295,101 +275,6 @@ export const consultaCnpjSection: Section = {
         exponha detalhes técnicos — informe indisponibilidade temporária e
         escale ou peça para tentar depois.
       </H>
-
-      <SubTitle>Referência de campos (nível raiz)</SubTitle>
-      <DataTable
-        headers={["Campo", "Tipo", "Cenário", "Descrição"]}
-        rows={[
-          ["ok", "boolean", "Todos", "true = sucesso; false = erro"],
-          ["error", "string", "Erro", "Mensagem (só quando ok: false)"],
-          ["cnpj", "string", "Sucesso", "14 dígitos, sem máscara"],
-          [
-            "possuiCadastro",
-            "boolean",
-            "Sucesso",
-            "Existe na base clientes CADBRASIL",
-          ],
-          [
-            "cadastroConcluido",
-            "boolean",
-            "Sucesso",
-            "true se cadastrado; false se só Receita",
-          ],
-          [
-            "cadastroValido",
-            "boolean",
-            "Sucesso",
-            "SICAF válido ou renovação paga",
-          ],
-          ["sicafValido", "boolean", "Sucesso", "Licença SICAF ativa/vencendo"],
-          [
-            "possuiRenovacao",
-            "boolean",
-            "Sucesso",
-            "Última renovação concluída/aprovada",
-          ],
-          [
-            "possuiManutencao",
-            "boolean",
-            "Sucesso",
-            "Plano de manutenção ativo",
-          ],
-          ["razaoSocial", "string|null", "Sucesso", "Da base ou da Receita"],
-          ["cliente", "object|null", "Cenário 1", "Dados completos do cliente"],
-          ["sicaf", "object|null", "Cenário 1", "Situação do cadastro SICAF"],
-          ["renovacao", "object|null", "Cenário 1", "Última renovação"],
-          ["manutencao", "object|null", "Cenário 1", "Manutenção mais recente"],
-          [
-            "urlCadastro",
-            "string",
-            "Cenários 2 e 3",
-            "URL para concluir cadastro",
-          ],
-          [
-            "podeConcluirCadastro",
-            "boolean",
-            "Cenários 2 e 3",
-            "true neste fluxo",
-          ],
-          [
-            "encontradoNaReceitaFederal",
-            "boolean",
-            "Cenários 2 e 3",
-            "Consulta OpenCNPJ OK",
-          ],
-          [
-            "situacaoReceitaFederal",
-            "string|null",
-            "Cenários 2 e 3",
-            "Ex.: Ativa, Baixada",
-          ],
-          [
-            "receitaFederal",
-            "object|null",
-            "Cenário 2",
-            "Dados da Receita",
-          ],
-          ["message", "string", "Cenários 2 e 3", "Mensagem resumida"],
-          [
-            "orientacaoUsuario",
-            "string",
-            "Cenários 2 e 3",
-            "Texto para o cliente final",
-          ],
-          [
-            "orientacaoIA",
-            "string",
-            "Cenários 2 e 3",
-            "Texto pronto para IA/WhatsApp",
-          ],
-          [
-            "erroReceitaFederal",
-            "string|null",
-            "Cenário 3",
-            "Erro da consulta Receita",
-          ],
-        ]}
-      />
 
       <SubTitle>Objeto cliente</SubTitle>
       <DataTable
@@ -432,27 +317,22 @@ export const consultaCnpjSection: Section = {
         ]}
       />
 
-      <SubTitle>Objeto renovacao</SubTitle>
+      <SubTitle>Objeto pagamentosResumo</SubTitle>
       <DataTable
-        headers={["Campo", "Tipo"]}
+        headers={["Campo", "Tipo", "Descrição"]}
         rows={[
-          ["id", "number"],
-          ["status", "string|null"],
-          ["anoReferencia", "number|null"],
-          ["createdAt", "string (ISO)|null"],
-        ]}
-      />
-
-      <SubTitle>Objeto manutencao</SubTitle>
-      <DataTable
-        headers={["Campo", "Tipo"]}
-        rows={[
-          ["id", "number"],
-          ["status", "string|null"],
-          ["dataInicio", "string|null"],
-          ["dataFim", "string|null"],
-          ["valor", "number|null"],
-          ["diasRestantes", "number|null"],
+          ["totalPendentes", "number", "Quantidade de boletos em aberto"],
+          ["valorTotalPendente", "number", "Soma dos valores pendentes"],
+          [
+            "sicafPendentes[]",
+            "array",
+            "Boletos SICAF: valor, status, dataVencimento, linkBoleto, pdfBoleto",
+          ],
+          [
+            "manutencaoPendentes[]",
+            "array",
+            "Boletos de manutenção pendentes",
+          ],
         ]}
       />
 
@@ -478,6 +358,45 @@ export const consultaCnpjSection: Section = {
           ["naturezaJuridica", "string|null"],
         ]}
       />
+
+      <SubTitle>Campos exclusivos do cenário ativo</SubTitle>
+      <DataTable
+        headers={["Campo", "Descrição"]}
+        rows={[
+          ["saudacao", "Bom dia / Boa tarde / Boa noite (horário Brasília)"],
+          ["pagamentosEmDia", "true se não há boletos pendentes"],
+          ["renovacaoProxima", "true se faltam ≤ 60 dias para vencer"],
+          ["renovacaoUrgente", "true se faltam ≤ 30 dias"],
+          ["diasParaRenovacao", "Dias até sicaf.dataValidade"],
+          ["niveisSicaf[]", "Array com níveis I a VI"],
+          ["certidaoVencendoOuVencida", "true se algum nível está A Vencer ou Vencido"],
+          ["urlAjuda", LINKS.ajuda],
+          ["urlVideoAtualizacaoSicaf", VIDEOS.atualizarSicaf],
+          ["urlWhatsApp", LINKS.whatsapp],
+          ["whatsappDisplay", LINKS.whatsappDisplay],
+        ]}
+      />
+
+      <SubTitle>Links oficiais (referência fixa)</SubTitle>
+      <DataTable
+        headers={["Recurso", "URL"]}
+        rows={[
+          ["Cadastro digital", LINKS.cadastro],
+          ["Portal do fornecedor", LINKS.portal],
+          ["Central de ajuda", LINKS.ajuda],
+          ["Esqueci senha", LINKS.esqueciSenha],
+          ["Vídeo — atualizar SICAF", VIDEOS.atualizarSicaf],
+          ["WhatsApp", LINKS.whatsappDisplay],
+          ["Documentação", LINKS.docs],
+        ]}
+      />
+
+      <Callout tone="ok">
+        <strong>Regra final para a IA:</strong> sempre priorize{" "}
+        <code>orientacaoUsuario</code> quando existir. Nunca invente status,
+        valores ou links de boleto. Use apenas o retorno da API e este
+        documento.
+      </Callout>
     </>
   ),
 };
