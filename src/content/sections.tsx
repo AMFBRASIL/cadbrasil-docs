@@ -13,7 +13,7 @@ import {
 } from "@/lib/docs-ui";
 import { consultaCnpjSection } from "@/content/consulta-cnpj-api";
 import { sicafProcessSections } from "@/content/sicaf-processo-sections";
-import { VIDEOS } from "@/content/videos";
+import { VIDEOS, LINKS } from "@/content/videos";
 
 export { VIDEOS };
 
@@ -105,8 +105,11 @@ Tecnologia, segurança e suporte para fornecedores do Brasil. 🇧🇷`}</Code>
             </>,
             <>
               <code>aguardando_pagamento</code> → cadastro OK, pagamento
-              pendente; <code>urlPortal</code> + boleto (
-              <code>pagamentosResumo</code> ou API boleto-sicaf)
+              pendente; orientar{" "}
+              <a href={LINKS.pagamentos} className="underline underline-offset-4">
+                {LINKS.pagamentos}
+              </a>{" "}
+              + boleto (<code>pagamentosResumo</code> ou API boleto-sicaf)
             </>,
             <>
               <code>sicaf_vencido</code> → renovação urgente;{" "}
@@ -137,6 +140,19 @@ Tecnologia, segurança e suporte para fornecedores do Brasil. 🇧🇷`}</Code>
           ]}
         />
         <H>
+          <strong>Boleto e pagamento:</strong> quando o cliente pedir boleto,
+          2ª via, pagamento, taxa ou &quot;como pagar&quot;, oriente a acessar a
+          página de pagamentos:{" "}
+          <a
+            href={LINKS.pagamentos}
+            className="underline underline-offset-4"
+          >
+            {LINKS.pagamentos}
+          </a>
+          . Se ainda tiver dúvida após a orientação, peça para falar com um
+          atendente (escalar para humano).
+        </H>
+        <H>
           <strong>Horário comercial:</strong> Seg–Sex, 08h–18h (exceto
           feriados). Fora do horário → responder dúvidas simples e avisar que
           consultores retornam no próximo dia útil.
@@ -152,8 +168,8 @@ Tecnologia, segurança e suporte para fornecedores do Brasil. 🇧🇷`}</Code>
         </H>
         <List
           items={[
-            "2ª via / boleto / taxa / 985 → Boleto SICAF (credenciamento)",
-            "mensalidade / 155 / manutenção → Boleto de manutenção",
+            "2ª via / boleto / taxa / 985 / pagar → Página de pagamentos + API boleto",
+            "mensalidade / 155 / manutenção → Página de pagamentos + API consulta-boletos",
             "cadastro / habilitação / fornecedor / consultar CNPJ → API consulta-cnpj",
             "app / programa / aplicativo → Assistente CADBRASIL",
             "senha / login / acesso → Área do Fornecedor",
@@ -564,11 +580,22 @@ Tecnologia, segurança e suporte para fornecedores do Brasil. 🇧🇷`}</Code>
     body: (
       <>
         <ShortAnswer>
-          Pagamento via boleto bancário. A IA pode enviar o link/PDF do boleto
-          consultando o CNPJ do cliente nas APIs.
+          Pagamento via boleto bancário. O cliente pode acessar{" "}
+          <a href={LINKS.pagamentos} className="underline underline-offset-4">
+            {LINKS.pagamentos}
+          </a>{" "}
+          para emitir ou pagar boletos. A IA também pode consultar o CNPJ nas
+          APIs e enviar link/PDF do boleto.
         </ShortAnswer>
         <List
           items={[
+            <>
+              Página de pagamentos:{" "}
+              <a href={LINKS.pagamentos} className="underline underline-offset-4">
+                {LINKS.pagamentos}
+              </a>{" "}
+              — boleto SICAF, manutenção e demais taxas
+            </>,
             "Boleto bancário — emitido via plataforma (link PDF ou código de barras)",
             "Compensação bancária: geralmente 1 a 3 dias úteis após pagamento",
             "Não solicitamos PIX direto por WhatsApp — desconfie de cobranças informais",
@@ -1032,7 +1059,11 @@ Tecnologia, segurança e suporte para fornecedores do Brasil. 🇧🇷`}</Code>
       <>
         <ShortAnswer>
           Boleto SICAF = credenciamento (R$ 985, único). Boleto manutenção =
-          mensalidade (R$ 155/mês). APIs diferentes.
+          mensalidade (R$ 155/mês). Ambos disponíveis em{" "}
+          <a href={LINKS.pagamentos} className="underline underline-offset-4">
+            {LINKS.pagamentos}
+          </a>
+          .
         </ShortAnswer>
         <List
           items={[
@@ -1061,8 +1092,18 @@ Tecnologia, segurança e suporte para fornecedores do Brasil. 🇧🇷`}</Code>
     body: (
       <>
         <ShortAnswer>
-          Me informe seu CNPJ (14 dígitos) que consulto e envio o boleto/PDF.
+          Acesse{" "}
+          <a href={LINKS.pagamentos} className="underline underline-offset-4">
+            {LINKS.pagamentos}
+          </a>{" "}
+          ou informe seu CNPJ (14 dígitos) que consulto e envio o boleto/PDF.
         </ShortAnswer>
+        <H>
+          Página de pagamentos:{" "}
+          <a href={LINKS.pagamentos} className="underline underline-offset-4">
+            {LINKS.pagamentos}
+          </a>
+        </H>
         <H>
           Vídeo explicativo: <VideoLink href={VIDEOS.boletoSicaf} />
         </H>
@@ -1114,8 +1155,9 @@ Tecnologia, segurança e suporte para fornecedores do Brasil. 🇧🇷`}</Code>
   "error": "Cliente não encontrado para este CNPJ."
 }`}</Code>
         <Escalar>
-          CNPJ não encontrado após 2 tentativas ou cliente insiste que já é
-          cadastrado.
+          CNPJ não encontrado após 2 tentativas, cliente insiste que já é
+          cadastrado, ou ainda tem dúvida sobre boleto/pagamento após orientar a
+          página de pagamentos.
         </Escalar>
       </>
     ),
@@ -1133,14 +1175,27 @@ Tecnologia, segurança e suporte para fornecedores do Brasil. 🇧🇷`}</Code>
           items={[
             "1. Pedir CNPJ (14 dígitos, sem pontuação)",
             "2. Validar formato do CNPJ",
-            "3. Consultar API apropriada (SICAF ou manutenção)",
-            "4. Se pendentePagamento=true → enviar linkPdf e/ou linkBoleto",
-            "5. Se pendentePagamento=false → informar que não há boleto em aberto",
-            "6. Se 404 / possuiCadastro=false → orientar contratação ou escalar",
+            <>
+              3. Orientar{" "}
+              <a href={LINKS.pagamentos} className="underline underline-offset-4">
+                {LINKS.pagamentos}
+              </a>{" "}
+              para boleto e pagamento
+            </>,
+            "4. Consultar API apropriada (SICAF ou manutenção) se cliente preferir pelo WhatsApp",
+            "5. Se pendentePagamento=true → enviar linkPdf e/ou linkBoleto",
+            "6. Se pendentePagamento=false → informar que não há boleto em aberto",
+            "7. Se 404 / possuiCadastro=false → orientar contratação ou escalar",
+            "8. Se ainda tiver dúvida → pedir para falar com atendente",
           ]}
         />
         <Callout tone="info">
-          Nunca invente links de boleto. Use apenas URLs retornadas pela API.
+          Nunca invente links de boleto. Use apenas URLs retornadas pela API ou
+          oriente{" "}
+          <a href={LINKS.pagamentos} className="underline underline-offset-4">
+            {LINKS.pagamentos}
+          </a>
+          . Se o cliente ainda tiver dúvida, peça para falar com um atendente.
         </Callout>
       </>
     ),
@@ -1151,9 +1206,19 @@ Tecnologia, segurança e suporte para fornecedores do Brasil. 🇧🇷`}</Code>
     body: (
       <>
         <ShortAnswer>
-          Informe seu CNPJ — consultamos a API e reenviamos o boleto vigente ou
-          geramos novo se necessário.
+          Acesse{" "}
+          <a href={LINKS.pagamentos} className="underline underline-offset-4">
+            {LINKS.pagamentos}
+          </a>{" "}
+          ou informe seu CNPJ — consultamos a API e reenviamos o boleto vigente
+          ou geramos novo se necessário.
         </ShortAnswer>
+        <H>
+          Página de pagamentos:{" "}
+          <a href={LINKS.pagamentos} className="underline underline-offset-4">
+            {LINKS.pagamentos}
+          </a>
+        </H>
         <H>
           A 2ª via é obtida pela mesma API de boleto. Se existir boleto vigente,
           o campo <code>boletoReutilizado: true</code> indica reutilização do
@@ -1166,6 +1231,10 @@ Tecnologia, segurança e suporte para fornecedores do Brasil. 🇧🇷`}</Code>
         <H>
           Manutenção: <code>/api/clients/consulta-boletos?cnpj=CNPJ</code>
         </H>
+        <Escalar>
+          Cliente ainda com dúvida sobre boleto ou pagamento após orientar a
+          página de pagamentos — pedir para falar com um atendente.
+        </Escalar>
       </>
     ),
   },
@@ -1227,9 +1296,19 @@ Tecnologia, segurança e suporte para fornecedores do Brasil. 🇧🇷`}</Code>
     body: (
       <>
         <ShortAnswer>
-          Me informe seu CNPJ (14 dígitos) que consulto os boletos de
+          Acesse{" "}
+          <a href={LINKS.pagamentos} className="underline underline-offset-4">
+            {LINKS.pagamentos}
+          </a>{" "}
+          ou informe seu CNPJ (14 dígitos) que consulto os boletos de
           manutenção pendentes.
         </ShortAnswer>
+        <H>
+          Página de pagamentos:{" "}
+          <a href={LINKS.pagamentos} className="underline underline-offset-4">
+            {LINKS.pagamentos}
+          </a>
+        </H>
         <H>
           Vídeo explicativo: <VideoLink href={VIDEOS.boletoManutencao} />
         </H>

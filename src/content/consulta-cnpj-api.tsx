@@ -191,7 +191,7 @@ export const consultaCnpjSection: Section = {
             "aguardando_pagamento",
             "Objetivo",
             "Pagar taxa SICAF",
-            "fornecedor.cadbrasil.com.br + boleto",
+            "fornecedor.cadbrasil.com.br/pagamentos + boleto",
           ],
           [
             "sicaf_vencido",
@@ -383,6 +383,7 @@ export const consultaCnpjSection: Section = {
         rows={[
           ["Cadastro digital", LINKS.cadastro],
           ["Portal do fornecedor", LINKS.portal],
+          ["Pagamentos (boletos)", LINKS.pagamentos],
           ["Central de ajuda", LINKS.ajuda],
           ["Esqueci senha", LINKS.esqueciSenha],
           ["Vídeo — atualizar SICAF", VIDEOS.atualizarSicaf],

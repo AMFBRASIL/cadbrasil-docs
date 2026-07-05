@@ -186,18 +186,20 @@ export function ConsultaCnpjScenarios() {
           <>
             A empresa <strong>{"{razaoSocial}"}</strong> já possui cadastro, mas o{" "}
             <strong>pagamento da taxa SICAF está em aberto</strong> — R${" "}
-            {"{valorTotalPendente}"},00. Acesse <strong>{LINKS.portal}</strong>{" "}
-            e regularize. Enquanto não pagar, os níveis do SICAF não serão
-            concluídos. Posso enviar o boleto aqui — confirme se deseja receber.
+            {"{valorTotalPendente}"},00. Acesse{" "}
+            <strong>{LINKS.pagamentos}</strong> para emitir ou pagar o boleto.
+            Enquanto não pagar, os níveis do SICAF não serão concluídos. Se
+            ainda tiver dúvida, peça para falar com um atendente.
           </>
         }
         iaDo={
           <List
             items={[
               "Informar: cadastro feito, pagamento pendente.",
-              "Orientar urlPortal.",
+              `Orientar ${LINKS.pagamentos} para boleto e pagamento.`,
               "Se pagamentosResumo.sicafPendentes[].linkBoleto ou pdfBoleto existir → enviar.",
               "Ou consultar GET /api/clients/boleto-sicaf/CNPJ.",
+              "Se ainda tiver dúvida → pedir para falar com atendente (escalar).",
             ]}
           />
         }

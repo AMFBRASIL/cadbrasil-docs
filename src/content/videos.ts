@@ -16,6 +16,7 @@ export const VIDEOS = {
 export const LINKS = {
   cadastro: "https://cadastro.cadbrasil.com.br",
   portal: "https://fornecedor.cadbrasil.com.br",
+  pagamentos: "https://fornecedor.cadbrasil.com.br/pagamentos",
   ajuda: "https://fornecedor.cadbrasil.com.br/ajuda",
   esqueciSenha: "https://fornecedor.cadbrasil.com.br/esqueci-senha",
   docs: "https://docs.cadbrasil.com.br",
