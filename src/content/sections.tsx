@@ -63,11 +63,29 @@ ou
 🔐 **CADBRASIL Oficial**
 Tecnologia, segurança e suporte para fornecedores do Brasil. 🇧🇷`}</Code>
         <H>
-          <strong>Após receber CNPJ:</strong> consulte a API consulta-cnpj (14
-          dígitos, somente números) e siga o fluxo por{" "}
-          <code>situacaoCadastro</code>. Se o cliente informar CPF, encaminhe
-          para identificação ou escale a um consultor conforme o fluxo interno.
+          <strong>Após receber CNPJ:</strong> consulte apenas{" "}
+          <code>GET /api/clients/consulta-cnpj?cnpj=CNPJ</code> e responda com o
+          cenário completo (<code>situacaoCadastro</code>). Detalhes:{" "}
+          <a href="#api-consulta-cnpj" className="underline underline-offset-4">
+            API consulta-cnpj
+          </a>
+          .
         </H>
+
+        <SubTitle>Ordem das APIs (resumo)</SubTitle>
+        <Callout tone="info">
+          <strong>Etapa 1 — Identificação:</strong> CNPJ →{" "}
+          <code>consulta-cnpj</code> (sempre primeiro).
+          <br />
+          <strong>Etapa 2 — Boleto:</strong> somente quando o cliente pedir → ver{" "}
+          <a
+            href="#api-solicitar-boleto"
+            className="underline underline-offset-4"
+          >
+            API solicitar-boleto
+          </a>
+          .
+        </Callout>
 
         <H>
           <strong>Tom:</strong> cordial, objetivo, frases curtas (ideal para
@@ -93,10 +111,17 @@ Tecnologia, segurança e suporte para fornecedores do Brasil. 🇧🇷`}</Code>
           mensagem.
         </H>
         <H>
-          <strong>APIs:</strong> substitua <code>CNPJ</code> nos endpoints
-          pelos 14 dígitos informados pelo cliente. Consulta CNPJ: ver seção{" "}
+          <strong>APIs:</strong> substitua <code>CNPJ</code> pelos 14 dígitos.{" "}
+          Identificação →{" "}
           <a href="#api-consulta-cnpj" className="underline underline-offset-4">
-            API consulta-cnpj
+            consulta-cnpj
+          </a>
+          . Boleto/pagamento (quando o cliente pedir) →{" "}
+          <a
+            href="#api-solicitar-boleto"
+            className="underline underline-offset-4"
+          >
+            solicitar-boleto
           </a>
           .
         </H>
@@ -118,13 +143,11 @@ Tecnologia, segurança e suporte para fornecedores do Brasil. 🇧🇷`}</Code>
               enviar <code>urlCadastro</code> + taxa R$ 985
             </>,
             <>
-              <code>aguardando_pagamento</code> → cadastro OK, pagamento
-              pendente; orientar{" "}
-              <a href={LINKS.pagamentos} className="underline underline-offset-4">
-                {LINKS.pagamentos}
-              </a>{" "}
-              + boleto (API <code>solicitar-boleto</code> ou{" "}
-              <code>pagamentosResumo</code>)
+              <code>aguardando_pagamento</code> → informar pagamento pendente e
+              orientar portal — ver cenário D em{" "}
+              <a href="#api-consulta-cnpj" className="underline underline-offset-4">
+                consulta-cnpj
+              </a>
             </>,
             <>
               <code>sicaf_vencido</code> → renovação urgente;{" "}
@@ -146,48 +169,23 @@ Tecnologia, segurança e suporte para fornecedores do Brasil. 🇧🇷`}</Code>
             </>,
             <>
               Sempre priorizar <code>orientacaoUsuario</code> quando existir.
-              Nunca inventar status, valores ou links de boleto.
-            </>,
-            <>
-              Com boleto disponível → enviar o campo <code>urlPagamento</code>{" "}
-              (link principal para ver boleto e pagar). Se o cliente não
-              conseguir abrir, informar também <code>linkPdf</code>. Não enviar{" "}
-              <code>linkBoleto</code>.
+              Nunca inventar status, valores ou links de boleto na consulta-cnpj.
             </>,
           ]}
         />
-        <H>
-          <strong>Boleto e pagamento:</strong> quando o cliente pedir boleto,
-          link para pagar, &quot;quero pagar&quot;, &quot;pode me mandar?&quot;,
-          2ª via ou renovação — a IA <strong>deve enviar o link</strong> via API{" "}
-          <a
-            href="#api-solicitar-boleto"
-            className="underline underline-offset-4"
-          >
-            solicitar-boleto
-          </a>{" "}
-          (<code>GET /api/clients/solicitar-boleto?cnpj=CNPJ</code>). Enviar o
-          campo <code>urlPagamento</code> ao cliente.{" "}
-          <strong>Não escalar humano</strong> para enviar boleto.
-        </H>
-
-        <SubTitle>Boleto / pagamento — a IA ENVIA o link (não escalar)</SubTitle>
+        <SubTitle>Boleto e pagamento (quando o cliente pedir)</SubTitle>
         <Callout tone="ok">
-          <strong>Proibido escalar humano</strong> quando o cliente pedir boleto
-          ou link de pagamento. Exemplos: &quot;Quero pagar o boleto, pode me
-          mandar?&quot;, &quot;manda o link&quot;, &quot;2ª via&quot;, &quot;quero
-          pagar os 985&quot;. A IA: 1) pede CNPJ se necessário → 2) chama{" "}
-          <code>GET /api/clients/solicitar-boleto?cnpj=CNPJ</code> → 3) envia{" "}
-          <code>urlPagamento</code> na mensagem (textos em{" "}
+          <strong>Regra fixa:</strong> boleto, link de pagamento, 2ª via ou
+          renovação SICAF → seguir{" "}
+          <strong>apenas</strong> a seção{" "}
           <a
             href="#api-solicitar-boleto"
             className="underline underline-offset-4"
           >
             API solicitar-boleto
           </a>
-          ). <code>linkPdf</code> só se existir. Nunca{" "}
-          <code>linkBoleto</code>. Nunca dizer &quot;vou encaminhar para um
-          atendente enviar o link&quot;.
+          . Na identificação inicial (CNPJ) usar somente{" "}
+          <code>consulta-cnpj</code> — não misturar as etapas.
         </Callout>
 
         <SubTitle>SICAF gratuito vs pago (textos prontos WhatsApp)</SubTitle>
@@ -236,9 +234,9 @@ Tecnologia, segurança e suporte para fornecedores do Brasil. 🇧🇷`}</Code>
         </H>
         <List
           items={[
-            "quero pagar o boleto / pode me mandar / manda o link / 2ª via / boleto / taxa / 985 / pagar → IA ENVIA urlPagamento via API solicitar-boleto (NÃO escalar humano)",
+            "cadastro / habilitação / fornecedor / informou CNPJ → #api-consulta-cnpj (Etapa 1)",
+            "boleto / pagar / 2ª via / renovação sicaf / manda o link → #api-solicitar-boleto (Etapa 2)",
             "mensalidade / 155 / manutenção → Página de pagamentos + API consulta-boletos",
-            "cadastro / habilitação / fornecedor / consultar CNPJ → API consulta-cnpj",
             "app / programa / aplicativo / instalar / baixar / assistente / como usar o app → Assistente CADBRASIL (2 links obrigatórios)",
             "senha / login / acesso → Área do Fornecedor",
             "certidão / CND / FGTS / negativa → Atualizar certidões",
@@ -615,8 +613,15 @@ Tecnologia, segurança e suporte para fornecedores do Brasil. 🇧🇷`}</Code>
             <>
               <strong>Taxa SICAF / credenciamento (R$ 985,00):</strong>{" "}
               serviço da CADBRASIL Oficial para habilitar a empresa com
-              assessoria, análise documental e acesso à plataforma. Boleto via
-              API <code>solicitar-boleto</code> ou página de pagamentos.
+              assessoria, análise documental e acesso à plataforma. Pagamento:{" "}
+              <a href="#api-solicitar-boleto" className="underline underline-offset-4">
+                solicitar-boleto
+              </a>{" "}
+              ou{" "}
+              <a href={LINKS.pagamentos} className="underline underline-offset-4">
+                {LINKS.pagamentos}
+              </a>
+              .
             </>,
             <>
               <strong>Manutenção CADBRASIL Oficial (R$ 155,00/mês):</strong>{" "}
@@ -765,7 +770,12 @@ Tecnologia, segurança e suporte para fornecedores do Brasil. 🇧🇷`}</Code>
                 {LINKS.pagamentos}
               </a>
             </>,
-            "Informe o CNPJ — a IA envia boleto/link PDF pela API",
+            <>
+              Informe o CNPJ — ver{" "}
+              <a href="#api-solicitar-boleto" className="underline underline-offset-4">
+                API solicitar-boleto
+              </a>
+            </>,
             "Compensação bancária: 1 a 3 dias úteis",
           ]}
         />
@@ -1012,14 +1022,15 @@ Tecnologia, segurança e suporte para fornecedores do Brasil. 🇧🇷`}</Code>
     body: (
       <>
         <ShortAnswer>
-          Pagamento via boleto bancário. O cliente pode acessar{" "}
+          Pagamento via boleto bancário ou PIX na página oficial. Portal:{" "}
           <a href={LINKS.pagamentos} className="underline underline-offset-4">
             {LINKS.pagamentos}
-          </a>{" "}
-          para emitir ou pagar boletos. A IA consulta{" "}
-          <code>GET /api/clients/solicitar-boleto</code> e envia{" "}
-          <code>urlPagamento</code> (link principal) e <code>linkPdf</code>{" "}
-          (alternativa).
+          </a>
+          . Boleto pelo WhatsApp: ver{" "}
+          <a href="#api-solicitar-boleto" className="underline underline-offset-4">
+            API solicitar-boleto
+          </a>
+          .
         </ShortAnswer>
         <List
           items={[
@@ -1027,18 +1038,19 @@ Tecnologia, segurança e suporte para fornecedores do Brasil. 🇧🇷`}</Code>
               Página de pagamentos:{" "}
               <a href={LINKS.pagamentos} className="underline underline-offset-4">
                 {LINKS.pagamentos}
-              </a>{" "}
-              — boleto SICAF, manutenção e demais taxas
+              </a>
             </>,
-            "Boleto SICAF — link de pagamento via API solicitar-boleto (campo urlPagamento; linkPdf se não abrir)",
             "Compensação bancária: geralmente 1 a 3 dias úteis após pagamento",
             "Não solicitamos PIX direto por WhatsApp — desconfie de cobranças informais",
           ]}
         />
         <Callout tone="warn">
-          A CADBRASIL Oficial não pede transferência PIX para números pessoais. O
-          link oficial de pagamento é o campo <code>urlPagamento</code> retornado
-          pela API — nunca <code>linkBoleto</code>.
+          A CADBRASIL Oficial não pede transferência PIX para números pessoais.
+          Procedimento de boleto pela IA:{" "}
+          <a href="#api-solicitar-boleto" className="underline underline-offset-4">
+            solicitar-boleto
+          </a>
+          .
         </Callout>
       </>
     ),
@@ -1497,38 +1509,30 @@ Tecnologia, segurança e suporte para fornecedores do Brasil. 🇧🇷`}</Code>
     body: (
       <>
         <ShortAnswer>
-          Boleto SICAF = credenciamento (R$ 985, único). Boleto manutenção =
-          mensalidade (R$ 155/mês). SICAF e renovação → API{" "}
+          Boleto SICAF = credenciamento (R$ 985). Manutenção = R$ 155/mês.
+          Procedimento completo de boleto SICAF:{" "}
           <a href="#api-solicitar-boleto" className="underline underline-offset-4">
-            solicitar-boleto
-          </a>
-          . Manutenção → consulta-boletos ou{" "}
-          <a href={LINKS.pagamentos} className="underline underline-offset-4">
-            {LINKS.pagamentos}
+            API solicitar-boleto
           </a>
           .
         </ShortAnswer>
         <List
           items={[
             <>
-              <strong>Boleto SICAF / renovação (R$ 985):</strong>{" "}
-              <code>GET /api/clients/solicitar-boleto?cnpj=CNPJ</code> — ver{" "}
+              <strong>SICAF / renovação:</strong>{" "}
               <a href="#api-solicitar-boleto" className="underline underline-offset-4">
-                documentação completa
+                solicitar-boleto
               </a>
             </>,
             <>
-              <strong>Boleto manutenção (R$ 155/mês):</strong> mensalidade do
-              serviço contínuo. API:{" "}
-              <code>/api/clients/consulta-boletos?cnpj=CNPJ</code>
+              <strong>Manutenção mensal:</strong>{" "}
+              <code>GET /api/clients/consulta-boletos?cnpj=CNPJ</code> ou{" "}
+              <a href={LINKS.pagamentos} className="underline underline-offset-4">
+                {LINKS.pagamentos}
+              </a>
             </>,
           ]}
         />
-        <H>
-          Se o cliente pedir &quot;boleto&quot; sem especificar, consulte{" "}
-          <code>solicitar-boleto</code> primeiro; se não houver pendência SICAF,
-          pergunte se é manutenção mensal.
-        </H>
       </>
     ),
   },
@@ -1538,82 +1542,42 @@ Tecnologia, segurança e suporte para fornecedores do Brasil. 🇧🇷`}</Code>
     body: (
       <>
         <ShortAnswer>
-          Informe seu CNPJ (14 dígitos) — a IA consulta{" "}
-          <code>GET /api/clients/solicitar-boleto?cnpj=CNPJ</code> e envia o
-          link de pagamento. Ou acesse{" "}
+          Informe seu CNPJ — a IA segue o procedimento em{" "}
+          <a href="#api-solicitar-boleto" className="underline underline-offset-4">
+            API solicitar-boleto
+          </a>
+          . Ou acesse{" "}
           <a href={LINKS.pagamentos} className="underline underline-offset-4">
             {LINKS.pagamentos}
           </a>
           .
         </ShortAnswer>
         <H>
-          Procedimento completo e mensagens WhatsApp:{" "}
-          <a href="#api-solicitar-boleto" className="underline underline-offset-4">
-            API solicitar-boleto
-          </a>
-        </H>
-        <H>
-          Página de pagamentos:{" "}
-          <a href={LINKS.pagamentos} className="underline underline-offset-4">
-            {LINKS.pagamentos}
-          </a>
-        </H>
-        <H>
           Vídeo explicativo: <VideoLink href={VIDEOS.boletoSicaf} />
         </H>
-        <Endpoint
-          method="GET"
-          url={`${LINKS.portal}/api/clients/solicitar-boleto?cnpj=CNPJ`}
-        />
-        <Escalar>
-          CNPJ não encontrado após 2 tentativas, cliente insiste que já é
-          cadastrado, ou ainda tem dúvida sobre boleto/pagamento após orientar a
-          API ou página de pagamentos.
-        </Escalar>
       </>
     ),
   },
   {
     id: "ia-enviar-boleto",
-    title: "A IA DEVE enviar boleto pelo WhatsApp (não escalar)",
+    title: "A IA pode enviar boleto pelo WhatsApp?",
     body: (
       <>
         <ShortAnswer>
-          Sim — a IA <strong>deve enviar</strong> o link quando o cliente pedir
-          boleto ou pagamento. Chame{" "}
-          <code>GET /api/clients/solicitar-boleto?cnpj=CNPJ</code> e envie{" "}
-          <code>urlPagamento</code>. <strong>Não escalar humano</strong> para
-          isso.
+          Sim — quando o cliente pedir explicitamente. Todo o procedimento,
+          mensagens, gatilhos e regras estão em{" "}
+          <a href="#api-solicitar-boleto" className="underline underline-offset-4">
+            API solicitar-boleto
+          </a>
+          .
         </ShortAnswer>
-        <Callout tone="ok">
-          <strong>Exemplo correto:</strong> cliente: &quot;Quero pagar o boleto,
-          pode me mandar?&quot; → IA consulta API → envia mensagem com{" "}
-          <code>urlPagamento</code>.
-          <br />
-          <strong>Exemplo errado:</strong> &quot;Vou encaminhar para um atendente
-          humano enviar o link&quot; — <strong>proibido</strong>.
-        </Callout>
-        <List
-          items={[
-            "1. Pedir CNPJ (14 dígitos) se ainda não informado",
-            "2. GET /api/clients/solicitar-boleto?cnpj=CNPJ",
-            <>
-              3. <code>pendentePagamento: true</code> → enviar urlPagamento +
-              texto em{" "}
-              <a href="#api-solicitar-boleto" className="underline underline-offset-4">
-                API solicitar-boleto
-              </a>
-            </>,
-            <>
-              4. <code>linkPdf</code> não null → incluir como alternativa
-            </>,
-            <>
-              5. <code>pendentePagamento: false</code> → informar sem pendência
-            </>,
-            "6. NÃO escalar para enviar boleto — função da IA",
-            "7. Escalar só: CNPJ não encontrado 2x, erro 500 repetido, ou assunto não relacionado",
-          ]}
-        />
+        <H>
+          Na identificação inicial (CNPJ), use apenas{" "}
+          <a href="#api-consulta-cnpj" className="underline underline-offset-4">
+            consulta-cnpj
+          </a>
+          . Não acione solicitar-boleto nesta etapa.
+        </H>
       </>
     ),
   },
@@ -1623,27 +1587,16 @@ Tecnologia, segurança e suporte para fornecedores do Brasil. 🇧🇷`}</Code>
     body: (
       <>
         <ShortAnswer>
-          Informe seu CNPJ — a IA consulta{" "}
-          <code>GET /api/clients/solicitar-boleto?cnpj=CNPJ</code> e reenvia o
-          boleto vigente (<code>boletoReutilizado: true</code>) ou gera novo se
-          necessário (<code>geradoAgora: true</code>).
-        </ShortAnswer>
-        <H>
-          Mensagens e fluxo:{" "}
+          Informe seu CNPJ — procedimento em{" "}
           <a href="#api-solicitar-boleto" className="underline underline-offset-4">
             API solicitar-boleto
           </a>
-        </H>
-        <H>
-          Página de pagamentos:{" "}
+          . Ou acesse{" "}
           <a href={LINKS.pagamentos} className="underline underline-offset-4">
             {LINKS.pagamentos}
           </a>
-        </H>
-        <Escalar>
-          CNPJ não encontrado após 2 tentativas. Não escalar só porque o cliente
-          pediu boleto — a IA envia via API.
-        </Escalar>
+          .
+        </ShortAnswer>
       </>
     ),
   },
@@ -1679,13 +1632,16 @@ Tecnologia, segurança e suporte para fornecedores do Brasil. 🇧🇷`}</Code>
     body: (
       <>
         <ShortAnswer>
-          Informe seu CNPJ — consultamos se há boleto vigente ou geramos um novo
-          para você.
+          Informe seu CNPJ — procedimento em{" "}
+          <a href="#api-solicitar-boleto" className="underline underline-offset-4">
+            API solicitar-boleto
+          </a>
+          . Ou acesse{" "}
+          <a href={LINKS.pagamentos} className="underline underline-offset-4">
+            {LINKS.pagamentos}
+          </a>
+          .
         </ShortAnswer>
-        <H>
-          Consulte a API com o CNPJ. Se o boleto anterior venceu, um novo pode
-          ser gerado (<code>geradoAgora: true</code>).
-        </H>
         <H>
           Vídeo boleto SICAF: <VideoLink href={VIDEOS.boletoSicaf} />
         </H>
@@ -2068,15 +2024,16 @@ Tecnologia, segurança e suporte para fornecedores do Brasil. 🇧🇷`}</Code>
       <>
         <ShortAnswer>
           Reclamação, cancelamento, reembolso, golpe, erro técnico, cliente
-          irritado ou CNPJ não encontrado após 2 tentativas.{" "}
-          <strong>Não escalar</strong> para pedido de boleto/link de pagamento.
+          irritado ou CNPJ não encontrado após 2 tentativas.
         </ShortAnswer>
-        <Callout tone="warn">
-          <strong>Não é caso de escalar humano:</strong> &quot;quero pagar o
-          boleto&quot;, &quot;pode me mandar?&quot;, &quot;manda o link&quot;, 2ª
-          via, renovação SICAF — a IA envia <code>urlPagamento</code> pela API{" "}
-          <code>solicitar-boleto</code>.
-        </Callout>
+        <H>
+          Pedido de boleto ou link de pagamento <strong>não</strong> é escalar
+          humano — ver{" "}
+          <a href="#api-solicitar-boleto" className="underline underline-offset-4">
+            API solicitar-boleto
+          </a>
+          .
+        </H>
         <List
           items={[
             "Reclamação ou insatisfação com serviço",

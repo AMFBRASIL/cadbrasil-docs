@@ -6,7 +6,6 @@ import {
   SubTitle,
 } from "@/lib/docs-ui";
 import { LINKS, VIDEOS } from "@/content/videos";
-import { BOLETO_WA_LINKS_PAGAMENTO } from "@/content/solicitar-boleto-api";
 
 const WA_NOTE =
   "Enviar em blocos curtos no WhatsApp (ideal: 2–4 mensagens). Use os dados retornados pela API; omita linhas com valor null ou vazio. Formate CNPJ para exibição (XX.XXX.XXX/XXXX-XX).";
@@ -341,18 +340,17 @@ Olá! 👋 Consultamos seu cadastro e identificamos que sua empresa *já está n
 
 Enquanto o pagamento *não for confirmado*, os *níveis do SICAF não serão concluídos* e o credenciamento permanece *pendente*.
 
-${BOLETO_WA_LINKS_PAGAMENTO}
+💡 *Quer receber o boleto aqui no WhatsApp?*
+Basta pedir: *"quero pagar"* ou *"manda o boleto"* — enviamos o *link de pagamento* na hora.
 
-*(Preencher urlPagamento e linkPdf com o retorno de GET /api/clients/solicitar-boleto?cnpj=CNPJ — nunca usar linkBoleto.)*
-
-✅ *Outras formas de regularizar:*
+✅ *Como regularizar:*
 
 1️⃣ Acesse a página de pagamentos:
 👉 ${LINKS.pagamentos}
 
 2️⃣ Faça login e emita ou pague o boleto
 
-3️⃣ Os links acima vêm da API *solicitar-boleto* — campo *urlPagamento* (principal) e *linkPdf* (alternativa)
+3️⃣ Ou *peça o link aqui* — enviamos o campo *urlPagamento* da API solicitar-boleto
 
 📌 Compensação bancária: geralmente *1 a 3 dias úteis* após o pagamento.
 
@@ -363,13 +361,11 @@ ${FOOTER}`}</WhatsAppMessage>
         iaDo={
           <List
             items={[
-              "Informar: cadastro feito, pagamento pendente.",
+              "Informar: cadastro feito, pagamento pendente (consulta-cnpj apenas).",
               "Montar bloco com razaoSocial, cnpj, cliente.email, cliente.telefone, sicaf.status, sicaf.completude.",
-              `Orientar ${LINKS.pagamentos} para boleto e pagamento.`,
-              "Chamar GET /api/clients/solicitar-boleto?cnpj=CNPJ e enviar urlPagamento (link principal) + linkPdf (alternativa).",
-              "Nunca enviar linkBoleto nem escrever \"Link para pagamento: linkBoleto\".",
-              "Mencionar dataVencimento quando existir.",
-              "Se ainda tiver dúvida → pedir para falar com atendente (escalar).",
+              `Orientar ${LINKS.pagamentos} e convidar a pedir o boleto pelo WhatsApp.`,
+              "NÃO chamar solicitar-boleto nesta primeira resposta — só quando o cliente pedir boleto/link.",
+              "Mencionar dataVencimento de pagamentosResumo quando existir.",
             ]}
           />
         }
@@ -379,7 +375,8 @@ ${FOOTER}`}</WhatsAppMessage>
               "Dizer que o SICAF está ativo ou apto a licitar.",
               "Dizer que não há pendências.",
               "Inventar links de boleto.",
-              "Enviar linkBoleto ou pdfBoleto de pagamentosResumo — usar solicitar-boleto (urlPagamento + linkPdf).",
+              "Chamar solicitar-boleto automaticamente só por aguardando_pagamento.",
+              "Enviar linkBoleto ou urlPagamento sem pedido do cliente.",
             ]}
           />
         }
@@ -394,7 +391,7 @@ ${FOOTER}`}</WhatsAppMessage>
   "pagamentosResumo": {
     "sicafPendentes": [{ "valor": 985, "dataVencimento": "2026-07-10" }]
   },
-  "nota": "Para link ao cliente → GET /api/clients/solicitar-boleto (urlPagamento + linkPdf). Não usar linkBoleto.",
+  "nota": "Etapa 1: só consulta-cnpj. solicitar-boleto → quando cliente pedir boleto/link.",
   "urlPortal": "https://fornecedor.CADBRASIL Oficial.com.br"
 }`}</Code>
       </ScenarioBlock>

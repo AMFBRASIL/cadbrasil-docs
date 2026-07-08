@@ -409,11 +409,11 @@ Cliente informou CNPJ com menos ou mais de 14 dígitos, ou vazio.
 > ❓ Dúvidas? Solicite falar com um **atendente**.
 
 ### O que a IA deve fazer
-- Informar claramente: **cadastro feito, pagamento pendente**.
-- Orientar portal `urlPortal`.
-- Chamar `GET /api/clients/solicitar-boleto?cnpj={cnpj}` e enviar ao cliente o campo **urlPagamento** (link principal para ver boleto e pagar).
-- Se o cliente não conseguir abrir, informar também **linkPdf**.
-- **Não** enviar `linkBoleto` nem `pagamentosResumo.sicafPendentes[].linkBoleto` — esses campos não são o link de pagamento correto.
+- Informar claramente: **cadastro feito, pagamento pendente** (via consulta-cnpj).
+- Orientar portal `urlPortal` e página de pagamentos.
+- Convidar o cliente a pedir o boleto pelo WhatsApp se quiser o link.
+- **Não** chamar `solicitar-boleto` nesta primeira resposta.
+- Quando o cliente pedir boleto/link → `GET /api/clients/solicitar-boleto` → enviar **urlPagamento**.
 - Mencionar que `sicaf.completude` provavelmente está em 0% até pagar.
 
 ### O que a IA NÃO deve fazer

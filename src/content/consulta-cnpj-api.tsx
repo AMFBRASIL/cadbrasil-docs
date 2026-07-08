@@ -25,6 +25,15 @@ export const consultaCnpjSection: Section = {
         <code>orientacaoUsuario</code> na resposta ao cliente.
       </ShortAnswer>
 
+      <Callout tone="ok">
+        <strong>Etapa 1 — sempre primeiro após o CNPJ:</strong> esta API mostra
+        o processo completo do cliente (cadastro, SICAF, pendências, renovação).
+        Responda com o cenário A–H.{" "}
+        <strong>Não chame solicitar-boleto nesta etapa</strong> — mesmo se{" "}
+        <code>aguardando_pagamento</code>. O link de pagamento só quando o
+        cliente pedir boleto/pagamento/renovação (Etapa 2).
+      </Callout>
+
       <Callout tone="info">
         <strong>Como a IA deve usar esta API:</strong>
         <List
@@ -326,7 +335,7 @@ export const consultaCnpjSection: Section = {
           [
             "sicafPendentes[]",
             "array",
-            "Valor, status, dataVencimento. Link ao cliente → GET solicitar-boleto (urlPagamento + linkPdf). Não usar linkBoleto.",
+            "Valor, status, dataVencimento. Não enviar link aqui — aguardar pedido do cliente e usar solicitar-boleto (urlPagamento).",
           ],
           [
             "manutencaoPendentes[]",
@@ -396,10 +405,10 @@ export const consultaCnpjSection: Section = {
       <Callout tone="ok">
         <strong>Regra final para a IA:</strong> sempre priorize{" "}
         <code>orientacaoUsuario</code> quando existir. Nunca invente status,
-        valores ou links de boleto. Para enviar link de pagamento ao cliente, use{" "}
-        <code>GET /api/clients/solicitar-boleto</code> e o campo{" "}
-        <code>urlPagamento</code> (não <code>linkBoleto</code>). Alternativa:{" "}
-        <code>linkPdf</code>. Ver seção{" "}
+        valores ou links de boleto na consulta-cnpj. Para enviar link ao
+        cliente, aguarde pedido explícito (boleto, pagar, renovação) e use{" "}
+        <code>GET /api/clients/solicitar-boleto</code> — campo{" "}
+        <code>urlPagamento</code>. Ver{" "}
         <a href="#api-solicitar-boleto" className="underline underline-offset-4">
           API solicitar-boleto
         </a>

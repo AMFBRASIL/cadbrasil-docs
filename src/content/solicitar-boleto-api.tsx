@@ -16,17 +16,33 @@ const API_BASE = LINKS.portal;
 const ENDPOINT = `${API_BASE}/api/clients/solicitar-boleto?cnpj={14_dígitos}`;
 
 const WA_NOTE =
-  "Enviar em 1–2 blocos no WhatsApp. Use *asteriscos* para negrito. Preencha com dados da API — nunca invente valores, links ou datas. Formate dataVencimento para DD/MM/AAAA. O link que o cliente deve receber é sempre o campo urlPagamento.";
+  "Enviar em 1–2 blocos no WhatsApp. Use *asteriscos* para negrito. Copiar o valor literal do campo urlPagamento da API (ex.: https://fornecedor.cadbrasil.com.br/pay/t-636). Formate dataVencimento para DD/MM/AAAA. Nunca usar linkBoleto.";
 
-/** Bloco de links — urlPagamento (principal) + linkPdf (alternativa, se existir). */
-export const BOLETO_WA_LINKS_PAGAMENTO = `🔗 *Acesse para ver o boleto e pagar (PIX ou boleto):*
-👉 {urlPagamento}
+/**
+ * Bloco principal — o cliente DEVE ver o valor de urlPagamento.
+ * Preencher {urlPagamento} com o retorno exato da API.
+ */
+export const BOLETO_WA_LINKS_PAGAMENTO = `━━━━━━━━━━━━━━━━
 
-📄 *Não conseguiu abrir o link acima?* PDF do boleto:
-👉 {linkPdf}`;
+✅ *LINK DE PAGAMENTO*
+🔐 Página oficial CADBRASIL Oficial
 
-export const BOLETO_WA_LINKS_SOMENTE_URL = `🔗 *Acesse para ver o boleto e pagar (PIX ou boleto):*
-👉 {urlPagamento}`;
+👉 *{urlPagamento}*
+
+📌 Toque no link acima para *ver o boleto* e pagar por *PIX* ou *boleto bancário*.
+
+📄 *Não conseguiu abrir?* PDF do boleto:
+👉 {linkPdf}
+*(omitir bloco do PDF se linkPdf for null)*`;
+
+export const BOLETO_WA_LINKS_SOMENTE_URL = `━━━━━━━━━━━━━━━━
+
+✅ *LINK DE PAGAMENTO*
+🔐 Página oficial CADBRASIL Oficial
+
+👉 *{urlPagamento}*
+
+📌 Toque no link para *ver o boleto* e pagar por *PIX* ou *boleto bancário*.`;
 
 const FOOTER = `🔐 *CADBRASIL Oficial*
 Tecnologia, segurança e suporte para fornecedores do Brasil. 🇧🇷`;
@@ -41,31 +57,69 @@ function WhatsAppMessage({ children }: { children: string }) {
 }
 
 /**
- * Mensagem principal — quando o cliente pede boleto/link para pagar.
- * Ex.: "Quero pagar o boleto, pode me mandar?"
+ * Mensagem padrão de retorno — usar sempre que solicitar-boleto retornar
+ * pendentePagamento: true e urlPagamento preenchido.
  */
-export const BOLETO_WA_PEDIDO_CLIENTE = `🇧🇷 *CADBRASIL Oficial ®*
-💳 *Link de pagamento SICAF*
+export const BOLETO_WA_RETORNO_PADRAO = `🇧🇷 *CADBRASIL Oficial ®*
+💳 *Pagamento SICAF — link pronto para você*
 
-Olá! 👋 *Claro!* Consultei seu cadastro e já preparei seu pagamento.
+Olá! 👋 Conforme solicitado, consultei seu cadastro e preparei seu pagamento:
 
 🏢 *{razaoSocial}*
 
 ━━━━━━━━━━━━━━━━
 
 💰 *Valor:* {valorFormatado}
-📅 *Vencimento:* {dataVencimento} *(omitir se null)*
-📋 *Protocolo:* {protocolo} *(omitir se null)*
+📅 *Vencimento:* {dataVencimento}
+📋 *Protocolo:* {protocolo}
 
 ${BOLETO_WA_LINKS_PAGAMENTO}
 
-📌 Acesse o link acima — na página você escolhe *PIX* ou *boleto bancário* com total segurança.
+⏱️ *Após o pagamento:* compensação em *1 a 3 dias úteis*.
+Os *níveis do SICAF* são liberados na plataforma após a confirmação.
 
-⏱️ Após o pagamento: compensação em *1 a 3 dias úteis*. Os *níveis do SICAF* são liberados na plataforma após a confirmação.
-
-Qualquer dúvida, estamos à disposição! 😊
+❓ Qualquer dúvida, estamos à disposição!
 
 ${FOOTER}`;
+
+/** Exemplo preenchido (referência visual para a IA). */
+export const BOLETO_WA_EXEMPLO_PREENCHIDO = `🇧🇷 *CADBRASIL Oficial ®*
+💳 *Pagamento SICAF — link pronto para você*
+
+Olá! 👋 Conforme solicitado, consultei seu cadastro e preparei seu pagamento:
+
+🏢 *J A R E ASSESSORIA E CONSULTORIA DE SEGURANCA E EMPRESARIAL LTDA*
+
+━━━━━━━━━━━━━━━━
+
+💰 *Valor:* R$ 985,00
+📅 *Vencimento:* 13/07/2026
+📋 *Protocolo:* SICAF-2026-636
+
+━━━━━━━━━━━━━━━━
+
+✅ *LINK DE PAGAMENTO*
+🔐 Página oficial CADBRASIL Oficial
+
+👉 *https://fornecedor.cadbrasil.com.br/pay/t-636*
+
+📌 Toque no link acima para *ver o boleto* e pagar por *PIX* ou *boleto bancário*.
+
+📄 *Não conseguiu abrir?* PDF do boleto:
+👉 https://download.sejaefi.com.br/790387_6536_PACA8/790387-6536-DRAZE0.pdf
+
+⏱️ *Após o pagamento:* compensação em *1 a 3 dias úteis*.
+Os *níveis do SICAF* são liberados na plataforma após a confirmação.
+
+❓ Qualquer dúvida, estamos à disposição!
+
+${FOOTER}`;
+
+/**
+ * Mensagem principal — quando o cliente pede boleto/link para pagar.
+ * Ex.: "Quero pagar o boleto, pode me mandar?"
+ */
+export const BOLETO_WA_PEDIDO_CLIENTE = BOLETO_WA_RETORNO_PADRAO;
 
 /** Mensagem — só urlPagamento (sem PDF). */
 export const BOLETO_WA_SOMENTE_URL = `🇧🇷 *CADBRASIL Oficial ®*
@@ -85,7 +139,7 @@ ${BOLETO_WA_LINKS_SOMENTE_URL}
 
 ${FOOTER}`;
 
-/** Mensagens modelo — boleto reutilizado (pendente já existia). */
+/** Mensagens modelo — boleto reutilizado (boletoReutilizado: true). */
 export const BOLETO_WA_REUTILIZADO = `🇧🇷 *CADBRASIL Oficial ®*
 💳 *Boleto SICAF — pagamento pendente*
 
@@ -101,7 +155,7 @@ Olá! 👋 Localizei a *taxa SICAF pendente* da empresa:
 
 ${BOLETO_WA_LINKS_PAGAMENTO}
 
-📌 Este é o *mesmo boleto* já emitido — acesse o link para ver e pagar.
+📌 *Boleto já emitido* — o link acima (urlPagamento) continua válido para pagamento.
 
 ⏱️ Compensação: *1 a 3 dias úteis*. Níveis do SICAF liberados após confirmação.
 
@@ -240,10 +294,9 @@ const IA_NAO_ESCALAR = (
   <List
     items={[
       <>
-        <strong>Proibido</strong> escalar humano para &quot;quero pagar o
-        boleto&quot;, &quot;pode me mandar?&quot;, &quot;manda o link&quot;,
-        2ª via ou renovação — a IA <strong>deve</strong> chamar a API e enviar{" "}
-        <code>urlPagamento</code>.
+        <strong>Proibido</strong> escalar humano para envio de boleto.{" "}
+        <strong>Proibido</strong> chamar esta API no primeiro CNPJ — antes use{" "}
+        <code>consulta-cnpj</code>.
       </>,
       "Não dizer que vai encaminhar para atendente para enviar o link — a IA envia diretamente.",
       "Não enviar linkBoleto ao cliente — apenas urlPagamento (+ linkPdf se existir).",
@@ -278,14 +331,23 @@ function SolicitarBoletoScenarios() {
           <List
             items={[
               "Responder SIM — enviar o link. Não escalar humano.",
-              "Preencher urlPagamento com o valor exato retornado pela API (ex.: https://fornecedor.cadbrasil.com.br/pay/t-637).",
-              "Se linkPdf existir → incluir bloco alternativo. Se null → omitir linha do PDF.",
-              "Se pendentePagamento=false → usar mensagem sem pendência (não inventar link).",
+              "Se Etapa 1 (consulta-cnpj) ainda não foi feita nesta conversa, fazer antes ou usar CNPJ já informado.",
+              "Preencher urlPagamento com o valor exato da API.",
+              "Se linkPdf existir → bloco alternativo. Se null → só urlPagamento.",
             ]}
           />
         }
         iaDont={IA_NAO_ESCALAR}
-      />
+      >
+        <p className="mt-4 text-sm font-medium text-muted-foreground">
+          Retorno JSON (exemplo real)
+        </p>
+        <Code>{EXAMPLE_OK}</Code>
+        <p className="mt-4 text-sm font-medium text-muted-foreground">
+          Mensagem WhatsApp preenchida — link = urlPagamento da API
+        </p>
+        <WhatsAppMessage>{BOLETO_WA_EXEMPLO_PREENCHIDO}</WhatsAppMessage>
+      </ScenarioBlock>
 
       <ScenarioBlock
         title="Cenário 1 — Boleto com PDF (reutilizado ou gerado)"
@@ -440,12 +502,21 @@ export const solicitarBoletoSection: Section = {
   body: (
     <>
       <ShortAnswer>
-        Quando o cliente pedir boleto, link para pagar ou &quot;pode me
-        mandar?&quot; — a IA <strong>deve enviar o link</strong>, consultando{" "}
-        <code>GET /api/clients/solicitar-boleto?cnpj=CNPJ</code> e repassando o
-        campo <code>urlPagamento</code>. <strong>Não escalar humano</strong> para
-        isso.
+        <strong>Etapa 2</strong> — chamar somente quando o cliente{" "}
+        <strong>pedir explicitamente</strong> boleto, pagamento, 2ª via ou
+        renovação SICAF. <strong>Não</strong> acionar no primeiro CNPJ (use{" "}
+        <code>consulta-cnpj</code> antes). Envie <code>urlPagamento</code>. Não
+        escalar humano.
       </ShortAnswer>
+
+      <Callout tone="warn">
+        <strong>Não acionar no início:</strong> quando o cliente informa o CNPJ
+        pela primeira vez → apenas{" "}
+        <code>GET /api/clients/consulta-cnpj?cnpj=CNPJ</code> (processo completo).
+        Mesmo com <code>aguardando_pagamento</code>,{" "}
+        <strong>não</strong> chame solicitar-boleto até o cliente pedir boleto
+        ou link.
+      </Callout>
 
       <Callout tone="ok">
         <strong>Regra fixa — NÃO escalar humano:</strong> frases como &quot;Quero
@@ -460,10 +531,34 @@ export const solicitarBoletoSection: Section = {
         atendente enviar o link&quot;.
       </Callout>
 
+      <SubTitle>Quando acionar (gatilhos)</SubTitle>
+      <List
+        items={[
+          "Quero pagar o boleto / pode me mandar? / manda o link",
+          "Preciso pagar / quero pagar o SICAF / os R$ 985",
+          "2ª via / perdi o boleto / emitir boleto",
+          "Renovação SICAF / quero renovar",
+          "Link de pagamento / como pago",
+        ]}
+      />
+
+      <SubTitle>Quando NÃO acionar</SubTitle>
+      <List
+        items={[
+          "Primeiro CNPJ da conversa → só consulta-cnpj",
+          "Consulta de status sem pedido de boleto",
+          "aguardando_pagamento sem o cliente pedir link",
+        ]}
+      />
+
       <SubTitle>Frases do cliente → ação da IA</SubTitle>
       <DataTable
         headers={["Cliente diz", "IA faz"]}
         rows={[
+          [
+            "Cliente informou CNPJ (primeira vez)",
+            "Só consulta-cnpj — mostrar processo completo. NÃO solicitar-boleto",
+          ],
           [
             "Quero pagar o boleto / pode me mandar?",
             "Chama solicitar-boleto → envia urlPagamento (NÃO escalar)",
@@ -479,7 +574,7 @@ export const solicitarBoletoSection: Section = {
           ["Tem boleto pendente?", "Consulta API → envia link ou informa sem pendência"],
           [
             "CNPJ ainda não informado",
-            "Pedir CNPJ (14 dígitos) → depois chamar API",
+            "Pedir CNPJ (14 dígitos) → depois consulta-cnpj (Etapa 1)",
           ],
         ]}
       />
@@ -487,13 +582,13 @@ export const solicitarBoletoSection: Section = {
       <SubTitle>Fluxo obrigatório</SubTitle>
       <List
         items={[
-          "1. Cliente pede boleto/link → pedir CNPJ se ainda não tiver (14 dígitos)",
-          "2. GET /api/clients/solicitar-boleto?cnpj=CNPJ",
-          "3. Se pendentePagamento=true e urlPagamento existe → enviar mensagem com o link (texto BOLETO_WA_PEDIDO_CLIENTE)",
-          "4. Se linkPdf não for null → incluir como alternativa",
-          "5. Se pendentePagamento=false → informar sem pendência (sem inventar link)",
-          "6. NÃO escalar humano para enviar boleto — isso é função da IA",
-          "7. Escalar só: 404 após 2 tentativas, erro 500 repetido, ou dúvida não relacionada a boleto",
+          "0. Boas-vindas → pedir CNPJ",
+          "1. Cliente informa CNPJ → GET consulta-cnpj (Etapa 1 — status completo)",
+          "2. Cliente pede boleto/pagamento/renovação → GET solicitar-boleto (Etapa 2)",
+          "3. Se pendentePagamento=true → enviar urlPagamento (+ linkPdf se existir)",
+          "4. Se pendentePagamento=false → informar sem pendência",
+          "5. NÃO pular Etapa 1 na primeira identificação",
+          "6. NÃO escalar humano para enviar boleto",
         ]}
       />
 
@@ -513,14 +608,22 @@ export const solicitarBoletoSection: Section = {
 
       <SubTitle>Campo que o cliente deve receber</SubTitle>
       <Callout tone="info">
-        <strong>urlPagamento</strong> — único link principal. Exemplo real:{" "}
-        <code>https://fornecedor.cadbrasil.com.br/pay/t-637</code>
+        <strong>urlPagamento</strong> — único link principal. Copiar valor
+        literal da API, ex.:
         <br />
-        <strong>linkPdf</strong> — só se não null; frase &quot;se não conseguir
-        abrir o link&quot;.
+        <code>https://fornecedor.cadbrasil.com.br/pay/t-636</code>
+        <br />
+        <strong>linkPdf</strong> — alternativa; só se não null.
         <br />
         <strong>linkBoleto</strong> — não enviar ao cliente.
       </Callout>
+
+      <SubTitle>Exemplo visual — JSON → mensagem ao cliente</SubTitle>
+      <p className="mb-2 text-[13px] text-muted-foreground">
+        Quando a API retorna <code>urlPagamento</code>, a IA envia a mensagem
+        abaixo com esse link (nunca linkBoleto).
+      </p>
+      <WhatsAppMessage>{BOLETO_WA_EXEMPLO_PREENCHIDO}</WhatsAppMessage>
 
       <SubTitle>Retorno JSON — campos principais</SubTitle>
       <DataTable
