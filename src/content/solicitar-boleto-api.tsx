@@ -18,7 +18,7 @@ const API_BASE = LINKS.portal;
 const ENDPOINT = `${API_BASE}/api/clients/solicitar-boleto?cnpj={14_dígitos}`;
 
 const WA_IA_NOTE =
-  "Preencher {urlPagamento} com o link exato retornado pela API (ex.: https://fornecedor.cadbrasil.com.br/pay/t-636). Formate dataVencimento DD/MM/AAAA. Omitir bloco PDF se linkPdf for null. Nunca enviar linkBoleto. Não escrever urlPagamento, API ou nomes técnicos na mensagem ao cliente.";
+  "Link na mensagem = valor EXATO do campo urlPagamento (ex.: https://fornecedor.cadbrasil.com.br/pay/t-636). Mesmo que linkBoleto venha igual — usar só urlPagamento. dataVencimento ISO → DD/MM/AAAA (13/07/2026). linkPdf só se não null. Não enviar codigoBarras, message, email* ao cliente. Não escrever nomes de campos na mensagem.";
 
 /**
  * Bloco principal — o cliente DEVE ver o valor de urlPagamento.
@@ -241,7 +241,40 @@ Olá! 👋 Não localizei cadastro para este CNPJ na CADBRASIL Oficial.
 
 ${FOOTER}`;
 
-const JSON_SUCESSO_COMPLETO = `{
+const JSON_REAL_REUTILIZADO = `{
+  "ok": true,
+  "possuiCadastro": true,
+  "clienteId": 192803,
+  "cnpj": "01744605000150",
+  "razaoSocial": "J A R E ASSESSORIA E CONSULTORIA DE SEGURANCA E EMPRESARIAL LTDA",
+  "pendentePagamento": true,
+  "valor": 985,
+  "valorFormatado": "R$ 985,00",
+  "linkPdf": "https://download.sejaefi.com.br/790387_6536_PACA8/790387-6536-DRAZE0.pdf",
+  "linkBoleto": "https://fornecedor.cadbrasil.com.br/pay/t-636",
+  "codigoBarras": "36490.00050 00079.038709 00000.065367 6 00000000098500",
+  "protocolo": "SICAF-2026-636",
+  "dataVencimento": "2026-07-13T03:00:00.000Z",
+  "taxaId": 636,
+  "pagamentoId": 1350,
+  "payCode": "t-636",
+  "urlPagamento": "https://fornecedor.cadbrasil.com.br/pay/t-636",
+  "URLpagamento": "https://fornecedor.cadbrasil.com.br/pay/t-636",
+  "boletoReutilizado": true,
+  "geradoAgora": false,
+  "renovacaoAntecipada": false,
+  "diasParaRenovacao": null,
+  "sicafValidoAte": null,
+  "message": "Boleto ou pagamento pendente localizado. URL de pagamento online retornada.",
+  "emailEnviado": true,
+  "emailPara": "licitacao@suat.com.br",
+  "emailAssunto": "Taxa CADBRASIL pendente — regularize seu cadastro — J A R E ASSESSORIA E CONSULTORIA DE SEGURANCA E EMPRESARIAL LTDA",
+  "emailSimulado": false,
+  "emailErro": null
+}`;
+
+/** Exemplo quando geradoAgora: true (boleto novo nesta chamada). */
+const JSON_GERADO_AGORA = `{
   "ok": true,
   "possuiCadastro": true,
   "clienteId": 123,
@@ -251,20 +284,13 @@ const JSON_SUCESSO_COMPLETO = `{
   "valor": 985,
   "valorFormatado": "R$ 985,00",
   "linkPdf": "https://...",
-  "linkBoleto": "https://...",
-  "codigoBarras": "34191...",
+  "linkBoleto": "https://fornecedor.cadbrasil.com.br/pay/t-637",
   "protocolo": "SICAF-2026-637",
   "dataVencimento": "2026-07-12",
-  "taxaId": 637,
-  "pagamentoId": 891,
-  "payCode": "t-637",
   "urlPagamento": "https://fornecedor.cadbrasil.com.br/pay/t-637",
   "URLpagamento": "https://fornecedor.cadbrasil.com.br/pay/t-637",
   "boletoReutilizado": false,
   "geradoAgora": true,
-  "renovacaoAntecipada": false,
-  "diasParaRenovacao": null,
-  "sicafValidoAte": null,
   "message": "Novo boleto SICAF gerado com vencimento em 5 dias."
 }`;
 
@@ -292,7 +318,8 @@ const IA_NAO_ESCALAR = (
         <code>consulta-cnpj</code>.
       </>,
       "Não dizer que vai encaminhar para atendente para enviar o link — a IA envia diretamente.",
-      "Não enviar linkBoleto ao cliente — apenas urlPagamento (+ linkPdf se existir).",
+      "Não enviar linkBoleto ao cliente — sempre urlPagamento (mesmo se os dois vierem com a mesma URL).",
+      "Não enviar codigoBarras, message, emailEnviado, emailPara nem campos email* ao cliente.",
     ]}
   />
 );
@@ -325,8 +352,9 @@ function SolicitarBoletoScenarios() {
             items={[
               "Responder SIM — enviar o link. Não escalar humano.",
               "Se Etapa 1 (consulta-cnpj) ainda não foi feita nesta conversa, fazer antes ou usar CNPJ já informado.",
-              "Preencher urlPagamento com o valor exato da API.",
-              "Se linkPdf existir → bloco alternativo. Se null → só urlPagamento.",
+              "Copiar na mensagem o valor literal de urlPagamento (ex.: https://fornecedor.cadbrasil.com.br/pay/t-636).",
+              "Se boletoReutilizado: true → BOLETO_WA_REUTILIZADO; se geradoAgora: true → BOLETO_WA_GERADO_AGORA; senão BOLETO_WA_PEDIDO_CLIENTE.",
+              "Se linkPdf existir → bloco PDF alternativo. Se null → omitir.",
             ]}
           />
         }
@@ -335,22 +363,24 @@ function SolicitarBoletoScenarios() {
         <p className="mt-4 text-sm font-medium text-muted-foreground">
           Retorno JSON (exemplo real)
         </p>
-        <Code>{JSON_SUCESSO_COMPLETO}</Code>
+        <Code>{JSON_REAL_REUTILIZADO}</Code>
         <p className="mt-4 text-sm font-medium text-muted-foreground">
-          Mensagem WhatsApp preenchida — link = urlPagamento da API
+          Mensagem ao cliente — link copiado de{" "}
+          <code>urlPagamento</code> (não linkBoleto)
         </p>
         <ClienteWhatsApp iaNote={WA_IA_NOTE}>{BOLETO_WA_EXEMPLO_PREENCHIDO}</ClienteWhatsApp>
       </ScenarioBlock>
 
       <ScenarioBlock
-        title="Cenário 1 — Boleto com PDF (reutilizado ou gerado)"
-        badge="pendentePagamento"
+        title="Cenário 1 — Boleto reutilizado (boletoReutilizado: true)"
+        badge="boletoReutilizado"
         tone="ok"
         when={
           <>
             <code>ok: true</code> · <code>pendentePagamento: true</code> ·{" "}
-            <code>urlPagamento</code> preenchido · <code>linkPdf</code> pode
-            existir
+            <code>urlPagamento</code> preenchido ·{" "}
+            <code>boletoReutilizado: true</code> · <code>geradoAgora: false</code>
+            . Exemplo real abaixo (CNPJ 01744605000150).
           </>
         }
         clientMessage={
@@ -361,14 +391,32 @@ function SolicitarBoletoScenarios() {
         iaDo={
           <List
             items={[
-              "Link ao cliente = valor de urlPagamento (nunca linkBoleto).",
-              "linkPdf como alternativa se o cliente não abrir o link.",
+              "Link ao cliente = valor de urlPagamento (nunca linkBoleto, mesmo URL igual).",
+              "linkPdf como alternativa se o cliente não abrir o link principal.",
+              "dataVencimento ISO → exibir 13/07/2026 na mensagem.",
             ]}
           />
         }
         iaDont={IA_NAO_ESCALAR}
       >
-        <Code>{JSON_SUCESSO_COMPLETO}</Code>
+        <Code>{JSON_REAL_REUTILIZADO}</Code>
+      </ScenarioBlock>
+
+      <ScenarioBlock
+        title="Cenário 1b — Boleto gerado agora (geradoAgora: true)"
+        badge="geradoAgora"
+        tone="ok"
+        when={
+          <>
+            <code>geradoAgora: true</code> · <code>boletoReutilizado: false</code>
+          </>
+        }
+        clientMessage={
+          <ClienteWhatsApp iaNote={WA_IA_NOTE}>{BOLETO_WA_GERADO_AGORA}</ClienteWhatsApp>
+        }
+        iaDont={IA_NAO_ESCALAR}
+      >
+        <Code>{JSON_GERADO_AGORA}</Code>
       </ScenarioBlock>
 
       <ScenarioBlock
@@ -495,12 +543,19 @@ export const solicitarBoletoSection: Section = {
   body: (
     <>
       <ShortAnswer>
-        <strong>Etapa 2</strong> — chamar somente quando o cliente{" "}
-        <strong>pedir explicitamente</strong> boleto, pagamento, 2ª via ou
-        renovação SICAF. <strong>Não</strong> acionar no primeiro CNPJ (use{" "}
-        <code>consulta-cnpj</code> antes). Envie <code>urlPagamento</code>. Não
-        escalar humano.
+        Cliente pede boleto/link → chamar API → enviar ao cliente o valor de{" "}
+        <code>urlPagamento</code> na mensagem WhatsApp. É o link oficial de
+        pagamento (ex.: <code>https://fornecedor.cadbrasil.com.br/pay/t-636</code>
+        ). Não escalar humano.
       </ShortAnswer>
+
+      <Callout tone="ok">
+        <strong>Regra do link (obrigatória):</strong> na resposta JSON, copie{" "}
+        <strong>somente</strong> o campo <code>urlPagamento</code> (ou{" "}
+        <code>URLpagamento</code>) para o link que o cliente vê.{" "}
+        <strong>Nunca</strong> usar <code>linkBoleto</code> — mesmo quando vier
+        com a mesma URL. <code>linkPdf</code> só como alternativa opcional.
+      </Callout>
 
       <Callout tone="warn">
         <strong>Não acionar no início:</strong> quando o cliente informa o CNPJ
@@ -635,6 +690,47 @@ export const solicitarBoletoSection: Section = {
       />
       <Endpoint method="GET" url={ENDPOINT} />
 
+      <SubTitle>Mapeamento API → mensagem WhatsApp</SubTitle>
+      <DataTable
+        headers={["Campo JSON", "Enviar ao cliente?", "Como usar"]}
+        rows={[
+          [
+            "urlPagamento / URLpagamento",
+            "SIM — obrigatório",
+            "Copiar URL literal no 👉 link da mensagem (único link principal)",
+          ],
+          [
+            "linkBoleto",
+            "NÃO",
+            "Ignorar — mesmo se igual a urlPagamento; nunca enviar ao cliente",
+          ],
+          ["linkPdf", "SIM (opcional)", "Bloco PDF alternativo se não null"],
+          ["valorFormatado", "SIM", "Linha Valor na mensagem"],
+          ["razaoSocial", "SIM", "Nome da empresa"],
+          ["protocolo", "SIM", "Ex.: SICAF-2026-636"],
+          [
+            "dataVencimento",
+            "SIM",
+            "Converter ISO para DD/MM/AAAA (2026-07-13 → 13/07/2026)",
+          ],
+          [
+            "boletoReutilizado / geradoAgora",
+            "Não (só IA)",
+            "true/false → escolher BOLETO_WA_REUTILIZADO ou BOLETO_WA_GERADO_AGORA",
+          ],
+          ["codigoBarras", "NÃO", "Não colar na mensagem WhatsApp"],
+          ["message", "NÃO", "Texto interno da API"],
+          ["emailEnviado, emailPara, email*", "NÃO", "Dados internos — não mencionar ao cliente"],
+        ]}
+      />
+
+      <SubTitle>Retorno JSON real — boleto reutilizado</SubTitle>
+      <p className="mb-2 text-[13px] text-muted-foreground">
+        Exemplo de produção: pendência localizada, link em{" "}
+        <code>urlPagamento</code>. A IA envia esse link na mensagem.
+      </p>
+      <Code>{JSON_REAL_REUTILIZADO}</Code>
+
       <SubTitle>Instruções internas — campos da API</SubTitle>
       <IaInstrucao>
         O cliente recebe o <strong>link</strong> (valor do campo urlPagamento).
@@ -642,14 +738,15 @@ export const solicitarBoletoSection: Section = {
         nomes de campo na mensagem WhatsApp.
       </IaInstrucao>
       <Callout tone="info">
-        <strong>urlPagamento</strong> — único link principal. Copiar valor
-        literal da API, ex.:
+        <strong>urlPagamento</strong> — único link que o cliente recebe. Exemplo
+        real:
         <br />
         <code>https://fornecedor.cadbrasil.com.br/pay/t-636</code>
         <br />
-        <strong>linkPdf</strong> — alternativa; só se não null.
+        <strong>linkBoleto</strong> — pode vir preenchido com URL parecida;{" "}
+        <strong>ignorar</strong> e usar só urlPagamento.
         <br />
-        <strong>linkBoleto</strong> — não enviar ao cliente.
+        <strong>linkPdf</strong> — alternativa PDF; só se não null.
       </Callout>
 
       <SubTitle>Exemplo visual — mensagem ao cliente</SubTitle>
@@ -663,12 +760,14 @@ export const solicitarBoletoSection: Section = {
       <DataTable
         headers={["Campo", "Tipo", "Uso para IA"]}
         rows={[
-          ["urlPagamento", "string", "ENVIAR AO CLIENTE — link de pagamento"],
-          ["URLpagamento", "string", "Alias de urlPagamento"],
-          ["pendentePagamento", "boolean", "true = há taxa em aberto"],
-          ["valorFormatado", "string", "Ex.: R$ 985,00"],
-          ["linkPdf", "string|null", "Alternativa se cliente não abrir urlPagamento"],
-          ["linkBoleto", "string|null", "Não enviar ao cliente"],
+          ["urlPagamento", "string", "ENVIAR AO CLIENTE — único link na mensagem"],
+          ["URLpagamento", "string", "Alias — mesmo valor que urlPagamento"],
+          ["linkBoleto", "string|null", "NÃO enviar — ignorar mesmo se = urlPagamento"],
+          ["linkPdf", "string|null", "Alternativa PDF se cliente não abrir link"],
+          ["codigoBarras", "string", "NÃO enviar ao cliente"],
+          ["emailEnviado, emailPara, email*", "vários", "Interno — não mencionar ao cliente"],
+          ["pendentePagamento", "boolean", "true = enviar link; false = sem pendência"],
+          ["valorFormatado", "string", "Ex.: R$ 985,00 — linha Valor na mensagem"],
           ["razaoSocial", "string", "Nome na mensagem"],
           ["dataVencimento", "string", "Formatar DD/MM/AAAA"],
           ["protocolo", "string", "Ex.: SICAF-2026-637"],
