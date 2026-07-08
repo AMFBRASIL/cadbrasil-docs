@@ -110,10 +110,11 @@ Tecnologia, segurança e suporte para fornecedores do Brasil. 🇧🇷`}</Code>
 
         <SubTitle>Ordem das APIs (resumo)</SubTitle>
         <Callout tone="info">
-          <strong>Etapa 1 — Identificação:</strong> CNPJ →{" "}
-          <code>consulta-cnpj</code> (sempre primeiro).
+          <strong>Etapa 1 — consulta-cnpj:</strong> CNPJ → situação da empresa,
+          indicadores, pendências, orientações. <strong>Sem link de boleto.</strong>
           <br />
-          <strong>Etapa 2 — Boleto:</strong> somente quando o cliente pedir → ver{" "}
+          <strong>Etapa 2 — solicitar-boleto:</strong> quando o cliente pedir
+          boleto/link → enviar <code>urlPagamento</code> na mensagem WhatsApp. Ver{" "}
           <a
             href="#api-solicitar-boleto"
             className="underline underline-offset-4"
@@ -151,11 +152,13 @@ Tecnologia, segurança e suporte para fornecedores do Brasil. 🇧🇷`}</Code>
         </H>
         <H>
           <strong>APIs:</strong> substitua <code>CNPJ</code> pelos 14 dígitos.{" "}
-          Identificação →{" "}
+          <strong>consulta-cnpj</strong> = consultar empresa e indicadores (sem
+          link de boleto). <strong>solicitar-boleto</strong> = enviar link de
+          pagamento quando o cliente pedir. Ver{" "}
           <a href="#api-consulta-cnpj" className="underline underline-offset-4">
             consulta-cnpj
-          </a>
-          . Boleto/pagamento (quando o cliente pedir) →{" "}
+          </a>{" "}
+          e{" "}
           <a
             href="#api-solicitar-boleto"
             className="underline underline-offset-4"
@@ -182,10 +185,11 @@ Tecnologia, segurança e suporte para fornecedores do Brasil. 🇧🇷`}</Code>
               enviar <code>urlCadastro</code> + taxa R$ 985
             </>,
             <>
-              <code>aguardando_pagamento</code> → informar pagamento pendente e
-              orientar portal — ver cenário D em{" "}
-              <a href="#api-consulta-cnpj" className="underline underline-offset-4">
-                consulta-cnpj
+              <code>aguardando_pagamento</code> → informar pendência e portal
+              (consulta-cnpj <strong>sem link</strong>) — ver cenário D. Cliente
+              pedir boleto →{" "}
+              <a href="#api-solicitar-boleto" className="underline underline-offset-4">
+                solicitar-boleto
               </a>
             </>,
             <>

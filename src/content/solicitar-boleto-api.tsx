@@ -542,6 +542,12 @@ export const solicitarBoletoSection: Section = {
   title: "API solicitar-boleto — boleto, 2ª via e renovação SICAF",
   body: (
     <>
+      <Callout tone="warn">
+        <strong>Única API que envia link ao cliente:</strong> solicitar-boleto.
+        A consulta-cnpj <strong>não traz</strong> urlPagamento nem link de boleto —
+        só informa pendência e convida o cliente a pedir o link.
+      </Callout>
+
       <ShortAnswer>
         Cliente pede boleto/link → chamar API → enviar ao cliente o valor de{" "}
         <code>urlPagamento</code> na mensagem WhatsApp. É o link oficial de

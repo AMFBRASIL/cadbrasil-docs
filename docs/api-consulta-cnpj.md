@@ -317,18 +317,19 @@ Cliente informou CNPJ com menos ou mais de 14 dígitos, ou vazio.
 
 ### Quando ocorre
 - Cliente **já está** na base CADBRASIL Oficial (`possuiCadastro: true`)
-- Tem registro SICAF, mas **taxa de credenciamento não foi paga** (`sicafValido: false`)
-- `sicaf.status` geralmente **Pendente** e/ou há boletos em `pagamentosResumo`
+- Tem registro SICAF, mas **taxa de credenciamento não foi paga** (`sicafValido: false`, `possuiPagamentoPendente: true`)
+- `sicaf.status` geralmente **Pendente**
 
 ### Campos principais
-`possuiPagamentoPendente: true` · `valorTotalPendente` · `pagamentosResumo` · `urlPortal` · objetos `cliente` e `sicaf`
+`valorTotalPendente` · `pagamentosResumo` (somente totais) · `urlPortal` · `orientacaoUsuario` · `cliente` · `sicaf` · `renovacao`
 
-### Exemplo completo de resposta
+**Esta API não retorna link de boleto.** Link → `solicitar-boleto`.
+
+### Exemplo completo de resposta (produção)
 ```json
 {
   "ok": true,
-  "cnpj": "35270386000136",
-  "situacaoCadastro": "aguardando_pagamento",
+  "cnpj": "01744605000150",
   "possuiCadastro": true,
   "cadastroConcluido": true,
   "cadastroValido": false,
@@ -336,86 +337,67 @@ Cliente informou CNPJ com menos ou mais de 14 dígitos, ou vazio.
   "possuiRenovacao": false,
   "possuiManutencao": false,
   "possuiPagamentoPendente": true,
-  "razaoSocial": "35.270.386 BARBARA GLACIELE DA CONCEICAO",
-  "urlCadastro": "https://cadastro.CADBRASIL Oficial.com.br",
-  "urlPortal": "https://fornecedor.CADBRASIL Oficial.com.br",
-  "valorTotalPendente": 985,
+  "razaoSocial": "J A R E ASSESSORIA E CONSULTORIA DE SEGURANCA E EMPRESARIAL LTDA",
+  "urlCadastro": "https://cadastro.cadbrasil.com.br",
+  "urlPortal": "https://fornecedor.cadbrasil.com.br",
   "cliente": {
-    "id": 192547,
-    "razaoSocial": "35.270.386 BARBARA GLACIELE DA CONCEICAO",
-    "documento": "35.270.386/0001-36",
-    "email": "barbaraglaciely@gmail.com",
+    "id": 192803,
+    "razaoSocial": "J A R E ASSESSORIA E CONSULTORIA DE SEGURANCA E EMPRESARIAL LTDA",
+    "nomeFantasia": "SUAT",
+    "email": "licitacao@suat.com.br",
+    "telefone": "1120626798",
     "status": "Ativo"
   },
   "sicaf": {
-    "id": 192546,
+    "id": 192802,
     "status": "Pendente",
     "valido": false,
-    "dataValidade": null,
-    "diasValidade": 0,
     "completude": 0
   },
-  "renovacao": null,
+  "renovacao": {
+    "id": 6250,
+    "status": "Pendente",
+    "anoReferencia": 2026
+  },
   "manutencao": null,
+  "situacaoCadastro": "aguardando_pagamento",
+  "valorTotalPendente": 985,
   "pagamentosResumo": {
     "totalPendentes": 1,
     "valorTotalPendente": 985,
-    "sicafPendentes": [
-      {
-        "valor": 985,
-        "status": "Pendente",
-        "dataVencimento": "2026-07-10",
-        "linkBoleto": "https://...",
-        "pdfBoleto": "https://...pdf"
-      }
-    ],
     "manutencaoPendentes": []
   },
   "message": "Cadastro SICAF identificado com pagamento pendente de R$ 985,00.",
-  "orientacaoUsuario": "A empresa 35.270.386 BARBARA GLACIELE DA CONCEICAO já possui cadastro SICAF na CADBRASIL Oficial, porém o pagamento da taxa de credenciamento ainda está em aberto no valor de R$ 985,00. Para dar continuidade ao processo e liberar a conclusão dos níveis do SICAF, acesse o Portal do Fornecedor em https://fornecedor.CADBRASIL Oficial.com.br, faça login com sua conta e regularize o pagamento. Enquanto o pagamento não for confirmado, os níveis do credenciamento SICAF não serão concluídos e sua empresa permanecerá com o credenciamento pendente.",
-  "orientacaoIA": "O CNPJ pertence a 35.270.386 BARBARA GLACIELE DA CONCEICAO, que já possui cadastro SICAF na CADBRASIL Oficial, mas ainda não quitou a taxa de credenciamento (R$ 985,00). Oriente o cliente a acessar https://fornecedor.CADBRASIL Oficial.com.br, entrar com login e senha e efetuar o pagamento pendente para concluir os níveis do SICAF. Sem a regularização do pagamento, o credenciamento permanece incompleto (status Pendente) e os níveis do SICAF não serão liberados."
+  "orientacaoUsuario": "A empresa J A R E ASSESSORIA... acesse o Portal do Fornecedor em https://fornecedor.cadbrasil.com.br...",
+  "orientacaoIA": "Oriente o cliente a regularizar o pagamento pendente (R$ 985,00). Sem link nesta API — usar solicitar-boleto se pedir boleto."
 }
 ```
 
-### Mensagem completa para o cliente (IA — enviar em blocos WhatsApp)
+### Mensagem para o cliente (Etapa 1 — sem link)
 
-**Bloco 1 — Identificação**
-> 🇧🇷 **CADBRASIL Oficial ®**  
-> 💬 **Consulta de CNPJ — Resultado**  
->  
-> Olá! 👋 Sua empresa **já está na CADBRASIL Oficial**, porém há **pagamento pendente** do credenciamento SICAF.
+Informar situação, valor pendente, portal e **convidar** a pedir o boleto. **Não enviar link** nesta mensagem.
 
-**Bloco 2 — Dados da empresa**
-> 🏢 **Razão Social:** {razaoSocial}  
-> 🔢 **CNPJ:** {cnpj}  
-> 📧 **E-mail:** {cliente.email}  
-> 📊 **Status SICAF:** {sicaf.status} — {sicaf.completude}% concluído
-
-**Bloco 3 — Pendência financeira**
+**Bloco 3 — Pendência**
 > 💳 **Pagamento em aberto:** R$ {valorTotalPendente},00  
-> 📅 **Vencimento:** {dataVencimento}  
 > ⚠️ Enquanto não pagar, os **níveis do SICAF não serão concluídos**.
 
 **Bloco 4 — Regularização**
 > ✅ **Como pagar:**  
-> 1️⃣ 👉 **https://fornecedor.cadbrasil.com.br/pagamentos**  
-> 2️⃣ Login → emitir/pagar boleto  
-> 3️⃣ Ou peça aqui no WhatsApp: *"pode me mandar o boleto"* — enviamos o link na hora  
->  
-> 📌 Compensação: 1 a 3 dias úteis  
-> ❓ Dúvidas? Solicite falar com um **atendente**.
+> 1️⃣ Portal: https://fornecedor.cadbrasil.com.br  
+> 2️⃣ Pagamentos: https://fornecedor.cadbrasil.com.br/pagamentos  
+> 3️⃣ Ou peça aqui: *"pode me mandar o boleto"* — enviamos o link na hora
 
 ### O que a IA deve fazer
-- Informar claramente: **cadastro feito, pagamento pendente** (via consulta-cnpj).
-- Orientar portal `urlPortal` e página de pagamentos.
-- Convidar o cliente a pedir o boleto pelo WhatsApp com linguagem simples (sem citar API ou campos).
+- Informar: **cadastro feito, pagamento pendente** (só consulta-cnpj).
+- Usar `orientacaoUsuario`, `valorTotalPendente`, dados de `cliente` e `sicaf`.
+- Convidar o cliente a pedir o boleto pelo WhatsApp.
 - **Não** chamar `solicitar-boleto` nesta primeira resposta.
-- Quando o cliente pedir boleto/link → `GET /api/clients/solicitar-boleto` → enviar o **link de pagamento** (valor de urlPagamento — só o link, não o nome do campo).
-- Mencionar que `sicaf.completude` provavelmente está em 0% até pagar.
+- Cliente pedir boleto/link → `GET /api/clients/solicitar-boleto` → enviar **urlPagamento**.
 
 ### O que a IA NÃO deve fazer
-- Dizer que o SICAF está ativo ou apto a licitar.
-- Dizer que não há pendências.
+- Enviar link de pagamento nesta etapa (consulta-cnpj não tem link).
+- Buscar `urlPagamento` ou `linkBoleto` no JSON da consulta-cnpj.
+- Dizer que o SICAF está ativo.
 
 ---
 

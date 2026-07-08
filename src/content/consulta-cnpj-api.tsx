@@ -19,11 +19,42 @@ export const consultaCnpjSection: Section = {
   body: (
     <>
       <ShortAnswer>
-        GET /api/clients/consulta-cnpj?cnpj=CNPJ — consulta situação do cliente
-        na CADBRASIL Oficial e, se necessário, na Receita Federal. Leia{" "}
-        <code>situacaoCadastro</code> para definir o cenário. Priorize{" "}
-        <code>orientacaoUsuario</code> na resposta ao cliente.
+        <strong>Etapa 1 — só consulta.</strong> GET /api/clients/consulta-cnpj?cnpj=CNPJ
+        informa situação da empresa, indicadores SICAF, pendências e orientações.{" "}
+        <strong>Não retorna link de boleto/pagamento.</strong> Para enviar link ao
+        cliente →{" "}
+        <a href="#api-solicitar-boleto" className="underline underline-offset-4">
+          API solicitar-boleto
+        </a>{" "}
+        (Etapa 2).
       </ShortAnswer>
+
+      <Callout tone="warn">
+        <strong>Esta API não envia boleto:</strong> use consulta-cnpj apenas para
+        identificar o cliente, montar o cenário (A–H) e informar status/valores.
+        O campo <code>pagamentosResumo</code> traz <strong>totais</strong> — sem
+        URLs de pagamento. Link de boleto → exclusivamente{" "}
+        <code>solicitar-boleto</code> → <code>urlPagamento</code>.
+      </Callout>
+
+      <SubTitle>consulta-cnpj vs solicitar-boleto</SubTitle>
+      <DataTable
+        headers={["API", "Quando", "O que retorna", "Link ao cliente?"]}
+        rows={[
+          [
+            "consulta-cnpj",
+            "Cliente informa CNPJ (Etapa 1)",
+            "situacaoCadastro, cliente, sicaf, valorTotalPendente, orientacaoUsuario",
+            "Não — só informar e convidar a pedir o boleto",
+          ],
+          [
+            "solicitar-boleto",
+            "Cliente pede boleto/link/pagar (Etapa 2)",
+            "urlPagamento, linkPdf, valorFormatado, protocolo",
+            "Sim — enviar urlPagamento na mensagem WhatsApp",
+          ],
+        ]}
+      />
 
       <Callout tone="ok">
         <strong>Etapa 1 — sempre primeiro após o CNPJ:</strong> esta API mostra
@@ -45,7 +76,7 @@ export const consultaCnpjSection: Section = {
               resposta) → <code>orientacaoIA</code> (roteiro interno) →{" "}
               <code>message</code> (resumo).
             </>,
-            "Nunca invente valores, prazos, links de boleto ou status.",
+            "Nunca invente valores, prazos ou links de pagamento — esta API não traz link de boleto.",
             <>
               Não trate como cliente ativo quem tem{" "}
               <code>possuiCadastro: false</code>, mesmo que{" "}
@@ -162,8 +193,10 @@ export const consultaCnpjSection: Section = {
           [
             "possuiPagamentoPendente",
             "boolean",
-            "Há taxa/boleto SICAF ou manutenção em aberto",
+            "Há taxa SICAF ou manutenção em aberto (sem link nesta API)",
           ],
+          ["possuiRenovacao", "boolean", "Há registro de renovação"],
+          ["possuiManutencao", "boolean", "Há manutenção ativa"],
           ["cadastroConcluido", "boolean", "true se cadastrado na base"],
           [
             "cadastroValido",
@@ -199,8 +232,8 @@ export const consultaCnpjSection: Section = {
           [
             "aguardando_pagamento",
             "Objetivo",
-            "Pagar taxa SICAF",
-            "fornecedor.CADBRASIL Oficial.com.br/pagamentos + boleto",
+            "Informar pendência R$ 985 + portal — convidar a pedir boleto",
+            "urlPortal / pagamentos (sem link de boleto nesta API)",
           ],
           [
             "sicaf_vencido",
@@ -326,21 +359,30 @@ export const consultaCnpjSection: Section = {
         ]}
       />
 
-      <SubTitle>Objeto pagamentosResumo</SubTitle>
+      <SubTitle>Objetos renovacao e manutencao</SubTitle>
       <DataTable
         headers={["Campo", "Tipo", "Descrição"]}
         rows={[
-          ["totalPendentes", "number", "Quantidade de boletos em aberto"],
-          ["valorTotalPendente", "number", "Soma dos valores pendentes"],
-          [
-            "sicafPendentes[]",
-            "array",
-            "Valor, status, dataVencimento. Não enviar link aqui — aguardar pedido do cliente e usar solicitar-boleto (urlPagamento).",
-          ],
+          ["renovacao", "object|null", "Renovação SICAF (status, anoReferencia)"],
+          ["manutencao", "object|null", "Manutenção mensal, se houver"],
+        ]}
+      />
+
+      <SubTitle>Objeto pagamentosResumo (somente totais — sem links)</SubTitle>
+      <Callout tone="info">
+        A consulta-cnpj informa <strong>quantos</strong> e <strong>quanto</strong> está
+        pendente. <strong>Não inclui</strong> urlPagamento, linkBoleto nem PDF. Para
+        o link → solicitar-boleto.
+      </Callout>
+      <DataTable
+        headers={["Campo", "Tipo", "Descrição"]}
+        rows={[
+          ["totalPendentes", "number", "Quantidade de pendências financeiras"],
+          ["valorTotalPendente", "number", "Soma em reais (ex.: 985)"],
           [
             "manutencaoPendentes[]",
             "array",
-            "Boletos de manutenção pendentes",
+            "Resumo manutenção (sem link de pagamento nesta API)",
           ],
         ]}
       />
@@ -403,11 +445,9 @@ export const consultaCnpjSection: Section = {
       />
 
       <Callout tone="ok">
-        <strong>Regra final para a IA:</strong> sempre priorize{" "}
-        <code>orientacaoUsuario</code> quando existir. Nunca invente status,
-        valores ou links de boleto na consulta-cnpj. Para enviar link ao
-        cliente, aguarde pedido explícito (boleto, pagar, renovação) e use{" "}
-        <code>GET /api/clients/solicitar-boleto</code> — campo{" "}
+        <strong>Regra final:</strong> consulta-cnpj = consultar e informar. Nunca
+        inventar link de pagamento nesta etapa. Cliente pediu boleto/link →{" "}
+        <code>GET /api/clients/solicitar-boleto</code> → enviar{" "}
         <code>urlPagamento</code>. Ver{" "}
         <a href="#api-solicitar-boleto" className="underline underline-offset-4">
           API solicitar-boleto

@@ -14,6 +14,52 @@ const WA_IA_NOTE =
 const FOOTER = `🔐 *CADBRASIL Oficial*
 Tecnologia, segurança e suporte para fornecedores do Brasil. 🇧🇷`;
 
+/** Retorno real consulta-cnpj — aguardando_pagamento (sem link de boleto). */
+const JSON_AGUARDANDO_PAGAMENTO = `{
+  "ok": true,
+  "cnpj": "01744605000150",
+  "possuiCadastro": true,
+  "cadastroConcluido": true,
+  "cadastroValido": false,
+  "sicafValido": false,
+  "possuiRenovacao": false,
+  "possuiManutencao": false,
+  "possuiPagamentoPendente": true,
+  "razaoSocial": "J A R E ASSESSORIA E CONSULTORIA DE SEGURANCA E EMPRESARIAL LTDA",
+  "urlCadastro": "https://cadastro.cadbrasil.com.br",
+  "urlPortal": "https://fornecedor.cadbrasil.com.br",
+  "cliente": {
+    "id": 192803,
+    "razaoSocial": "J A R E ASSESSORIA E CONSULTORIA DE SEGURANCA E EMPRESARIAL LTDA",
+    "nomeFantasia": "SUAT",
+    "email": "licitacao@suat.com.br",
+    "telefone": "1120626798",
+    "status": "Ativo"
+  },
+  "sicaf": {
+    "id": 192802,
+    "status": "Pendente",
+    "valido": false,
+    "completude": 0
+  },
+  "renovacao": {
+    "id": 6250,
+    "status": "Pendente",
+    "anoReferencia": 2026
+  },
+  "manutencao": null,
+  "situacaoCadastro": "aguardando_pagamento",
+  "valorTotalPendente": 985,
+  "pagamentosResumo": {
+    "totalPendentes": 1,
+    "valorTotalPendente": 985,
+    "manutencaoPendentes": []
+  },
+  "message": "Cadastro SICAF identificado com pagamento pendente de R$ 985,00.",
+  "orientacaoUsuario": "...(texto completo para o cliente)...",
+  "orientacaoIA": "...(roteiro interno — não copiar literal ao cliente)..."
+}`;
+
 export function ConsultaCnpjScenarios() {
   return (
     <>
@@ -289,12 +335,14 @@ ${FOOTER}`}</ClienteWhatsApp>
         }
         fields={
           <>
-            <code>valorTotalPendente</code> · <code>pagamentosResumo</code> ·{" "}
-            <code>urlPortal</code> · objetos <code>cliente</code> e <code>sicaf</code>
+            <code>valorTotalPendente</code> · <code>pagamentosResumo.totalPendentes</code>{" "}
+            · <code>urlPortal</code> · <code>orientacaoUsuario</code> · objetos{" "}
+            <code>cliente</code>, <code>sicaf</code>, <code>renovacao</code>.{" "}
+            <strong>Sem link de boleto nesta API.</strong>
           </>
         }
         clientMessage={
-          <ClienteWhatsApp>{`🇧🇷 *CADBRASIL Oficial ®*
+          <ClienteWhatsApp iaNote="Etapa 1 — só informar. Sem link de pagamento nesta mensagem. Se o cliente pedir boleto em seguida → solicitar-boleto.">{`🇧🇷 *CADBRASIL Oficial ®*
 💬 *Consulta de CNPJ — Resultado*
 
 Olá! 👋 Consultamos seu cadastro e identificamos que sua empresa *já está na base CADBRASIL Oficial*, porém há *pagamento pendente* para conclusão do credenciamento SICAF.
@@ -322,65 +370,61 @@ Olá! 👋 Consultamos seu cadastro e identificamos que sua empresa *já está n
 
 ⚠️ *Pagamento da taxa SICAF em aberto*
 💰 *Valor pendente:* R$ {valorTotalPendente},00
-📅 *Vencimento:* {pagamentosResumo.sicafPendentes[0].dataVencimento}
 
 Enquanto o pagamento *não for confirmado*, os *níveis do SICAF não serão concluídos* e o credenciamento permanece *pendente*.
 
-💡 *Quer receber o boleto aqui no WhatsApp?*
-Basta pedir: *"quero pagar"* ou *"manda o boleto"* — enviamos o *link de pagamento* na hora.
+💡 *Quer o link de pagamento aqui no WhatsApp?*
+Basta pedir: *"pode me mandar o boleto"* ou *"quero pagar"* — enviamos o *link na hora*.
 
 ✅ *Como regularizar:*
 
-1️⃣ Acesse a página de pagamentos:
+1️⃣ Acesse o portal do fornecedor:
+👉 ${LINKS.portal}
+
+2️⃣ Ou a página de pagamentos:
 👉 ${LINKS.pagamentos}
 
-2️⃣ Faça login e emita ou pague o boleto
-
-3️⃣ Ou peça aqui mesmo: *"pode me mandar o boleto"* — enviamos o link na hora
+3️⃣ Ou peça aqui mesmo: *"manda o boleto"* — enviamos o link de pagamento
 
 📌 Compensação bancária: geralmente *1 a 3 dias úteis* após o pagamento.
 
-❓ Precisa de ajuda? Solicite falar com um *atendente*! 📞
+❓ Precisa de ajuda? Estamos à disposição!
 
 ${FOOTER}`}</ClienteWhatsApp>
         }
         iaDo={
           <List
             items={[
-              "Informar: cadastro feito, pagamento pendente (consulta-cnpj apenas).",
-              "Montar bloco com razaoSocial, cnpj, cliente.email, cliente.telefone, sicaf.status, sicaf.completude.",
-              `Orientar ${LINKS.pagamentos} e convidar a pedir o boleto pelo WhatsApp (linguagem simples, sem citar API).`,
-              "Se o cliente pedir na sequência (ex.: pode me mandar o boleto) → Etapa 2 solicitar-boleto e enviar link — NÃO escalar humano.",
-              "NÃO chamar solicitar-boleto nesta primeira resposta — só quando o cliente pedir boleto/link.",
-              "Mencionar dataVencimento de pagamentosResumo quando existir.",
+              "Etapa 1 apenas: informar cadastro feito + pagamento pendente (consulta-cnpj).",
+              "Usar orientacaoUsuario como base; montar bloco com razaoSocial, cnpj, cliente, sicaf.",
+              "Informar valorTotalPendente e urlPortal — sem link de boleto nesta resposta.",
+              "Convidar o cliente a pedir o boleto pelo WhatsApp (linguagem simples).",
+              "Cliente pedir boleto/link na sequência → Etapa 2 solicitar-boleto → urlPagamento.",
+              "NÃO chamar solicitar-boleto automaticamente nesta primeira resposta.",
             ]}
           />
         }
         iaDont={
           <List
             items={[
+              "Enviar link de pagamento nesta etapa — consulta-cnpj não retorna link.",
+              "Buscar urlPagamento ou linkBoleto no JSON da consulta-cnpj (não existem).",
               "Dizer que o SICAF está ativo ou apto a licitar.",
-              "Dizer que não há pendências.",
-              "Inventar links de boleto.",
-              "Chamar solicitar-boleto automaticamente só por aguardando_pagamento.",
-              "Copiar texto técnico (urlPagamento, solicitar-boleto, nomes de API) na mensagem ao cliente.",
+              "Inventar vencimento ou link de boleto.",
+              "Chamar solicitar-boleto sem o cliente pedir.",
+              "Copiar orientacaoIA ou nomes de API/campos na mensagem ao cliente.",
             ]}
           />
         }
       >
-        <Code>{`{
-  "situacaoCadastro": "aguardando_pagamento",
-  "possuiCadastro": true,
-  "sicafValido": false,
-  "possuiPagamentoPendente": true,
-  "valorTotalPendente": 985,
-  "sicaf": { "status": "Pendente", "valido": false, "completude": 0 },
-  "pagamentosResumo": {
-    "sicafPendentes": [{ "valor": 985, "dataVencimento": "2026-07-10" }]
-  },
-  "nota": "Etapa 1: só consulta-cnpj. solicitar-boleto → quando cliente pedir boleto/link.",
-  "urlPortal": "https://fornecedor.CADBRASIL Oficial.com.br"
-}`}</Code>
+        <Code>{JSON_AGUARDANDO_PAGAMENTO}</Code>
+        <p className="mt-3 text-[13px] text-muted-foreground">
+          Link de pagamento → somente após pedido do cliente, via{" "}
+          <a href="#api-solicitar-boleto" className="underline underline-offset-4">
+            solicitar-boleto
+          </a>
+          .
+        </p>
       </ScenarioBlock>
 
       <ScenarioBlock
