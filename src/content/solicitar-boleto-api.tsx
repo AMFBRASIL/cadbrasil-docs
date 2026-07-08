@@ -16,14 +16,17 @@ const API_BASE = LINKS.portal;
 const ENDPOINT = `${API_BASE}/api/clients/solicitar-boleto?cnpj={14_dígitos}`;
 
 const WA_NOTE =
-  "Enviar em 1–2 blocos no WhatsApp. Use *asteriscos* para negrito. Preencha com dados da API — nunca invente valores, links ou datas. Formate dataVencimento para DD/MM/AAAA (horário de Brasília). O cliente deve receber o campo urlPagamento como link principal; linkPdf só como alternativa se não conseguir abrir.";
+  "Enviar em 1–2 blocos no WhatsApp. Use *asteriscos* para negrito. Preencha com dados da API — nunca invente valores, links ou datas. Formate dataVencimento para DD/MM/AAAA. O link que o cliente deve receber é sempre o campo urlPagamento.";
 
-/** Bloco de links — urlPagamento (principal) + linkPdf (alternativa). */
-export const BOLETO_WA_LINKS_PAGAMENTO = `🔗 *Link de pagamento — acesse para ver o boleto e pagar (PIX ou boleto):*
+/** Bloco de links — urlPagamento (principal) + linkPdf (alternativa, se existir). */
+export const BOLETO_WA_LINKS_PAGAMENTO = `🔗 *Acesse para ver o boleto e pagar (PIX ou boleto):*
 👉 {urlPagamento}
 
-📄 *Não conseguiu abrir o link acima?* Acesse também o PDF do boleto:
+📄 *Não conseguiu abrir o link acima?* PDF do boleto:
 👉 {linkPdf}`;
+
+export const BOLETO_WA_LINKS_SOMENTE_URL = `🔗 *Acesse para ver o boleto e pagar (PIX ou boleto):*
+👉 {urlPagamento}`;
 
 const FOOTER = `🔐 *CADBRASIL Oficial*
 Tecnologia, segurança e suporte para fornecedores do Brasil. 🇧🇷`;
@@ -37,11 +40,56 @@ function WhatsAppMessage({ children }: { children: string }) {
   );
 }
 
+/**
+ * Mensagem principal — quando o cliente pede boleto/link para pagar.
+ * Ex.: "Quero pagar o boleto, pode me mandar?"
+ */
+export const BOLETO_WA_PEDIDO_CLIENTE = `🇧🇷 *CADBRASIL Oficial ®*
+💳 *Link de pagamento SICAF*
+
+Olá! 👋 *Claro!* Consultei seu cadastro e já preparei seu pagamento.
+
+🏢 *{razaoSocial}*
+
+━━━━━━━━━━━━━━━━
+
+💰 *Valor:* {valorFormatado}
+📅 *Vencimento:* {dataVencimento} *(omitir se null)*
+📋 *Protocolo:* {protocolo} *(omitir se null)*
+
+${BOLETO_WA_LINKS_PAGAMENTO}
+
+📌 Acesse o link acima — na página você escolhe *PIX* ou *boleto bancário* com total segurança.
+
+⏱️ Após o pagamento: compensação em *1 a 3 dias úteis*. Os *níveis do SICAF* são liberados na plataforma após a confirmação.
+
+Qualquer dúvida, estamos à disposição! 😊
+
+${FOOTER}`;
+
+/** Mensagem — só urlPagamento (sem PDF). */
+export const BOLETO_WA_SOMENTE_URL = `🇧🇷 *CADBRASIL Oficial ®*
+💳 *Link de pagamento SICAF*
+
+Olá! 👋 Consultei seu cadastro da *{razaoSocial}* e localizei a taxa pendente.
+
+━━━━━━━━━━━━━━━━
+
+💰 *Valor:* {valorFormatado}
+
+${BOLETO_WA_LINKS_SOMENTE_URL}
+
+📌 Acesse o link — você poderá pagar por *PIX* ou *boleto* na página oficial da CADBRASIL Oficial.
+
+⏱️ Compensação bancária: *1 a 3 dias úteis*.
+
+${FOOTER}`;
+
 /** Mensagens modelo — boleto reutilizado (pendente já existia). */
 export const BOLETO_WA_REUTILIZADO = `🇧🇷 *CADBRASIL Oficial ®*
 💳 *Boleto SICAF — pagamento pendente*
 
-Olá! 👋 Consultei o cadastro e localizei a *taxa SICAF pendente* da empresa:
+Olá! 👋 Localizei a *taxa SICAF pendente* da empresa:
 
 🏢 *{razaoSocial}*
 
@@ -53,19 +101,17 @@ Olá! 👋 Consultei o cadastro e localizei a *taxa SICAF pendente* da empresa:
 
 ${BOLETO_WA_LINKS_PAGAMENTO}
 
-📌 Este é o *mesmo boleto* já emitido — acesse o *link de pagamento* acima para ver o boleto e concluir o pagamento.
+📌 Este é o *mesmo boleto* já emitido — acesse o link para ver e pagar.
 
-⏱️ Após o pagamento, a compensação leva *1 a 3 dias úteis*. Os *níveis do SICAF* são liberados na plataforma após a confirmação.
-
-❓ Dúvidas? Solicite falar com um *atendente*.
+⏱️ Compensação: *1 a 3 dias úteis*. Níveis do SICAF liberados após confirmação.
 
 ${FOOTER}`;
 
 /** Mensagens modelo — boleto gerado na hora. */
 export const BOLETO_WA_GERADO_AGORA = `🇧🇷 *CADBRASIL Oficial ®*
-💳 *Guia de pagamento SICAF gerada*
+💳 *Guia de pagamento gerada agora*
 
-Olá! 👋 Para a empresa *{razaoSocial}*, *gerei agora* sua guia de pagamento SICAF:
+Olá! 👋 Para *{razaoSocial}*, *gerei agora* sua guia de pagamento SICAF:
 
 ━━━━━━━━━━━━━━━━
 
@@ -75,11 +121,9 @@ Olá! 👋 Para a empresa *{razaoSocial}*, *gerei agora* sua guia de pagamento S
 
 ${BOLETO_WA_LINKS_PAGAMENTO}
 
-📌 Guia *nova* com vencimento em até *5 dias úteis* — acesse o *link de pagamento* para ver o boleto e liberar os *níveis do SICAF* na plataforma CADBRASIL Oficial.
+📌 Guia *nova* — vencimento em até *5 dias úteis*. Acesse o link para pagar e liberar os *níveis do SICAF*.
 
-⏱️ Compensação bancária: *1 a 3 dias úteis* após o pagamento.
-
-❓ Precisa de ajuda? Estamos à disposição!
+⏱️ Compensação: *1 a 3 dias úteis*.
 
 ${FOOTER}`;
 
@@ -87,50 +131,45 @@ ${FOOTER}`;
 export const BOLETO_WA_RENOVACAO = `🇧🇷 *CADBRASIL Oficial ®*
 🔄 *Renovação SICAF — pagamento disponível*
 
-Olá! 👋 Consultei o cadastro da *{razaoSocial}* e localizei a *renovação SICAF* disponível para pagamento:
+Olá! 👋 Para *{razaoSocial}*, localizei a *renovação SICAF* disponível:
 
 ━━━━━━━━━━━━━━━━
 
 💰 *Valor:* {valorFormatado}
 📅 *Vencimento:* {dataVencimento}
 📋 *Protocolo:* {protocolo}
-📆 *SICAF válido até:* {sicafValidoAte} *(omitir linha se null)*
+📆 *SICAF válido até:* {sicafValidoAte} *(omitir se null)*
 
 ${BOLETO_WA_LINKS_PAGAMENTO}
 
-📌 Regularize a renovação pelo *link de pagamento* para manter seu cadastro *ativo* e continuar licitando com segurança.
+📌 Regularize pelo link acima para manter o cadastro *ativo*.
 
-⏱️ Compensação: *1 a 3 dias úteis* após o pagamento.
-
-❓ Dúvidas sobre renovação ou documentos? Solicite um *atendente*.
+⏱️ Compensação: *1 a 3 dias úteis*.
 
 ${FOOTER}`;
 
 /** Mensagens modelo — sem pendência. */
 export const BOLETO_WA_SEM_PENDENCIA = `🇧🇷 *CADBRASIL Oficial ®*
-💬 *Consulta de boleto SICAF*
+💬 *Consulta de pagamento SICAF*
 
-Olá! 👋 Consultei o cadastro da empresa *{razaoSocial}*.
+Olá! 👋 Consultei o cadastro da *{razaoSocial}*.
 
 ✅ No momento *não há taxa SICAF pendente* de pagamento.
 
 ━━━━━━━━━━━━━━━━
 
-📌 Isso pode significar:
-• Pagamento já *confirmado* ou em compensação bancária
-• Credenciamento *em dia* quanto à taxa de R$ 985
-• Renovação ainda *não disponível* para emissão
+📌 Pode significar:
+• Pagamento já *confirmado* ou em compensação
+• Credenciamento *em dia*
+• Renovação ainda *não disponível* {diasParaRenovacao — incluir se vier na API}
 
-🔍 *Acompanhe seu cadastro:*
+🔍 *Portal do fornecedor:*
 👉 ${LINKS.portal}
 
-📋 *Central de ajuda:*
-👉 ${LINKS.ajuda}
-
-💳 *Outras taxas ou manutenção:*
+💳 *Outras taxas:*
 👉 ${LINKS.pagamentos}
 
-❓ Precisa de *renovação*, *2ª via*, documentos ou suporte? Informe sua dúvida ou solicite falar com um *atendente*.
+Se precisar de ajuda com documentos ou renovação, informe sua dúvida.
 
 ${FOOTER}`;
 
@@ -138,169 +177,190 @@ ${FOOTER}`;
 export const BOLETO_WA_NAO_CADASTRO = `🇧🇷 *CADBRASIL Oficial ®*
 💬 *Consulta de boleto*
 
-Olá! 👋 Consultei o CNPJ informado e *não localizei cadastro* na base CADBRASIL Oficial.
+Olá! 👋 Não localizei cadastro para este CNPJ na CADBRASIL Oficial.
 
 ━━━━━━━━━━━━━━━━
 
-📌 Para emitir boleto de credenciamento SICAF, é necessário *iniciar o cadastro* primeiro:
+📌 Para obter o boleto de credenciamento SICAF:
 
-1️⃣ Acesse o cadastro:
+1️⃣ Inicie o cadastro:
 👉 ${LINKS.cadastro}
 
-2️⃣ Conclua as etapas iniciais do processo
+2️⃣ Conclua as etapas iniciais
 
-3️⃣ Depois, informe seu CNPJ aqui — consulto e envio o boleto
+3️⃣ Informe seu CNPJ aqui — consulto e envio o link de pagamento
 
-💡 *Valor do credenciamento assistido:* R$ 985,00 (serviço CADBRASIL Oficial — não é taxa do governo)
-
-❓ Já se cadastrou e não encontramos? Solicite falar com um *atendente*.
+💡 Credenciamento assistido: *R$ 985,00* (serviço CADBRASIL Oficial)
 
 ${FOOTER}`;
 
-const EXAMPLE_OK = `{
+const JSON_SUCESSO_COMPLETO = `{
   "ok": true,
   "possuiCadastro": true,
-  "clienteId": 192803,
-  "cnpj": "01744605000150",
-  "razaoSocial": "J A R E ASSESSORIA E CONSULTORIA DE SEGURANCA E EMPRESARIAL LTDA",
+  "clienteId": 123,
+  "cnpj": "28552323000107",
+  "razaoSocial": "EMPRESA EXEMPLO LTDA",
   "pendentePagamento": true,
   "valor": 985,
   "valorFormatado": "R$ 985,00",
-  "linkPdf": "https://download.sejaefi.com.br/790387_6536_PACA8/790387-6536-DRAZE0.pdf",
-  "linkBoleto": "https://visualizacao.gerencianet.com.br/emissao/790387_6536_PACA8/A4XB-790387-6536-DRAZE0",
-  "codigoBarras": "36490.00050 00079.038709 00000.065367 6 00000000098500",
-  "protocolo": "SICAF-2026-636",
-  "dataVencimento": "2026-07-13T03:00:00.000Z",
-  "taxaId": 636,
-  "pagamentoId": 1350,
-  "payCode": "t-636",
-  "urlPagamento": "https://fornecedor.cadbrasil.com.br/pay/t-636",
-  "URLpagamento": "https://fornecedor.cadbrasil.com.br/pay/t-636",
-  "boletoReutilizado": true,
-  "geradoAgora": false,
+  "linkPdf": "https://...",
+  "linkBoleto": "https://...",
+  "codigoBarras": "34191...",
+  "protocolo": "SICAF-2026-637",
+  "dataVencimento": "2026-07-12",
+  "taxaId": 637,
+  "pagamentoId": 891,
+  "payCode": "t-637",
+  "urlPagamento": "https://fornecedor.cadbrasil.com.br/pay/t-637",
+  "URLpagamento": "https://fornecedor.cadbrasil.com.br/pay/t-637",
+  "boletoReutilizado": false,
+  "geradoAgora": true,
   "renovacaoAntecipada": false,
   "diasParaRenovacao": null,
   "sicafValidoAte": null,
-  "message": "Boleto ou pagamento pendente localizado. URL de pagamento online retornada."
+  "message": "Novo boleto SICAF gerado com vencimento em 5 dias."
 }`;
+
+const JSON_SOMENTE_URL = `{
+  "ok": true,
+  "possuiCadastro": true,
+  "pendentePagamento": true,
+  "valor": 985,
+  "valorFormatado": "R$ 985,00",
+  "linkPdf": null,
+  "linkBoleto": null,
+  "urlPagamento": "https://fornecedor.cadbrasil.com.br/pay/t-637",
+  "URLpagamento": "https://fornecedor.cadbrasil.com.br/pay/t-637",
+  "boletoReutilizado": true,
+  "geradoAgora": false,
+  "message": "Taxa SICAF pendente localizada. Utilize a URL de pagamento online."
+}`;
+
+const IA_NAO_ESCALAR = (
+  <List
+    items={[
+      <>
+        <strong>Proibido</strong> escalar humano para &quot;quero pagar o
+        boleto&quot;, &quot;pode me mandar?&quot;, &quot;manda o link&quot;,
+        2ª via ou renovação — a IA <strong>deve</strong> chamar a API e enviar{" "}
+        <code>urlPagamento</code>.
+      </>,
+      "Não dizer que vai encaminhar para atendente para enviar o link — a IA envia diretamente.",
+      "Não enviar linkBoleto ao cliente — apenas urlPagamento (+ linkPdf se existir).",
+    ]}
+  />
+);
 
 function SolicitarBoletoScenarios() {
   return (
     <>
       <ScenarioBlock
-        title="Cenário 1 — Boleto pendente reutilizado"
-        badge="boletoReutilizado"
+        title="Pedido do cliente — “Quero pagar / pode me mandar o boleto?”"
+        badge="enviar_agora"
         tone="ok"
         when={
           <>
-            <code>ok: true</code> · <code>pendentePagamento: true</code> ·{" "}
-            <code>boletoReutilizado: true</code> · <code>geradoAgora: false</code>
+            Cliente pede boleto, link de pagamento, 2ª via ou &quot;pode me
+            mandar?&quot; — com CNPJ válido (ou já informado na conversa).
           </>
         }
         fields={
           <>
-            Enviar ao cliente o campo <code>urlPagamento</code> (ou{" "}
-            <code>URLpagamento</code> se vazio) como link principal ·{" "}
-            <code>linkPdf</code> como alternativa · <code>valorFormatado</code> ·{" "}
-            <code>dataVencimento</code> · <code>protocolo</code> ·{" "}
-            <code>razaoSocial</code>. Não enviar <code>linkBoleto</code> ao
-            cliente — usar apenas <code>urlPagamento</code> + <code>linkPdf</code>.
+            Chamar <code>GET /api/clients/solicitar-boleto?cnpj=CNPJ</code> →
+            enviar <code>urlPagamento</code> na mensagem. Usar texto{" "}
+            <strong>BOLETO_WA_PEDIDO_CLIENTE</strong> abaixo.
           </>
         }
         clientMessage={
-          <WhatsAppMessage>{BOLETO_WA_REUTILIZADO}</WhatsAppMessage>
+          <WhatsAppMessage>{BOLETO_WA_PEDIDO_CLIENTE}</WhatsAppMessage>
         }
         iaDo={
           <List
             items={[
-              "Cliente pediu boleto, 2ª via, taxa, renovação ou \"tem pendência?\" — este é o retorno mais comum.",
-              "Enviar o valor exato do campo urlPagamento — é o link que o cliente deve abrir para ver o boleto e pagar.",
-              "Informar linkPdf como alternativa: \"se não conseguir abrir o link, use o PDF\".",
-              "Não enviar linkBoleto ao cliente — apenas urlPagamento + linkPdf.",
-              "Formatar dataVencimento (ex.: 13/07/2026).",
-              "Mencionar compensação 1–3 dias úteis.",
-              "Nunca inventar codigoBarras ou links.",
+              "Responder SIM — enviar o link. Não escalar humano.",
+              "Preencher urlPagamento com o valor exato retornado pela API (ex.: https://fornecedor.cadbrasil.com.br/pay/t-637).",
+              "Se linkPdf existir → incluir bloco alternativo. Se null → omitir linha do PDF.",
+              "Se pendentePagamento=false → usar mensagem sem pendência (não inventar link).",
             ]}
           />
         }
+        iaDont={IA_NAO_ESCALAR}
+      />
+
+      <ScenarioBlock
+        title="Cenário 1 — Boleto com PDF (reutilizado ou gerado)"
+        badge="pendentePagamento"
+        tone="ok"
+        when={
+          <>
+            <code>ok: true</code> · <code>pendentePagamento: true</code> ·{" "}
+            <code>urlPagamento</code> preenchido · <code>linkPdf</code> pode
+            existir
+          </>
+        }
+        clientMessage={
+          <WhatsAppMessage>
+            {`Use BOLETO_WA_PEDIDO_CLIENTE, BOLETO_WA_REUTILIZADO ou BOLETO_WA_GERADO_AGORA conforme boletoReutilizado / geradoAgora.`}
+          </WhatsAppMessage>
+        }
+        iaDo={
+          <List
+            items={[
+              "Link ao cliente = valor de urlPagamento (nunca linkBoleto).",
+              "linkPdf como alternativa se o cliente não abrir o link.",
+            ]}
+          />
+        }
+        iaDont={IA_NAO_ESCALAR}
       >
-        <Code>{EXAMPLE_OK}</Code>
+        <Code>{JSON_SUCESSO_COMPLETO}</Code>
       </ScenarioBlock>
 
       <ScenarioBlock
-        title="Cenário 2 — Boleto gerado agora"
-        badge="geradoAgora"
+        title="Cenário 2 — Só pagamento online (sem PDF)"
+        badge="linkPdf_null"
         tone="ok"
         when={
           <>
-            <code>ok: true</code> · <code>pendentePagamento: true</code> ·{" "}
-            <code>geradoAgora: true</code>
-          </>
-        }
-        fields={
-          <>
-            Mesmos campos do cenário 1. Vencimento costuma ser *5 dias úteis*
-            a partir da geração.
+            <code>pendentePagamento: true</code> · <code>urlPagamento</code>{" "}
+            preenchido · <code>linkPdf: null</code>
           </>
         }
         clientMessage={
-          <WhatsAppMessage>{BOLETO_WA_GERADO_AGORA}</WhatsAppMessage>
+          <WhatsAppMessage>{BOLETO_WA_SOMENTE_URL}</WhatsAppMessage>
         }
         iaDo={
           <List
             items={[
-              "Destacar que a guia foi *gerada agora* (não é reutilização).",
-              "Enviar urlPagamento (link principal) + linkPdf (alternativa se não abrir).",
-              "Reforçar que níveis SICAF liberam após confirmação do pagamento.",
+              "Enviar apenas urlPagamento — suficiente para PIX e boleto.",
+              "Não escalar — enviar o link diretamente.",
             ]}
           />
         }
-      />
+        iaDont={IA_NAO_ESCALAR}
+      >
+        <Code>{JSON_SOMENTE_URL}</Code>
+      </ScenarioBlock>
 
       <ScenarioBlock
         title="Cenário 3 — Renovação antecipada"
         badge="renovacaoAntecipada"
         tone="info"
-        when={
-          <>
-            <code>ok: true</code> · <code>pendentePagamento: true</code> ·{" "}
-            <code>renovacaoAntecipada: true</code>
-          </>
-        }
-        fields={
-          <>
-            Incluir <code>sicafValidoAte</code> e{" "}
-            <code>diasParaRenovacao</code> quando não forem null.
-          </>
-        }
+        when={<code>renovacaoAntecipada: true</code>}
         clientMessage={
           <WhatsAppMessage>{BOLETO_WA_RENOVACAO}</WhatsAppMessage>
         }
-        iaDo={
-          <List
-            items={[
-              "Cliente pediu renovação do SICAF ou boleto de renovação.",
-              "Tom consultivo — regularizar antes do vencimento.",
-              "Se renovacaoAntecipada=false mas cliente pediu renovação, use cenário 1 ou 2 conforme boletoReutilizado/geradoAgora.",
-            ]}
-          />
-        }
+        iaDont={IA_NAO_ESCALAR}
       />
 
       <ScenarioBlock
-        title="Cenário 4 — Sem pendência"
+        title="Cenário 4 — Cliente em dia (sem pendência)"
         badge="sem_pendencia"
         tone="info"
         when={
           <>
-            <code>ok: true</code> · <code>possuiCadastro: true</code> ·{" "}
-            <code>pendentePagamento: false</code>
-          </>
-        }
-        fields={
-          <>
-            Usar <code>razaoSocial</code> · <code>message</code> da API como
-            referência interna.
+            <code>ok: true</code> · <code>pendentePagamento: false</code> — sem{" "}
+            <code>urlPagamento</code>
           </>
         }
         clientMessage={
@@ -309,11 +369,8 @@ function SolicitarBoletoScenarios() {
         iaDo={
           <List
             items={[
-              "Não enviar links de boleto inventados.",
-              "Orientar portal, ajuda e pagamentos.",
-              "Se cliente insistir que pagou há pouco → compensação 1–3 dias úteis.",
-              "Se cliente pedir manutenção mensal (R$ 155) → consultar GET /api/clients/consulta-boletos?cnpj=CNPJ.",
-              "Dúvida persistente → escalar atendente.",
+              "Informar que não há boleto pendente — não inventar urlPagamento.",
+              "Usar message da API como referência interna.",
             ]}
           />
         }
@@ -322,31 +379,23 @@ function SolicitarBoletoScenarios() {
   "ok": true,
   "possuiCadastro": true,
   "pendentePagamento": false,
-  "urlPagamento": null,
-  "linkPdf": null,
-  "message": "Cliente sem pendência de pagamento da taxa SICAF."
+  "diasParaRenovacao": 120,
+  "message": "Cliente em dia. Renovação antecipada disponível entre 30 e 60 dias antes do vencimento."
 }`}</Code>
       </ScenarioBlock>
 
       <ScenarioBlock
-        title="Cenário 5 — Cliente não cadastrado"
-        badge="nao_cadastrado"
+        title="Cenário 5 — CNPJ não cadastrado"
+        badge="404"
         tone="warn"
-        when={
-          <>
-            <code>ok: false</code> ou <code>possuiCadastro: false</code> — HTTP
-            404 em alguns casos
-          </>
-        }
+        when={<>HTTP 404 · <code>possuiCadastro: false</code></>}
         clientMessage={
           <WhatsAppMessage>{BOLETO_WA_NAO_CADASTRO}</WhatsAppMessage>
         }
         iaDo={
           <List
             items={[
-              "Orientar cadastro em cadastro.cadbrasil.com.br.",
-              "Não prometer boleto antes do cadastro.",
-              "Se cliente insiste que já é cliente após 2 tentativas → escalar humano.",
+              "Orientar cadastro. Escalar só se cliente insiste após 2 tentativas.",
             ]}
           />
         }
@@ -354,8 +403,31 @@ function SolicitarBoletoScenarios() {
         <Code>{`{
   "ok": false,
   "possuiCadastro": false,
+  "cnpj": "28552323000107",
   "error": "Cliente não encontrado para este CNPJ."
 }`}</Code>
+      </ScenarioBlock>
+
+      <ScenarioBlock
+        title="Erros da API — quando escalar"
+        badge="erro"
+        tone="warn"
+        when={<>HTTP 401, 500 ou falha ao gerar boleto</>}
+        iaDo={
+          <List
+            items={[
+              "401 → problema de API Key (interno). Não escalar cliente por boleto.",
+              "500 → informar indisponibilidade temporária; tentar novamente ou escalar só se falhar 2x.",
+              "CNPJ inválido 400 → pedir 14 dígitos (não escalar).",
+            ]}
+          />
+        }
+      >
+        <Code>{`// 400
+{ "ok": false, "error": "CNPJ inválido. Informe 14 dígitos." }
+
+// 500
+{ "ok": false, "error": "Erro ao gerar boleto SICAF", "taxaId": null }`}</Code>
       </ScenarioBlock>
     </>
   );
@@ -368,49 +440,60 @@ export const solicitarBoletoSection: Section = {
   body: (
     <>
       <ShortAnswer>
-        Sempre que o cliente pedir boleto, 2ª via, taxa SICAF, renovação,
-        pagamento ou perguntar se há boleto pendente — peça o CNPJ (14 dígitos)
-        e chame{" "}
-        <code>GET /api/clients/solicitar-boleto?cnpj=CNPJ</code>. Use os
-        textos WhatsApp desta seção conforme o retorno da API.
+        Quando o cliente pedir boleto, link para pagar ou &quot;pode me
+        mandar?&quot; — a IA <strong>deve enviar o link</strong>, consultando{" "}
+        <code>GET /api/clients/solicitar-boleto?cnpj=CNPJ</code> e repassando o
+        campo <code>urlPagamento</code>. <strong>Não escalar humano</strong> para
+        isso.
       </ShortAnswer>
 
       <Callout tone="ok">
-        <strong>Regra fixa para a IA:</strong> qualquer pedido de boleto para
-        pagamento (credenciamento R$ 985, renovação SICAF, 2ª via, &quot;tem
-        pendência?&quot;, &quot;quero pagar&quot;) →{" "}
-        <strong>obrigatório</strong> consultar esta API após obter CNPJ válido.
-        Nunca inventar links, valores ou vencimentos. O cliente deve receber o
-        campo <code>urlPagamento</code> como link principal (ver boleto e pagar).
-        Se não conseguir abrir, informar também <code>linkPdf</code>.{" "}
-        <strong>Nunca</strong> enviar <code>linkBoleto</code> ao cliente nem
-        escrever &quot;Link para pagamento: linkBoleto&quot; — o campo correto é{" "}
-        <code>urlPagamento</code>.
+        <strong>Regra fixa — NÃO escalar humano:</strong> frases como &quot;Quero
+        pagar o boleto&quot;, &quot;pode me mandar?&quot;, &quot;manda o link&quot;,
+        &quot;2ª via&quot;, &quot;quero pagar os R$ 985&quot; → a IA{" "}
+        <strong>consulta a API e envia o link na hora</strong>. O link correto é
+        sempre o valor de <code>urlPagamento</code> (ex.:{" "}
+        <code>https://fornecedor.cadbrasil.com.br/pay/t-637</code>). Se{" "}
+        <code>linkPdf</code> existir, enviar como alternativa.{" "}
+        <strong>Nunca</strong> usar <code>linkBoleto</code>.{" "}
+        <strong>Proibido</strong> responder &quot;vou encaminhar para um
+        atendente enviar o link&quot;.
       </Callout>
 
-      <SubTitle>Quando acionar esta API</SubTitle>
-      <List
-        items={[
-          "Quero o boleto / 2ª via do boleto",
-          "Tem boleto pendente? / Tenho algo para pagar?",
-          "Quero pagar a taxa / o SICAF / os R$ 985",
-          "Boleto da renovação / renovar meu SICAF",
-          "Como pago? / Manda o link de pagamento",
-          "Perdi o boleto / não recebi o boleto",
-          "Qual o valor e vencimento do meu boleto?",
+      <SubTitle>Frases do cliente → ação da IA</SubTitle>
+      <DataTable
+        headers={["Cliente diz", "IA faz"]}
+        rows={[
+          [
+            "Quero pagar o boleto / pode me mandar?",
+            "Chama solicitar-boleto → envia urlPagamento (NÃO escalar)",
+          ],
+          [
+            "Manda o link / 2ª via / perdi o boleto",
+            "Mesma API → envia urlPagamento",
+          ],
+          [
+            "Quero pagar o SICAF / os 985",
+            "Mesma API → envia urlPagamento + valorFormatado",
+          ],
+          ["Tem boleto pendente?", "Consulta API → envia link ou informa sem pendência"],
+          [
+            "CNPJ ainda não informado",
+            "Pedir CNPJ (14 dígitos) → depois chamar API",
+          ],
         ]}
       />
 
-      <SubTitle>Fluxo obrigatório (passo a passo)</SubTitle>
+      <SubTitle>Fluxo obrigatório</SubTitle>
       <List
         items={[
-          "1. Pedir CNPJ com 14 dígitos (somente números, sem pontuação)",
-          "2. Validar formato — se inválido, pedir novamente (cenário consulta-cnpj A)",
-          "3. Chamar GET /api/clients/solicitar-boleto?cnpj=CNPJ",
-          "4. Ler pendentePagamento, boletoReutilizado, geradoAgora, renovacaoAntecipada",
-          "5. Enviar mensagem WhatsApp do cenário correspondente (abaixo)",
-          "6. Se pendentePagamento=false e cliente pediu manutenção (R$ 155) → consulta-boletos",
-          "7. Dúvida persistente → escalar atendente",
+          "1. Cliente pede boleto/link → pedir CNPJ se ainda não tiver (14 dígitos)",
+          "2. GET /api/clients/solicitar-boleto?cnpj=CNPJ",
+          "3. Se pendentePagamento=true e urlPagamento existe → enviar mensagem com o link (texto BOLETO_WA_PEDIDO_CLIENTE)",
+          "4. Se linkPdf não for null → incluir como alternativa",
+          "5. Se pendentePagamento=false → informar sem pendência (sem inventar link)",
+          "6. NÃO escalar humano para enviar boleto — isso é função da IA",
+          "7. Escalar só: 404 após 2 tentativas, erro 500 repetido, ou dúvida não relacionada a boleto",
         ]}
       />
 
@@ -422,83 +505,58 @@ export const solicitarBoletoSection: Section = {
           ["Método", "GET"],
           ["Path", "/api/clients/solicitar-boleto"],
           ["Query", "cnpj={14_dígitos}"],
-          [
-            "Autenticação",
-            "Header x-api-key (mesma chave da API consulta-cnpj)",
-          ],
-          ["CNPJ", "Com ou sem máscara; deve ter 14 dígitos"],
+          ["Autenticação", "Header x-api-key"],
+          ["Resposta", "JSON direto de gerarOuObterBoletoSicafByCnpj() — sem wrapper extra"],
         ]}
       />
       <Endpoint method="GET" url={ENDPOINT} />
 
-      <SubTitle>Fluxo de decisão (retorno da API)</SubTitle>
-      <Code>{`GET /api/clients/solicitar-boleto?cnpj=...
-        │
-        ├─ possuiCadastro: false / HTTP 404 ──► Cenário 5 — não cadastrado
-        │
-        └─ possuiCadastro: true
-              │
-              ├─ pendentePagamento: false ──────► Cenário 4 — sem pendência
-              │
-              └─ pendentePagamento: true
-                    │
-                    ├─ renovacaoAntecipada: true ► Cenário 3 — renovação
-                    ├─ geradoAgora: true ────────► Cenário 2 — gerado agora
-                    └─ boletoReutilizado: true ──► Cenário 1 — reutilizado`}</Code>
+      <SubTitle>Campo que o cliente deve receber</SubTitle>
+      <Callout tone="info">
+        <strong>urlPagamento</strong> — único link principal. Exemplo real:{" "}
+        <code>https://fornecedor.cadbrasil.com.br/pay/t-637</code>
+        <br />
+        <strong>linkPdf</strong> — só se não null; frase &quot;se não conseguir
+        abrir o link&quot;.
+        <br />
+        <strong>linkBoleto</strong> — não enviar ao cliente.
+      </Callout>
 
-      <SubTitle>Campos principais do retorno</SubTitle>
+      <SubTitle>Retorno JSON — campos principais</SubTitle>
       <DataTable
         headers={["Campo", "Tipo", "Uso para IA"]}
         rows={[
-          ["ok", "boolean", "Sucesso da operação"],
-          ["possuiCadastro", "boolean", "Cliente na base CADBRASIL Oficial"],
-          ["pendentePagamento", "boolean", "Define se há boleto/taxa em aberto"],
-          ["razaoSocial", "string", "Nome da empresa na mensagem"],
-          ["valorFormatado", "string", "Valor para exibir (ex.: R$ 985,00)"],
-          ["urlPagamento", "string", "Link principal — enviar ao cliente para ver boleto e pagar (PIX ou boleto)"],
-          ["URLpagamento", "string", "Alias de urlPagamento — usar se urlPagamento vazio"],
-          ["linkPdf", "string", "Link alternativo — enviar junto com aviso \"se não conseguir abrir o link\""],
-          ["linkBoleto", "string", "Uso interno — não enviar ao cliente; usar urlPagamento"],
-          ["codigoBarras", "string", "Só enviar se cliente pedir explicitamente"],
-          ["protocolo", "string", "Referência SICAF (ex.: SICAF-2026-636)"],
-          ["dataVencimento", "ISO date", "Formatar DD/MM/AAAA para o cliente"],
-          ["boletoReutilizado", "boolean", "Boleto já existia — cenário 1"],
-          ["geradoAgora", "boolean", "Guia nova — cenário 2"],
-          ["renovacaoAntecipada", "boolean", "Renovação — cenário 3"],
-          ["sicafValidoAte", "date|null", "Validade atual do SICAF"],
-          ["diasParaRenovacao", "number|null", "Dias até renovação"],
-          ["message", "string", "Resumo técnico — não copiar literalmente ao cliente"],
+          ["urlPagamento", "string", "ENVIAR AO CLIENTE — link de pagamento"],
+          ["URLpagamento", "string", "Alias de urlPagamento"],
+          ["pendentePagamento", "boolean", "true = há taxa em aberto"],
+          ["valorFormatado", "string", "Ex.: R$ 985,00"],
+          ["linkPdf", "string|null", "Alternativa se cliente não abrir urlPagamento"],
+          ["linkBoleto", "string|null", "Não enviar ao cliente"],
+          ["razaoSocial", "string", "Nome na mensagem"],
+          ["dataVencimento", "string", "Formatar DD/MM/AAAA"],
+          ["protocolo", "string", "Ex.: SICAF-2026-637"],
+          ["boletoReutilizado", "boolean", "Boleto já existia"],
+          ["geradoAgora", "boolean", "Gerado nesta chamada"],
+          ["renovacaoAntecipada", "boolean", "Renovação na janela 30–60 dias"],
+          ["message", "string", "Referência interna — não copiar literal ao cliente"],
         ]}
       />
 
       <SubTitle>Cenários e mensagens WhatsApp</SubTitle>
       <SolicitarBoletoScenarios />
 
-      <Callout tone="warn">
-        <strong>IA — links para o cliente:</strong> envie sempre o valor de{" "}
-        <code>urlPagamento</code> (link principal para ver o boleto e pagar).
-        Informe também <code>linkPdf</code> com a frase &quot;se não conseguir
-        abrir o link acima&quot;. Não envie <code>linkBoleto</code> ao cliente.
-        Compensação bancária: 1 a 3 dias úteis. Página alternativa:{" "}
-        <a href={LINKS.pagamentos} className="underline underline-offset-4">
-          {LINKS.pagamentos}
-        </a>
-        . Manutenção mensal (R$ 155):{" "}
-        <code>GET /api/clients/consulta-boletos?cnpj=CNPJ</code>.
-      </Callout>
-
       <H>
         Relacionado:{" "}
         <a href="#api-consulta-cnpj" className="underline underline-offset-4">
           API consulta-cnpj
         </a>{" "}
-        (situação geral) ·{" "}
-        <a href="#formas-pagamento" className="underline underline-offset-4">
-          Formas de pagamento
-        </a>{" "}
         ·{" "}
         <a href="#ia-enviar-boleto" className="underline underline-offset-4">
-          Quando a IA pode enviar boleto
+          Quando a IA envia boleto
+        </a>{" "}
+        ·{" "}
+        <a href="#escalar-humano" className="underline underline-offset-4">
+          Quando escalar humano
         </a>
       </H>
     </>

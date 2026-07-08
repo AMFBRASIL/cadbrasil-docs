@@ -158,40 +158,36 @@ Tecnologia, segurança e suporte para fornecedores do Brasil. 🇧🇷`}</Code>
         />
         <H>
           <strong>Boleto e pagamento:</strong> quando o cliente pedir boleto,
-          2ª via, renovação SICAF, taxa, pagamento ou perguntar se há pendência
-          — peça o CNPJ e consulte a API{" "}
+          link para pagar, &quot;quero pagar&quot;, &quot;pode me mandar?&quot;,
+          2ª via ou renovação — a IA <strong>deve enviar o link</strong> via API{" "}
           <a
             href="#api-solicitar-boleto"
             className="underline underline-offset-4"
           >
             solicitar-boleto
           </a>{" "}
-          (<code>GET /api/clients/solicitar-boleto?cnpj=CNPJ</code>). Envie os
-          textos WhatsApp da seção conforme o retorno. Alternativa:{" "}
-          <a
-            href={LINKS.pagamentos}
-            className="underline underline-offset-4"
-          >
-            {LINKS.pagamentos}
-          </a>
-          . Se ainda tiver dúvida → escalar atendente.
+          (<code>GET /api/clients/solicitar-boleto?cnpj=CNPJ</code>). Enviar o
+          campo <code>urlPagamento</code> ao cliente.{" "}
+          <strong>Não escalar humano</strong> para enviar boleto.
         </H>
 
-        <SubTitle>Boleto / pagamento (API solicitar-boleto — obrigatório)</SubTitle>
+        <SubTitle>Boleto / pagamento — a IA ENVIA o link (não escalar)</SubTitle>
         <Callout tone="ok">
-          <strong>Regra fixa:</strong> boleto, 2ª via, renovação SICAF, taxa R$
-          985, &quot;tem pendência?&quot; ou qualquer pedido de pagamento → peça
-          CNPJ e chame{" "}
-          <code>GET /api/clients/solicitar-boleto?cnpj=CNPJ</code>. Textos em{" "}
+          <strong>Proibido escalar humano</strong> quando o cliente pedir boleto
+          ou link de pagamento. Exemplos: &quot;Quero pagar o boleto, pode me
+          mandar?&quot;, &quot;manda o link&quot;, &quot;2ª via&quot;, &quot;quero
+          pagar os 985&quot;. A IA: 1) pede CNPJ se necessário → 2) chama{" "}
+          <code>GET /api/clients/solicitar-boleto?cnpj=CNPJ</code> → 3) envia{" "}
+          <code>urlPagamento</code> na mensagem (textos em{" "}
           <a
             href="#api-solicitar-boleto"
             className="underline underline-offset-4"
           >
             API solicitar-boleto
           </a>
-          . Enviar <code>urlPagamento</code> (link principal). Se não abrir,{" "}
-          <code>linkPdf</code>. <strong>Nunca</strong> enviar{" "}
-          <code>linkBoleto</code>.
+          ). <code>linkPdf</code> só se existir. Nunca{" "}
+          <code>linkBoleto</code>. Nunca dizer &quot;vou encaminhar para um
+          atendente enviar o link&quot;.
         </Callout>
 
         <SubTitle>SICAF gratuito vs pago (textos prontos WhatsApp)</SubTitle>
@@ -240,7 +236,7 @@ Tecnologia, segurança e suporte para fornecedores do Brasil. 🇧🇷`}</Code>
         </H>
         <List
           items={[
-            "2ª via / boleto / taxa / 985 / pagar / renovação sicaf / tem pendência / link pagamento → API solicitar-boleto (#api-solicitar-boleto)",
+            "quero pagar o boleto / pode me mandar / manda o link / 2ª via / boleto / taxa / 985 / pagar → IA ENVIA urlPagamento via API solicitar-boleto (NÃO escalar humano)",
             "mensalidade / 155 / manutenção → Página de pagamentos + API consulta-boletos",
             "cadastro / habilitação / fornecedor / consultar CNPJ → API consulta-cnpj",
             "app / programa / aplicativo / instalar / baixar / assistente / como usar o app → Assistente CADBRASIL (2 links obrigatórios)",
@@ -1579,46 +1575,45 @@ Tecnologia, segurança e suporte para fornecedores do Brasil. 🇧🇷`}</Code>
   },
   {
     id: "ia-enviar-boleto",
-    title: "Quando a IA pode enviar boleto pelo WhatsApp?",
+    title: "A IA DEVE enviar boleto pelo WhatsApp (não escalar)",
     body: (
       <>
         <ShortAnswer>
-          Quando o cliente informar CNPJ válido e{" "}
-          <code>GET /api/clients/solicitar-boleto?cnpj=CNPJ</code> retornar{" "}
-          <code>pendentePagamento: true</code>. Envie <code>urlPagamento</code>{" "}
-          como link principal; se o cliente não conseguir abrir, informe também{" "}
-          <code>linkPdf</code>. Textos em{" "}
-          <a href="#api-solicitar-boleto" className="underline underline-offset-4">
-            API solicitar-boleto
-          </a>
-          .
+          Sim — a IA <strong>deve enviar</strong> o link quando o cliente pedir
+          boleto ou pagamento. Chame{" "}
+          <code>GET /api/clients/solicitar-boleto?cnpj=CNPJ</code> e envie{" "}
+          <code>urlPagamento</code>. <strong>Não escalar humano</strong> para
+          isso.
         </ShortAnswer>
+        <Callout tone="ok">
+          <strong>Exemplo correto:</strong> cliente: &quot;Quero pagar o boleto,
+          pode me mandar?&quot; → IA consulta API → envia mensagem com{" "}
+          <code>urlPagamento</code>.
+          <br />
+          <strong>Exemplo errado:</strong> &quot;Vou encaminhar para um atendente
+          humano enviar o link&quot; — <strong>proibido</strong>.
+        </Callout>
         <List
           items={[
-            "1. Pedir CNPJ (14 dígitos, sem pontuação)",
-            "2. Validar formato do CNPJ",
-            "3. Chamar GET /api/clients/solicitar-boleto?cnpj=CNPJ",
+            "1. Pedir CNPJ (14 dígitos) se ainda não informado",
+            "2. GET /api/clients/solicitar-boleto?cnpj=CNPJ",
             <>
-              4. Se <code>pendentePagamento: true</code> → enviar mensagem do
-              cenário (reutilizado, gerado agora ou renovação)
+              3. <code>pendentePagamento: true</code> → enviar urlPagamento +
+              texto em{" "}
+              <a href="#api-solicitar-boleto" className="underline underline-offset-4">
+                API solicitar-boleto
+              </a>
             </>,
             <>
-              5. Se <code>pendentePagamento: false</code> → informar sem
-              pendência (cenário 4)
+              4. <code>linkPdf</code> não null → incluir como alternativa
             </>,
-            "6. Se possuiCadastro=false → orientar cadastro ou escalar",
-            "7. Manutenção R$ 155 → consulta-boletos se aplicável",
-            "8. Dúvida persistente → pedir atendente",
+            <>
+              5. <code>pendentePagamento: false</code> → informar sem pendência
+            </>,
+            "6. NÃO escalar para enviar boleto — função da IA",
+            "7. Escalar só: CNPJ não encontrado 2x, erro 500 repetido, ou assunto não relacionado",
           ]}
         />
-        <Callout tone="info">
-          Nunca invente links. Envie <code>urlPagamento</code> ao cliente;{" "}
-          <code>linkPdf</code> só como alternativa. Detalhes:{" "}
-          <a href="#api-solicitar-boleto" className="underline underline-offset-4">
-            solicitar-boleto
-          </a>
-          .
-        </Callout>
       </>
     ),
   },
@@ -1646,8 +1641,8 @@ Tecnologia, segurança e suporte para fornecedores do Brasil. 🇧🇷`}</Code>
           </a>
         </H>
         <Escalar>
-          Cliente ainda com dúvida sobre boleto ou pagamento após consultar a API
-          — pedir para falar com um atendente.
+          CNPJ não encontrado após 2 tentativas. Não escalar só porque o cliente
+          pediu boleto — a IA envia via API.
         </Escalar>
       </>
     ),
@@ -2073,8 +2068,15 @@ Tecnologia, segurança e suporte para fornecedores do Brasil. 🇧🇷`}</Code>
       <>
         <ShortAnswer>
           Reclamação, cancelamento, reembolso, golpe, erro técnico, cliente
-          irritado ou CNPJ não encontrado após 2 tentativas.
+          irritado ou CNPJ não encontrado após 2 tentativas.{" "}
+          <strong>Não escalar</strong> para pedido de boleto/link de pagamento.
         </ShortAnswer>
+        <Callout tone="warn">
+          <strong>Não é caso de escalar humano:</strong> &quot;quero pagar o
+          boleto&quot;, &quot;pode me mandar?&quot;, &quot;manda o link&quot;, 2ª
+          via, renovação SICAF — a IA envia <code>urlPagamento</code> pela API{" "}
+          <code>solicitar-boleto</code>.
+        </Callout>
         <List
           items={[
             "Reclamação ou insatisfação com serviço",
