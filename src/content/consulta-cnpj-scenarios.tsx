@@ -347,7 +347,7 @@ Enquanto o pagamento *não for confirmado*, os *níveis do SICAF não serão con
 
 2️⃣ Faça login e emita ou pague o boleto
 
-3️⃣ Ou *confirme aqui* que deseja receber o boleto pelo WhatsApp — enviaremos o link/PDF oficial retornado pela API
+3️⃣ Ou *confirme aqui* que deseja o boleto — consultamos a API e enviamos o *link de pagamento* (PIX ou boleto) e o PDF oficial
 
 📌 Compensação bancária: geralmente *1 a 3 dias úteis* após o pagamento.
 
@@ -362,7 +362,7 @@ ${FOOTER}`}</WhatsAppMessage>
               "Montar bloco com razaoSocial, cnpj, cliente.email, cliente.telefone, sicaf.status, sicaf.completude.",
               `Orientar ${LINKS.pagamentos} para boleto e pagamento.`,
               "Se pagamentosResumo.sicafPendentes[].linkBoleto ou pdfBoleto existir → enviar.",
-              "Ou consultar GET /api/clients/boleto-sicaf/CNPJ.",
+              "Ou consultar GET /api/clients/solicitar-boleto?cnpj=CNPJ.",
               "Mencionar dataVencimento quando existir.",
               "Se ainda tiver dúvida → pedir para falar com atendente (escalar).",
             ]}

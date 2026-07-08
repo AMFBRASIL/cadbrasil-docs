@@ -409,7 +409,7 @@ Cliente informou CNPJ com menos ou mais de 14 dígitos, ou vazio.
 - Informar claramente: **cadastro feito, pagamento pendente**.
 - Orientar portal `urlPortal`.
 - Se `pagamentosResumo.sicafPendentes[].linkBoleto` ou `pdfBoleto` existir → enviar ao cliente.
-- Ou consultar API `/api/clients/boleto-sicaf/{cnpj}` para obter boleto.
+- Ou consultar API `GET /api/clients/solicitar-boleto?cnpj={cnpj}` para obter boleto e link de pagamento.
 - Mencionar que `sicaf.completude` provavelmente está em 0% até pagar.
 
 ### O que a IA NÃO deve fazer

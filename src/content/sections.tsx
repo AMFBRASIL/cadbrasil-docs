@@ -12,6 +12,7 @@ import {
   WaLink,
 } from "@/lib/docs-ui";
 import { consultaCnpjSection } from "@/content/consulta-cnpj-api";
+import { solicitarBoletoSection } from "@/content/solicitar-boleto-api";
 import { sicafProcessSections } from "@/content/sicaf-processo-sections";
 import {
   AssistenteLinksList,
@@ -122,7 +123,8 @@ Tecnologia, segurança e suporte para fornecedores do Brasil. 🇧🇷`}</Code>
               <a href={LINKS.pagamentos} className="underline underline-offset-4">
                 {LINKS.pagamentos}
               </a>{" "}
-              + boleto (<code>pagamentosResumo</code> ou API boleto-sicaf)
+              + boleto (API <code>solicitar-boleto</code> ou{" "}
+              <code>pagamentosResumo</code>)
             </>,
             <>
               <code>sicaf_vencido</code> → renovação urgente;{" "}
@@ -147,24 +149,50 @@ Tecnologia, segurança e suporte para fornecedores do Brasil. 🇧🇷`}</Code>
               Nunca inventar status, valores ou links de boleto.
             </>,
             <>
-              Com boleto disponível → enviar <code>pdfBoleto</code> ou{" "}
-              <code>linkBoleto</code> retornado pela API.
+              Com boleto disponível → enviar <code>urlPagamento</code> e{" "}
+              <code>linkPdf</code> retornados pela API{" "}
+              <code>solicitar-boleto</code>.
             </>,
           ]}
         />
         <H>
           <strong>Boleto e pagamento:</strong> quando o cliente pedir boleto,
-          2ª via, pagamento, taxa ou &quot;como pagar&quot;, oriente a acessar a
-          página de pagamentos:{" "}
+          2ª via, renovação SICAF, taxa, pagamento ou perguntar se há pendência
+          — peça o CNPJ e consulte a API{" "}
+          <a
+            href="#api-solicitar-boleto"
+            className="underline underline-offset-4"
+          >
+            solicitar-boleto
+          </a>{" "}
+          (<code>GET /api/clients/solicitar-boleto?cnpj=CNPJ</code>). Envie os
+          textos WhatsApp da seção conforme o retorno. Alternativa:{" "}
           <a
             href={LINKS.pagamentos}
             className="underline underline-offset-4"
           >
             {LINKS.pagamentos}
           </a>
-          . Se ainda tiver dúvida após a orientação, peça para falar com um
-          atendente (escalar para humano).
+          . Se ainda tiver dúvida → escalar atendente.
         </H>
+
+        <SubTitle>Boleto / pagamento (API solicitar-boleto — obrigatório)</SubTitle>
+        <Callout tone="ok">
+          <strong>Regra fixa:</strong> boleto, 2ª via, renovação SICAF, taxa R$
+          985, &quot;tem pendência?&quot; ou qualquer pedido de pagamento → peça
+          CNPJ e chame{" "}
+          <code>GET /api/clients/solicitar-boleto?cnpj=CNPJ</code>. Use os
+          textos WhatsApp em{" "}
+          <a
+            href="#api-solicitar-boleto"
+            className="underline underline-offset-4"
+          >
+            API solicitar-boleto
+          </a>{" "}
+          conforme <code>pendentePagamento</code>,{" "}
+          <code>boletoReutilizado</code> e <code>geradoAgora</code>. Enviar{" "}
+          <code>urlPagamento</code> + <code>linkPdf</code>. Nunca inventar links.
+        </Callout>
 
         <SubTitle>SICAF gratuito vs pago (textos prontos WhatsApp)</SubTitle>
         <Callout tone="ok">
@@ -212,7 +240,7 @@ Tecnologia, segurança e suporte para fornecedores do Brasil. 🇧🇷`}</Code>
         </H>
         <List
           items={[
-            "2ª via / boleto / taxa / 985 / pagar → Página de pagamentos + API boleto",
+            "2ª via / boleto / taxa / 985 / pagar / renovação sicaf / tem pendência / link pagamento → API solicitar-boleto (#api-solicitar-boleto)",
             "mensalidade / 155 / manutenção → Página de pagamentos + API consulta-boletos",
             "cadastro / habilitação / fornecedor / consultar CNPJ → API consulta-cnpj",
             "app / programa / aplicativo / instalar / baixar / assistente / como usar o app → Assistente CADBRASIL (2 links obrigatórios)",
@@ -238,6 +266,7 @@ Tecnologia, segurança e suporte para fornecedores do Brasil. 🇧🇷`}</Code>
     ),
   },
   consultaCnpjSection,
+  solicitarBoletoSection,
   {
     id: "o-que-e",
     title: "O que é a CADBRASIL Oficial?",
@@ -591,7 +620,7 @@ Tecnologia, segurança e suporte para fornecedores do Brasil. 🇧🇷`}</Code>
               <strong>Taxa SICAF / credenciamento (R$ 985,00):</strong>{" "}
               serviço da CADBRASIL Oficial para habilitar a empresa com
               assessoria, análise documental e acesso à plataforma. Boleto via
-              API boleto-sicaf ou página de pagamentos.
+              API <code>solicitar-boleto</code> ou página de pagamentos.
             </>,
             <>
               <strong>Manutenção CADBRASIL Oficial (R$ 155,00/mês):</strong>{" "}
@@ -1471,7 +1500,11 @@ Tecnologia, segurança e suporte para fornecedores do Brasil. 🇧🇷`}</Code>
       <>
         <ShortAnswer>
           Boleto SICAF = credenciamento (R$ 985, único). Boleto manutenção =
-          mensalidade (R$ 155/mês). Ambos disponíveis em{" "}
+          mensalidade (R$ 155/mês). SICAF e renovação → API{" "}
+          <a href="#api-solicitar-boleto" className="underline underline-offset-4">
+            solicitar-boleto
+          </a>
+          . Manutenção → consulta-boletos ou{" "}
           <a href={LINKS.pagamentos} className="underline underline-offset-4">
             {LINKS.pagamentos}
           </a>
@@ -1480,9 +1513,11 @@ Tecnologia, segurança e suporte para fornecedores do Brasil. 🇧🇷`}</Code>
         <List
           items={[
             <>
-              <strong>Boleto SICAF (R$ 985):</strong> taxa de credenciamento
-              inicial. API:{" "}
-              <code>/api/clients/boleto-sicaf/CNPJ</code>
+              <strong>Boleto SICAF / renovação (R$ 985):</strong>{" "}
+              <code>GET /api/clients/solicitar-boleto?cnpj=CNPJ</code> — ver{" "}
+              <a href="#api-solicitar-boleto" className="underline underline-offset-4">
+                documentação completa
+              </a>
             </>,
             <>
               <strong>Boleto manutenção (R$ 155/mês):</strong> mensalidade do
@@ -1492,8 +1527,9 @@ Tecnologia, segurança e suporte para fornecedores do Brasil. 🇧🇷`}</Code>
           ]}
         />
         <H>
-          Se o cliente pedir &quot;boleto&quot; sem especificar, pergunte se é
-          credenciamento (SICAF) ou manutenção mensal.
+          Se o cliente pedir &quot;boleto&quot; sem especificar, consulte{" "}
+          <code>solicitar-boleto</code> primeiro; se não houver pendência SICAF,
+          pergunte se é manutenção mensal.
         </H>
       </>
     ),
@@ -1504,12 +1540,20 @@ Tecnologia, segurança e suporte para fornecedores do Brasil. 🇧🇷`}</Code>
     body: (
       <>
         <ShortAnswer>
-          Acesse{" "}
+          Informe seu CNPJ (14 dígitos) — a IA consulta{" "}
+          <code>GET /api/clients/solicitar-boleto?cnpj=CNPJ</code> e envia o
+          link de pagamento. Ou acesse{" "}
           <a href={LINKS.pagamentos} className="underline underline-offset-4">
             {LINKS.pagamentos}
-          </a>{" "}
-          ou informe seu CNPJ (14 dígitos) que consulto e envio o boleto/PDF.
+          </a>
+          .
         </ShortAnswer>
+        <H>
+          Procedimento completo e mensagens WhatsApp:{" "}
+          <a href="#api-solicitar-boleto" className="underline underline-offset-4">
+            API solicitar-boleto
+          </a>
+        </H>
         <H>
           Página de pagamentos:{" "}
           <a href={LINKS.pagamentos} className="underline underline-offset-4">
@@ -1519,57 +1563,14 @@ Tecnologia, segurança e suporte para fornecedores do Brasil. 🇧🇷`}</Code>
         <H>
           Vídeo explicativo: <VideoLink href={VIDEOS.boletoSicaf} />
         </H>
-        <H>
-          Ou peça aqui mesmo que enviamos. Endpoint da API (substitua CNPJ pelos
-          14 dígitos):
-        </H>
         <Endpoint
           method="GET"
-          url="https://fornecedor.CADBRASIL Oficial.com.br/api/clients/boleto-sicaf/CNPJ"
+          url={`${LINKS.portal}/api/clients/solicitar-boleto?cnpj=CNPJ`}
         />
-        <p className="mt-4 text-sm font-medium text-muted-foreground">
-          Exemplo de resposta (com boleto)
-        </p>
-        <Code>{`{
-  "ok": true,
-  "possuiCadastro": true,
-  "clienteId": 123,
-  "cnpj": "52841613000155",
-  "razaoSocial": "EMPRESA EXEMPLO LTDA",
-  "pendentePagamento": true,
-  "valor": 985,
-  "valorFormatado": "R$ 985,00",
-  "linkPdf": "https://...pdf",
-  "linkBoleto": "https://...",
-  "codigoBarras": "...",
-  "dataVencimento": "2026-06-15",
-  "taxaId": 45,
-  "pagamentoId": 89,
-  "boletoReutilizado": true,
-  "geradoAgora": false,
-  "message": "Boleto vigente localizado. Link PDF retornado."
-}`}</Code>
-        <p className="mt-4 text-sm font-medium text-muted-foreground">
-          Sem pendência (já pago)
-        </p>
-        <Code>{`{
-  "ok": true,
-  "pendentePagamento": false,
-  "linkPdf": null,
-  "message": "Cliente sem pendência de pagamento da taxa SICAF."
-}`}</Code>
-        <p className="mt-4 text-sm font-medium text-muted-foreground">
-          Cliente não encontrado — HTTP 404
-        </p>
-        <Code>{`{
-  "ok": false,
-  "possuiCadastro": false,
-  "error": "Cliente não encontrado para este CNPJ."
-}`}</Code>
         <Escalar>
           CNPJ não encontrado após 2 tentativas, cliente insiste que já é
           cadastrado, ou ainda tem dúvida sobre boleto/pagamento após orientar a
-          página de pagamentos.
+          API ou página de pagamentos.
         </Escalar>
       </>
     ),
@@ -1580,34 +1581,40 @@ Tecnologia, segurança e suporte para fornecedores do Brasil. 🇧🇷`}</Code>
     body: (
       <>
         <ShortAnswer>
-          Quando o cliente informar CNPJ válido e a API retornar boleto com
-          pendentePagamento=true. Envie linkPdf ou linkBoleto.
+          Quando o cliente informar CNPJ válido e{" "}
+          <code>GET /api/clients/solicitar-boleto?cnpj=CNPJ</code> retornar{" "}
+          <code>pendentePagamento: true</code>. Envie <code>urlPagamento</code>{" "}
+          e <code>linkPdf</code> com os textos de{" "}
+          <a href="#api-solicitar-boleto" className="underline underline-offset-4">
+            API solicitar-boleto
+          </a>
+          .
         </ShortAnswer>
         <List
           items={[
             "1. Pedir CNPJ (14 dígitos, sem pontuação)",
             "2. Validar formato do CNPJ",
+            "3. Chamar GET /api/clients/solicitar-boleto?cnpj=CNPJ",
             <>
-              3. Orientar{" "}
-              <a href={LINKS.pagamentos} className="underline underline-offset-4">
-                {LINKS.pagamentos}
-              </a>{" "}
-              para boleto e pagamento
+              4. Se <code>pendentePagamento: true</code> → enviar mensagem do
+              cenário (reutilizado, gerado agora ou renovação)
             </>,
-            "4. Consultar API apropriada (SICAF ou manutenção) se cliente preferir pelo WhatsApp",
-            "5. Se pendentePagamento=true → enviar linkPdf e/ou linkBoleto",
-            "6. Se pendentePagamento=false → informar que não há boleto em aberto",
-            "7. Se 404 / possuiCadastro=false → orientar contratação ou escalar",
-            "8. Se ainda tiver dúvida → pedir para falar com atendente",
+            <>
+              5. Se <code>pendentePagamento: false</code> → informar sem
+              pendência (cenário 4)
+            </>,
+            "6. Se possuiCadastro=false → orientar cadastro ou escalar",
+            "7. Manutenção R$ 155 → consulta-boletos se aplicável",
+            "8. Dúvida persistente → pedir atendente",
           ]}
         />
         <Callout tone="info">
-          Nunca invente links de boleto. Use apenas URLs retornadas pela API ou
-          oriente{" "}
-          <a href={LINKS.pagamentos} className="underline underline-offset-4">
-            {LINKS.pagamentos}
+          Nunca invente links. Use <code>urlPagamento</code> e{" "}
+          <code>linkPdf</code> da API. Detalhes:{" "}
+          <a href="#api-solicitar-boleto" className="underline underline-offset-4">
+            solicitar-boleto
           </a>
-          . Se o cliente ainda tiver dúvida, peça para falar com um atendente.
+          .
         </Callout>
       </>
     ),
@@ -1618,34 +1625,26 @@ Tecnologia, segurança e suporte para fornecedores do Brasil. 🇧🇷`}</Code>
     body: (
       <>
         <ShortAnswer>
-          Acesse{" "}
-          <a href={LINKS.pagamentos} className="underline underline-offset-4">
-            {LINKS.pagamentos}
-          </a>{" "}
-          ou informe seu CNPJ — consultamos a API e reenviamos o boleto vigente
-          ou geramos novo se necessário.
+          Informe seu CNPJ — a IA consulta{" "}
+          <code>GET /api/clients/solicitar-boleto?cnpj=CNPJ</code> e reenvia o
+          boleto vigente (<code>boletoReutilizado: true</code>) ou gera novo se
+          necessário (<code>geradoAgora: true</code>).
         </ShortAnswer>
+        <H>
+          Mensagens e fluxo:{" "}
+          <a href="#api-solicitar-boleto" className="underline underline-offset-4">
+            API solicitar-boleto
+          </a>
+        </H>
         <H>
           Página de pagamentos:{" "}
           <a href={LINKS.pagamentos} className="underline underline-offset-4">
             {LINKS.pagamentos}
           </a>
         </H>
-        <H>
-          A 2ª via é obtida pela mesma API de boleto. Se existir boleto vigente,
-          o campo <code>boletoReutilizado: true</code> indica reutilização do
-          boleto existente.
-        </H>
-        <H>
-          Credenciamento:{" "}
-          <code>/api/clients/boleto-sicaf/CNPJ</code>
-        </H>
-        <H>
-          Manutenção: <code>/api/clients/consulta-boletos?cnpj=CNPJ</code>
-        </H>
         <Escalar>
-          Cliente ainda com dúvida sobre boleto ou pagamento após orientar a
-          página de pagamentos — pedir para falar com um atendente.
+          Cliente ainda com dúvida sobre boleto ou pagamento após consultar a API
+          — pedir para falar com um atendente.
         </Escalar>
       </>
     ),
