@@ -17,8 +17,10 @@ import { LINKS } from "@/content/videos";
 const API_BASE = LINKS.portal;
 const ENDPOINT = `${API_BASE}/api/clients/solicitar-boleto?cnpj={14_dígitos}`;
 
+const ENDPOINT_EXEMPLO = `${API_BASE}/api/clients/solicitar-boleto?cnpj=28552323000107`;
+
 const WA_IA_NOTE =
-  "Link na mensagem = valor EXATO do campo urlPagamento (ex.: https://fornecedor.cadbrasil.com.br/pay/t-636). Mesmo que linkBoleto venha igual — usar só urlPagamento. dataVencimento ISO → DD/MM/AAAA (13/07/2026). linkPdf só se não null. Não enviar codigoBarras, message, email* ao cliente. Não escrever nomes de campos na mensagem.";
+  "Link na mensagem = valor EXATO de urlPagamento (ex.: .../pay/t-637). Mesmo que linkBoleto venha igual — usar só urlPagamento. dataVencimento ISO → DD/MM/AAAA. linkPdf só se não null. Não enviar codigoBarras, message, email* ao cliente.";
 
 /**
  * Bloco principal — o cliente DEVE ver o valor de urlPagamento.
@@ -100,6 +102,39 @@ Olá! 👋 Conforme solicitado, consultei seu cadastro e preparei seu pagamento:
 
 📄 *Não conseguiu abrir?* PDF do boleto:
 👉 https://download.sejaefi.com.br/790387_6536_PACA8/790387-6536-DRAZE0.pdf
+
+⏱️ *Após o pagamento:* compensação em *1 a 3 dias úteis*.
+Os *níveis do SICAF* são liberados na plataforma após a confirmação.
+
+❓ Qualquer dúvida, estamos à disposição!
+
+${FOOTER}`;
+
+/** Exemplo preenchido — CNPJ 28552323000107, pay/t-637 (produção). */
+export const BOLETO_WA_EXEMPLO_LUDMILA = `🇧🇷 *CADBRASIL Oficial ®*
+💳 *Pagamento SICAF — link pronto para você*
+
+Olá! 👋 Conforme solicitado, consultei seu cadastro e preparei seu pagamento:
+
+🏢 *LUDMILA BERALDO SANTOS 10499395654*
+
+━━━━━━━━━━━━━━━━
+
+💰 *Valor:* R$ 985,00
+📅 *Vencimento:* 12/07/2026
+📋 *Protocolo:* SICAF-2026-637
+
+━━━━━━━━━━━━━━━━
+
+✅ *LINK DE PAGAMENTO*
+🔐 Página oficial CADBRASIL Oficial
+
+👉 *https://fornecedor.cadbrasil.com.br/pay/t-637*
+
+📌 Toque no link acima para *ver o boleto* e pagar por *PIX* ou *boleto bancário*.
+
+📄 *Não conseguiu abrir?* PDF do boleto:
+👉 https://download.sejaefi.com.br/790387_6535_HIMEH3/790387-6535-RAALE5.pdf
 
 ⏱️ *Após o pagamento:* compensação em *1 a 3 dias úteis*.
 Os *níveis do SICAF* são liberados na plataforma após a confirmação.
@@ -241,7 +276,41 @@ Olá! 👋 Não localizei cadastro para este CNPJ na CADBRASIL Oficial.
 
 ${FOOTER}`;
 
-const JSON_REAL_REUTILIZADO = `{
+/** Retorno real — CNPJ 28552323000107, pay/t-637. */
+const JSON_REAL_LUDMILA = `{
+  "ok": true,
+  "possuiCadastro": true,
+  "clienteId": 192802,
+  "cnpj": "28552323000107",
+  "razaoSocial": "LUDMILA BERALDO SANTOS 10499395654",
+  "pendentePagamento": true,
+  "valor": 985,
+  "valorFormatado": "R$ 985,00",
+  "linkPdf": "https://download.sejaefi.com.br/790387_6535_HIMEH3/790387-6535-RAALE5.pdf",
+  "linkBoleto": "https://fornecedor.cadbrasil.com.br/pay/t-637",
+  "codigoBarras": "36490.00076 00079.038709 00000.065359 7 00000000098500",
+  "protocolo": "SICAF-2026-637",
+  "dataVencimento": "2026-07-12T03:00:00.000Z",
+  "taxaId": 637,
+  "pagamentoId": 1349,
+  "payCode": "t-637",
+  "urlPagamento": "https://fornecedor.cadbrasil.com.br/pay/t-637",
+  "URLpagamento": "https://fornecedor.cadbrasil.com.br/pay/t-637",
+  "boletoReutilizado": true,
+  "geradoAgora": false,
+  "renovacaoAntecipada": false,
+  "diasParaRenovacao": null,
+  "sicafValidoAte": null,
+  "message": "Boleto ou pagamento pendente localizado. URL de pagamento online retornada.",
+  "emailEnviado": true,
+  "emailPara": "sssfiscal03@pontualcontabil.cnt.br",
+  "emailAssunto": "Taxa CADBRASIL pendente — regularize seu cadastro — LUDMILA BERALDO SANTOS 10499395654",
+  "emailSimulado": false,
+  "emailErro": null
+}`;
+
+/** Retorno real — CNPJ 01744605000150, pay/t-636. */
+const JSON_REAL_JARE = `{
   "ok": true,
   "possuiCadastro": true,
   "clienteId": 192803,
@@ -272,6 +341,8 @@ const JSON_REAL_REUTILIZADO = `{
   "emailSimulado": false,
   "emailErro": null
 }`;
+
+const JSON_REAL_REUTILIZADO = JSON_REAL_LUDMILA;
 
 /** Exemplo quando geradoAgora: true (boleto novo nesta chamada). */
 const JSON_GERADO_AGORA = `{
@@ -339,9 +410,10 @@ function SolicitarBoletoScenarios() {
         }
         fields={
           <>
-            Chamar <code>GET /api/clients/solicitar-boleto?cnpj=CNPJ</code> →
-            enviar <code>urlPagamento</code> na mensagem. Usar texto{" "}
-            <strong>BOLETO_WA_PEDIDO_CLIENTE</strong> abaixo.
+            Chamar{" "}
+            <code>GET /api/clients/solicitar-boleto?cnpj=CNPJ</code> (ex.:{" "}
+            <code>{ENDPOINT_EXEMPLO}</code>) → montar mensagem WhatsApp com o
+            valor de <code>urlPagamento</code> no 👉 link.
           </>
         }
         clientMessage={
@@ -361,14 +433,20 @@ function SolicitarBoletoScenarios() {
         iaDont={IA_NAO_ESCALAR}
       >
         <p className="mt-4 text-sm font-medium text-muted-foreground">
-          Retorno JSON (exemplo real)
+          1) Chamada da API (exemplo)
         </p>
-        <Code>{JSON_REAL_REUTILIZADO}</Code>
+        <Endpoint method="GET" url={ENDPOINT_EXEMPLO} />
         <p className="mt-4 text-sm font-medium text-muted-foreground">
-          Mensagem ao cliente — link copiado de{" "}
+          2) Retorno JSON (produção — CNPJ 28552323000107)
+        </p>
+        <Code>{JSON_REAL_LUDMILA}</Code>
+        <p className="mt-4 text-sm font-medium text-muted-foreground">
+          3) Mensagem ao cliente — link ={" "}
           <code>urlPagamento</code> (não linkBoleto)
         </p>
-        <ClienteWhatsApp iaNote={WA_IA_NOTE}>{BOLETO_WA_EXEMPLO_PREENCHIDO}</ClienteWhatsApp>
+        <ClienteWhatsApp iaNote={WA_IA_NOTE}>
+          {BOLETO_WA_EXEMPLO_LUDMILA}
+        </ClienteWhatsApp>
       </ScenarioBlock>
 
       <ScenarioBlock
@@ -380,7 +458,7 @@ function SolicitarBoletoScenarios() {
             <code>ok: true</code> · <code>pendentePagamento: true</code> ·{" "}
             <code>urlPagamento</code> preenchido ·{" "}
             <code>boletoReutilizado: true</code> · <code>geradoAgora: false</code>
-            . Exemplo real abaixo (CNPJ 01744605000150).
+            . Exemplos reais: CNPJ 28552323000107 (t-637) e 01744605000150 (t-636).
           </>
         }
         clientMessage={
@@ -399,7 +477,7 @@ function SolicitarBoletoScenarios() {
         }
         iaDont={IA_NAO_ESCALAR}
       >
-        <Code>{JSON_REAL_REUTILIZADO}</Code>
+        <Code>{JSON_REAL_JARE}</Code>
       </ScenarioBlock>
 
       <ScenarioBlock
@@ -549,11 +627,22 @@ export const solicitarBoletoSection: Section = {
       </Callout>
 
       <ShortAnswer>
-        Cliente pede boleto/link → chamar API → enviar ao cliente o valor de{" "}
-        <code>urlPagamento</code> na mensagem WhatsApp. É o link oficial de
-        pagamento (ex.: <code>https://fornecedor.cadbrasil.com.br/pay/t-636</code>
-        ). Não escalar humano.
+        Cliente pede boleto, quer pagar a taxa ou pede o link →{" "}
+        <code>GET /api/clients/solicitar-boleto?cnpj=CNPJ</code> → enviar na
+        mensagem WhatsApp o valor de <code>urlPagamento</code> (ex.:{" "}
+        <code>https://fornecedor.cadbrasil.com.br/pay/t-637</code>). Não
+        escalar humano.
       </ShortAnswer>
+
+      <SubTitle>Chamada da API (quando o cliente pedir boleto/pagamento)</SubTitle>
+      <Endpoint method="GET" url={ENDPOINT_EXEMPLO} />
+      <H>
+        Substitua o CNPJ pelos 14 dígitos do cliente. Resposta com{" "}
+        <code>pendentePagamento: true</code> → montar mensagem com ícones usando{" "}
+        <code>razaoSocial</code>, <code>valorFormatado</code>,{" "}
+        <code>dataVencimento</code>, <code>protocolo</code> e o link de{" "}
+        <code>urlPagamento</code>.
+      </H>
 
       <Callout tone="ok">
         <strong>Regra do link (obrigatória):</strong> na resposta JSON, copie{" "}
@@ -730,12 +819,23 @@ export const solicitarBoletoSection: Section = {
         ]}
       />
 
-      <SubTitle>Retorno JSON real — boleto reutilizado</SubTitle>
-      <p className="mb-2 text-[13px] text-muted-foreground">
-        Exemplo de produção: pendência localizada, link em{" "}
-        <code>urlPagamento</code>. A IA envia esse link na mensagem.
+      <SubTitle>Exemplos reais — JSON + mensagem WhatsApp</SubTitle>
+
+      <p className="mb-2 text-sm font-medium text-foreground">
+        Exemplo A — CNPJ 28552323000107 (pay/t-637)
       </p>
-      <Code>{JSON_REAL_REUTILIZADO}</Code>
+      <Code>{JSON_REAL_LUDMILA}</Code>
+      <ClienteWhatsApp iaNote={WA_IA_NOTE}>
+        {BOLETO_WA_EXEMPLO_LUDMILA}
+      </ClienteWhatsApp>
+
+      <p className="mb-2 mt-6 text-sm font-medium text-foreground">
+        Exemplo B — CNPJ 01744605000150 (pay/t-636)
+      </p>
+      <Code>{JSON_REAL_JARE}</Code>
+      <ClienteWhatsApp iaNote={WA_IA_NOTE}>
+        {BOLETO_WA_EXEMPLO_PREENCHIDO}
+      </ClienteWhatsApp>
 
       <SubTitle>Instruções internas — campos da API</SubTitle>
       <IaInstrucao>
@@ -755,12 +855,11 @@ export const solicitarBoletoSection: Section = {
         <strong>linkPdf</strong> — alternativa PDF; só se não null.
       </Callout>
 
-      <SubTitle>Exemplo visual — mensagem ao cliente</SubTitle>
+      <SubTitle>Modelo de mensagem (template com placeholders)</SubTitle>
       <p className="mb-2 text-[13px] text-muted-foreground">
-        Quando o cliente pede o boleto, envie uma mensagem como a abaixo (com
-        link real da API — nunca mencionar urlPagamento ou nome de API).
+        Preencher com dados da API. O 👉 link sempre vem de urlPagamento.
       </p>
-      <ClienteWhatsApp iaNote={WA_IA_NOTE}>{BOLETO_WA_EXEMPLO_PREENCHIDO}</ClienteWhatsApp>
+      <ClienteWhatsApp iaNote={WA_IA_NOTE}>{BOLETO_WA_PEDIDO_CLIENTE}</ClienteWhatsApp>
 
       <SubTitle>Retorno JSON — campos principais (só IA)</SubTitle>
       <DataTable
