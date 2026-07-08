@@ -149,9 +149,10 @@ Tecnologia, segurança e suporte para fornecedores do Brasil. 🇧🇷`}</Code>
               Nunca inventar status, valores ou links de boleto.
             </>,
             <>
-              Com boleto disponível → enviar <code>urlPagamento</code> e{" "}
-              <code>linkPdf</code> retornados pela API{" "}
-              <code>solicitar-boleto</code>.
+              Com boleto disponível → enviar o campo <code>urlPagamento</code>{" "}
+              (link principal para ver boleto e pagar). Se o cliente não
+              conseguir abrir, informar também <code>linkPdf</code>. Não enviar{" "}
+              <code>linkBoleto</code>.
             </>,
           ]}
         />
@@ -190,8 +191,10 @@ Tecnologia, segurança e suporte para fornecedores do Brasil. 🇧🇷`}</Code>
             API solicitar-boleto
           </a>{" "}
           conforme <code>pendentePagamento</code>,{" "}
-          <code>boletoReutilizado</code> e <code>geradoAgora</code>. Enviar{" "}
-          <code>urlPagamento</code> + <code>linkPdf</code>. Nunca inventar links.
+          <code>boletoReutilizado</code> e <code>geradoAgora</code>. Enviar ao
+          cliente o valor de <code>urlPagamento</code> (link principal). Se não
+          conseguir abrir, informar também <code>linkPdf</code>. Nunca inventar
+          links.
         </Callout>
 
         <SubTitle>SICAF gratuito vs pago (textos prontos WhatsApp)</SubTitle>
@@ -1584,7 +1587,8 @@ Tecnologia, segurança e suporte para fornecedores do Brasil. 🇧🇷`}</Code>
           Quando o cliente informar CNPJ válido e{" "}
           <code>GET /api/clients/solicitar-boleto?cnpj=CNPJ</code> retornar{" "}
           <code>pendentePagamento: true</code>. Envie <code>urlPagamento</code>{" "}
-          e <code>linkPdf</code> com os textos de{" "}
+          como link principal; se o cliente não conseguir abrir, informe também{" "}
+          <code>linkPdf</code>. Textos em{" "}
           <a href="#api-solicitar-boleto" className="underline underline-offset-4">
             API solicitar-boleto
           </a>
@@ -1609,8 +1613,8 @@ Tecnologia, segurança e suporte para fornecedores do Brasil. 🇧🇷`}</Code>
           ]}
         />
         <Callout tone="info">
-          Nunca invente links. Use <code>urlPagamento</code> e{" "}
-          <code>linkPdf</code> da API. Detalhes:{" "}
+          Nunca invente links. Envie <code>urlPagamento</code> ao cliente;{" "}
+          <code>linkPdf</code> só como alternativa. Detalhes:{" "}
           <a href="#api-solicitar-boleto" className="underline underline-offset-4">
             solicitar-boleto
           </a>

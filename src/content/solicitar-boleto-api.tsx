@@ -16,7 +16,14 @@ const API_BASE = LINKS.portal;
 const ENDPOINT = `${API_BASE}/api/clients/solicitar-boleto?cnpj={14_dígitos}`;
 
 const WA_NOTE =
-  "Enviar em 1–2 blocos no WhatsApp. Use *asteriscos* para negrito. Preencha com dados da API — nunca invente valores, links ou datas. Formate dataVencimento para DD/MM/AAAA (horário de Brasília). Priorize urlPagamento para PIX/boleto online.";
+  "Enviar em 1–2 blocos no WhatsApp. Use *asteriscos* para negrito. Preencha com dados da API — nunca invente valores, links ou datas. Formate dataVencimento para DD/MM/AAAA (horário de Brasília). O cliente deve receber o campo urlPagamento como link principal; linkPdf só como alternativa se não conseguir abrir.";
+
+/** Bloco de links — urlPagamento (principal) + linkPdf (alternativa). */
+const WA_LINKS_PAGAMENTO = `🔗 *Link de pagamento — acesse para ver o boleto e pagar (PIX ou boleto):*
+👉 {urlPagamento}
+
+📄 *Não conseguiu abrir o link acima?* Acesse também o PDF do boleto:
+👉 {linkPdf}`;
 
 const FOOTER = `🔐 *CADBRASIL Oficial*
 Tecnologia, segurança e suporte para fornecedores do Brasil. 🇧🇷`;
@@ -44,13 +51,9 @@ Olá! 👋 Consultei o cadastro e localizei a *taxa SICAF pendente* da empresa:
 📅 *Vencimento:* {dataVencimento}
 📋 *Protocolo:* {protocolo}
 
-🔗 *Pague online (PIX ou boleto):*
-👉 {urlPagamento}
+${WA_LINKS_PAGAMENTO}
 
-📄 *PDF do boleto:*
-{linkPdf}
-
-📌 Este é o *mesmo boleto* já emitido — basta acessar o link acima para pagar.
+📌 Este é o *mesmo boleto* já emitido — acesse o *link de pagamento* acima para ver o boleto e concluir o pagamento.
 
 ⏱️ Após o pagamento, a compensação leva *1 a 3 dias úteis*. Os *níveis do SICAF* são liberados na plataforma após a confirmação.
 
@@ -70,13 +73,9 @@ Olá! 👋 Para a empresa *{razaoSocial}*, *gerei agora* sua guia de pagamento S
 📅 *Vencimento:* {dataVencimento}
 📋 *Protocolo:* {protocolo}
 
-🔗 *Pague online (PIX ou boleto):*
-👉 {urlPagamento}
+${WA_LINKS_PAGAMENTO}
 
-📄 *PDF do boleto:*
-{linkPdf}
-
-📌 Guia *nova* com vencimento em até *5 dias úteis* — conclua o pagamento para liberar os *níveis do SICAF* na plataforma CADBRASIL Oficial.
+📌 Guia *nova* com vencimento em até *5 dias úteis* — acesse o *link de pagamento* para ver o boleto e liberar os *níveis do SICAF* na plataforma CADBRASIL Oficial.
 
 ⏱️ Compensação bancária: *1 a 3 dias úteis* após o pagamento.
 
@@ -97,13 +96,9 @@ Olá! 👋 Consultei o cadastro da *{razaoSocial}* e localizei a *renovação SI
 📋 *Protocolo:* {protocolo}
 📆 *SICAF válido até:* {sicafValidoAte} *(omitir linha se null)*
 
-🔗 *Pague online (PIX ou boleto):*
-👉 {urlPagamento}
+${WA_LINKS_PAGAMENTO}
 
-📄 *PDF do boleto:*
-{linkPdf}
-
-📌 Regularize a renovação para manter seu cadastro *ativo* e continuar licitando com segurança.
+📌 Regularize a renovação pelo *link de pagamento* para manter seu cadastro *ativo* e continuar licitando com segurança.
 
 ⏱️ Compensação: *1 a 3 dias úteis* após o pagamento.
 
@@ -204,10 +199,12 @@ function SolicitarBoletoScenarios() {
         }
         fields={
           <>
-            Usar <code>urlPagamento</code> (ou <code>URLpagamento</code> se
-            urlPagamento vazio) · <code>linkPdf</code> ·{" "}
-            <code>valorFormatado</code> · <code>dataVencimento</code> ·{" "}
-            <code>protocolo</code> · <code>razaoSocial</code>
+            Enviar ao cliente o campo <code>urlPagamento</code> (ou{" "}
+            <code>URLpagamento</code> se vazio) como link principal ·{" "}
+            <code>linkPdf</code> como alternativa · <code>valorFormatado</code> ·{" "}
+            <code>dataVencimento</code> · <code>protocolo</code> ·{" "}
+            <code>razaoSocial</code>. Não enviar <code>linkBoleto</code> ao
+            cliente — usar apenas <code>urlPagamento</code> + <code>linkPdf</code>.
           </>
         }
         clientMessage={
@@ -217,8 +214,9 @@ function SolicitarBoletoScenarios() {
           <List
             items={[
               "Cliente pediu boleto, 2ª via, taxa, renovação ou \"tem pendência?\" — este é o retorno mais comum.",
-              "Enviar urlPagamento como link principal (aceita PIX e boleto).",
-              "Incluir linkPdf se existir.",
+              "Enviar o valor exato do campo urlPagamento — é o link que o cliente deve abrir para ver o boleto e pagar.",
+              "Informar linkPdf como alternativa: \"se não conseguir abrir o link, use o PDF\".",
+              "Não enviar linkBoleto ao cliente — apenas urlPagamento + linkPdf.",
               "Formatar dataVencimento (ex.: 13/07/2026).",
               "Mencionar compensação 1–3 dias úteis.",
               "Nunca inventar codigoBarras ou links.",
@@ -252,7 +250,7 @@ function SolicitarBoletoScenarios() {
           <List
             items={[
               "Destacar que a guia foi *gerada agora* (não é reutilização).",
-              "Enviar urlPagamento + linkPdf.",
+              "Enviar urlPagamento (link principal) + linkPdf (alternativa se não abrir).",
               "Reforçar que níveis SICAF liberam após confirmação do pagamento.",
             ]}
           />
@@ -382,8 +380,10 @@ export const solicitarBoletoSection: Section = {
         pagamento (credenciamento R$ 985, renovação SICAF, 2ª via, &quot;tem
         pendência?&quot;, &quot;quero pagar&quot;) →{" "}
         <strong>obrigatório</strong> consultar esta API após obter CNPJ válido.
-        Nunca inventar links, valores ou vencimentos. Priorizar{" "}
-        <code>urlPagamento</code> na mensagem ao cliente.
+        Nunca inventar links, valores ou vencimentos. O cliente deve receber o
+        campo <code>urlPagamento</code> como link principal (ver boleto e pagar).
+        Se não conseguir abrir, informar também <code>linkPdf</code>. Não enviar{" "}
+        <code>linkBoleto</code> ao cliente.
       </Callout>
 
       <SubTitle>Quando acionar esta API</SubTitle>
@@ -453,10 +453,10 @@ export const solicitarBoletoSection: Section = {
           ["pendentePagamento", "boolean", "Define se há boleto/taxa em aberto"],
           ["razaoSocial", "string", "Nome da empresa na mensagem"],
           ["valorFormatado", "string", "Valor para exibir (ex.: R$ 985,00)"],
-          ["urlPagamento", "string", "Link principal — PIX ou boleto online"],
-          ["URLpagamento", "string", "Alias de urlPagamento — usar se url vazio"],
-          ["linkPdf", "string", "PDF do boleto — enviar junto"],
-          ["linkBoleto", "string", "Visualização Gerencianet — opcional"],
+          ["urlPagamento", "string", "Link principal — enviar ao cliente para ver boleto e pagar (PIX ou boleto)"],
+          ["URLpagamento", "string", "Alias de urlPagamento — usar se urlPagamento vazio"],
+          ["linkPdf", "string", "Link alternativo — enviar junto com aviso \"se não conseguir abrir o link\""],
+          ["linkBoleto", "string", "Uso interno — não enviar ao cliente; usar urlPagamento"],
           ["codigoBarras", "string", "Só enviar se cliente pedir explicitamente"],
           ["protocolo", "string", "Referência SICAF (ex.: SICAF-2026-636)"],
           ["dataVencimento", "ISO date", "Formatar DD/MM/AAAA para o cliente"],
@@ -473,8 +473,10 @@ export const solicitarBoletoSection: Section = {
       <SolicitarBoletoScenarios />
 
       <Callout tone="warn">
-        <strong>IA:</strong> use apenas <code>urlPagamento</code>,{" "}
-        <code>linkPdf</code> e <code>linkBoleto</code> retornados pela API.
+        <strong>IA — links para o cliente:</strong> envie sempre o valor de{" "}
+        <code>urlPagamento</code> (link principal para ver o boleto e pagar).
+        Informe também <code>linkPdf</code> com a frase &quot;se não conseguir
+        abrir o link acima&quot;. Não envie <code>linkBoleto</code> ao cliente.
         Compensação bancária: 1 a 3 dias úteis. Página alternativa:{" "}
         <a href={LINKS.pagamentos} className="underline underline-offset-4">
           {LINKS.pagamentos}
