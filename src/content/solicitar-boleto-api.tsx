@@ -342,7 +342,7 @@ function SolicitarBoletoScenarios() {
         <p className="mt-4 text-sm font-medium text-muted-foreground">
           Retorno JSON (exemplo real)
         </p>
-        <Code>{EXAMPLE_OK}</Code>
+        <Code>{JSON_SUCESSO_COMPLETO}</Code>
         <p className="mt-4 text-sm font-medium text-muted-foreground">
           Mensagem WhatsApp preenchida — link = urlPagamento da API
         </p>
