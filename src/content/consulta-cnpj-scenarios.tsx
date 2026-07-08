@@ -7,6 +7,27 @@ import {
 } from "@/lib/docs-ui";
 import { LINKS, VIDEOS } from "@/content/videos";
 
+const WA_NOTE =
+  "Enviar em blocos curtos no WhatsApp (ideal: 2–4 mensagens). Use os dados retornados pela API; omita linhas com valor null ou vazio. Formate CNPJ para exibição (XX.XXX.XXX/XXXX-XX).";
+
+function WhatsAppMessage({
+  note = WA_NOTE,
+  children,
+}: {
+  note?: string;
+  children: string;
+}) {
+  return (
+    <>
+      <p className="mb-3 text-[13px] text-muted-foreground">{note}</p>
+      <Code>{children}</Code>
+    </>
+  );
+}
+
+const FOOTER = `🔐 *CADBRASIL Oficial*
+Tecnologia, segurança e suporte para fornecedores do Brasil. 🇧🇷`;
+
 export function ConsultaCnpjScenarios() {
   return (
     <>
@@ -22,16 +43,36 @@ export function ConsultaCnpjScenarios() {
           </>
         }
         clientMessage={
-          <>
-            O CNPJ informado não é válido. Envie os <strong>14 números</strong>{" "}
-            do CNPJ, <strong>sem pontos, barra ou traço</strong>. Exemplo:{" "}
-            <code>03751915000127</code>
-          </>
+          <WhatsAppMessage>{`🇧🇷 *CADBRASIL Oficial ®*
+💬 *Consulta de CNPJ*
+
+⚠️ *CNPJ não reconhecido*
+
+Olá! 👋 Tentamos consultar o número informado, mas *não foi possível validá-lo* como um CNPJ válido.
+
+🔢 *O que precisamos:*
+Envie o CNPJ da empresa com *exatamente 14 números*, *sem pontos, barra ou traço*.
+
+✅ *Exemplo correto:*
+03751915000127
+
+❌ *Evite estes formatos:*
+• 37.519.150/0001-27
+• 3751915000127 (13 dígitos)
+• Campo vazio ou incompleto
+
+📌 Assim que recebermos o CNPJ correto, consultaremos sua situação cadastral na CADBRASIL e na Receita Federal.
+
+❓ Se precisar de ajuda para localizar o CNPJ, solicite falar com um *atendente*.
+
+${FOOTER}`}</WhatsAppMessage>
         }
         iaDo={
           <List
             items={[
-              "Pedir novamente o CNPJ no formato correto.",
+              "Tom cordial — não culpar o cliente pelo erro de digitação.",
+              "Explicar formato: 14 dígitos, somente números.",
+              "Dar exemplo concreto de CNPJ válido.",
               "Não consultar boletos nem falar de status SICAF até ter 14 dígitos válidos.",
               "Após 2 tentativas sem sucesso → escalar humano.",
             ]}
@@ -62,19 +103,51 @@ export function ConsultaCnpjScenarios() {
           </>
         }
         clientMessage={
-          <>
-            Não localizamos esse CNPJ na CADBRASIL nem na Receita Federal.
-            Confira se os 14 dígitos estão corretos. Se sua empresa ainda não se
-            cadastrou, acesse: <strong>{LINKS.cadastro}</strong>
-          </>
+          <WhatsAppMessage>{`🇧🇷 *CADBRASIL Oficial ®*
+💬 *Consulta de CNPJ — Resultado*
+
+Olá! 👋 Realizamos a consulta do CNPJ informado, porém *não localizamos* esse número em nossa base nem conseguimos confirmá-lo na *Receita Federal*.
+
+📋 *Consulta realizada:*
+
+🔢 *CNPJ informado:*
+{cnpj}
+
+📊 *Status CADBRASIL:*
+Não cadastrado
+
+📊 *Status Receita Federal:*
+{erroReceitaFederal}
+
+━━━━━━━━━━━━━━━━
+
+⚠️ *Possíveis motivos:*
+• CNPJ digitado incorretamente
+• Empresa recém-aberta (cadastro ainda indisponível na base)
+• Empresa ainda não iniciou cadastro na CADBRASIL
+
+✅ *O que fazer agora:*
+
+1️⃣ *Confira os 14 dígitos* do CNPJ e informe novamente
+
+2️⃣ Se sua empresa *ainda não se cadastrou* na CADBRASIL, inicie aqui:
+👉 {urlCadastro}
+
+Lá você dará sequência ao *credenciamento SICAF* e terá acesso à plataforma completa de fornecedores.
+
+❓ Ainda com dúvidas? Solicite falar com um *atendente* — estamos à disposição! 📞
+
+${FOOTER}`}</WhatsAppMessage>
         }
         iaDo={
           <List
             items={[
               "Use orientacaoUsuario / orientacaoIA quando existirem.",
-              "Pedir confirmação do CNPJ.",
-              "Oferecer link de cadastro se for empresa nova.",
+              "Informar CNPJ consultado e mensagem de erroReceitaFederal.",
+              "Pedir confirmação do CNPJ — pode ter digitado errado.",
+              "Oferecer urlCadastro se for empresa nova.",
               "Não dizer que o cliente já é cadastrado.",
+              "Se erroReceitaFederal = limite de consultas → pedir para tentar em instantes.",
               "Após 2 tentativas → escalar humano.",
             ]}
           />
@@ -119,23 +192,75 @@ export function ConsultaCnpjScenarios() {
           </>
         }
         clientMessage={
-          <>
-            Olá, empresa <strong>{"{razaoSocial}"}</strong>! Localizamos seus
-            dados na Receita Federal (situação:{" "}
-            <strong>{"{situacaoReceitaFederal}"}</strong>), mas o cadastro na
-            CADBRASIL ainda não foi concluído. Acesse <strong>{LINKS.cadastro}</strong>{" "}
-            e conclua o cadastramento. Taxa anual: <strong>R$ 985,00</strong>.
-            Sem concluir cadastro e pagamento, os níveis do SICAF não serão
-            liberados.
-          </>
+          <WhatsAppMessage note="Enviar em blocos curtos no WhatsApp (ideal: 2–4 mensagens). Use os campos de receitaFederal quando existirem; omita linhas com valor null ou vazio. Formate o CNPJ para exibição (XX.XXX.XXX/XXXX-XX).">{`🇧🇷 *CADBRASIL Oficial ®*
+💬 *Consulta de CNPJ — Resultado*
+
+Olá! 👋 Realizamos a consulta do seu CNPJ e identificamos que sua empresa está registrada na *Receita Federal*, porém o *cadastramento na CADBRASIL ainda não foi concluído*.
+
+📋 *Dados da empresa consultada:*
+
+🏢 *Razão Social:*
+{razaoSocial}
+
+🔢 *CNPJ:*
+{cnpj}
+
+📛 *Nome Fantasia:*
+{nomeFantasia ou "Não informado"}
+
+📊 *Situação Cadastral:*
+{situacaoReceitaFederal}
+
+⚖️ *Natureza Jurídica:*
+{naturezaJuridica}
+
+📍 *Endereço:*
+{logradouro}, {numero}{complemento ? " — " + complemento : ""}
+{bairro} — {cidade}/{estado}
+CEP: {cep}
+
+🏭 *Atividade Principal:*
+{atividadePrincipal}
+
+📧 *E-mail:* {email}
+📞 *Telefone:* {telefone}
+
+━━━━━━━━━━━━━━━━
+
+⚠️ *Situação na CADBRASIL:*
+Seu CNPJ *não consta* em nossa base de fornecedores com cadastro concluído.
+
+Para dar sequência ao *credenciamento SICAF* e acessar a plataforma CADBRASIL, é necessário concluir o cadastramento digital com dados atualizados.
+
+✅ *Próximos passos:*
+
+1️⃣ Acesse o cadastro digital:
+👉 {urlCadastro}
+
+2️⃣ Preencha todas as informações da empresa com *dados corretos e atualizados*
+
+3️⃣ Efetue o pagamento da *taxa anual de credenciamento SICAF*
+💰 Valor: *R$ {valorTaxaAnual},00*
+
+📌 *Importante:*
+Enquanto o cadastro e o pagamento não forem concluídos, os *níveis do SICAF não serão liberados* e sua empresa não poderá utilizar os serviços da plataforma CADBRASIL.
+
+❓ *Precisa de ajuda?*
+Se tiver dúvidas durante o cadastro, solicite falar com um *atendente* — estamos à disposição! 📞
+
+${FOOTER}`}</WhatsAppMessage>
         }
         iaDo={
           <List
             items={[
               "Cumprimentar pelo razaoSocial da Receita.",
-              "Enviar urlCadastro.",
-              "Informar valorTaxaAnual (padrão R$ 985,00).",
+              "Montar bloco de dados usando receitaFederal: razaoSocial, cnpj, nomeFantasia, situacaoCadastral, naturezaJuridica, endereço completo, atividadePrincipal, email, telefone.",
+              "Omitir linhas cujo campo seja null ou vazio (ex.: nomeFantasia, porte).",
+              "Explicar claramente: encontrado na Receita, cadastro CADBRASIL pendente.",
+              "Enviar urlCadastro e valorTaxaAnual (padrão R$ 985,00).",
+              "Reforçar que níveis SICAF só liberam após cadastro + pagamento.",
               "Se situacaoReceitaFederal = Baixada/Inapta → escalar consultor.",
+              "Se cliente tiver dúvida → pedir para falar com atendente.",
             ]}
           />
         }
@@ -183,22 +308,62 @@ export function ConsultaCnpjScenarios() {
           </>
         }
         clientMessage={
-          <>
-            A empresa <strong>{"{razaoSocial}"}</strong> já possui cadastro, mas o{" "}
-            <strong>pagamento da taxa SICAF está em aberto</strong> — R${" "}
-            {"{valorTotalPendente}"},00. Acesse{" "}
-            <strong>{LINKS.pagamentos}</strong> para emitir ou pagar o boleto.
-            Enquanto não pagar, os níveis do SICAF não serão concluídos. Se
-            ainda tiver dúvida, peça para falar com um atendente.
-          </>
+          <WhatsAppMessage>{`🇧🇷 *CADBRASIL Oficial ®*
+💬 *Consulta de CNPJ — Resultado*
+
+Olá! 👋 Consultamos seu cadastro e identificamos que sua empresa *já está na base CADBRASIL*, porém há *pagamento pendente* para conclusão do credenciamento SICAF.
+
+📋 *Dados da empresa:*
+
+🏢 *Razão Social:*
+{razaoSocial}
+
+🔢 *CNPJ:*
+{cnpj}
+
+📧 *E-mail cadastrado:*
+{cliente.email}
+
+📞 *Telefone:*
+{cliente.telefone}
+
+📊 *Status SICAF:*
+{sicaf.status} — {sicaf.completude}% concluído
+
+━━━━━━━━━━━━━━━━
+
+💳 *Situação financeira:*
+
+⚠️ *Pagamento da taxa SICAF em aberto*
+💰 *Valor pendente:* R$ {valorTotalPendente},00
+📅 *Vencimento:* {pagamentosResumo.sicafPendentes[0].dataVencimento}
+
+Enquanto o pagamento *não for confirmado*, os *níveis do SICAF não serão concluídos* e o credenciamento permanece *pendente*.
+
+✅ *Como regularizar:*
+
+1️⃣ Acesse a página de pagamentos:
+👉 ${LINKS.pagamentos}
+
+2️⃣ Faça login e emita ou pague o boleto
+
+3️⃣ Ou *confirme aqui* que deseja receber o boleto pelo WhatsApp — enviaremos o link/PDF oficial retornado pela API
+
+📌 Compensação bancária: geralmente *1 a 3 dias úteis* após o pagamento.
+
+❓ Precisa de ajuda? Solicite falar com um *atendente*! 📞
+
+${FOOTER}`}</WhatsAppMessage>
         }
         iaDo={
           <List
             items={[
               "Informar: cadastro feito, pagamento pendente.",
+              "Montar bloco com razaoSocial, cnpj, cliente.email, cliente.telefone, sicaf.status, sicaf.completude.",
               `Orientar ${LINKS.pagamentos} para boleto e pagamento.`,
               "Se pagamentosResumo.sicafPendentes[].linkBoleto ou pdfBoleto existir → enviar.",
               "Ou consultar GET /api/clients/boleto-sicaf/CNPJ.",
+              "Mencionar dataVencimento quando existir.",
               "Se ainda tiver dúvida → pedir para falar com atendente (escalar).",
             ]}
           />
@@ -208,6 +373,7 @@ export function ConsultaCnpjScenarios() {
             items={[
               "Dizer que o SICAF está ativo ou apto a licitar.",
               "Dizer que não há pendências.",
+              "Inventar links de boleto.",
             ]}
           />
         }
@@ -237,21 +403,55 @@ export function ConsultaCnpjScenarios() {
           </>
         }
         clientMessage={
-          <>
-            A empresa <strong>{"{razaoSocial}"}</strong> está cadastrada, mas o{" "}
-            <strong>SICAF está VENCIDO</strong>. Não participe de licitações com
-            SICAF vencido. Renove em <strong>{LINKS.portal}</strong> ou WhatsApp{" "}
-            {LINKS.whatsappDisplay}. Vídeo:{" "}
-            <a href={VIDEOS.atualizarSicaf} className="underline">
-              atualizar SICAF
-            </a>
-          </>
+          <WhatsAppMessage note="Tom de URGÊNCIA. Enviar em blocos curtos. Licitação próxima → escalar humano com prioridade alta.">{`🇧🇷 *CADBRASIL Oficial ®*
+💬 *Consulta de CNPJ — Resultado*
+
+Olá! 👋 Consultamos seu cadastro e identificamos uma situação que *requer atenção imediata*.
+
+📋 *Dados da empresa:*
+
+🏢 *Razão Social:*
+{razaoSocial}
+
+🔢 *CNPJ:*
+{cnpj}
+
+━━━━━━━━━━━━━━━━
+
+🚨 *ALERTA — SICAF VENCIDO*
+
+📛 *Status:* VENCIDO
+📅 *Validade expirada em:* {sicaf.dataValidade formatada}
+📊 *Completude:* {sicaf.completude}%
+
+⚠️ *IMPORTANTE:*
+*Não participe de licitações* com SICAF vencido — sua empresa pode ser *desclassificada* na fase de habilitação e ficar *impedida* de contratar com o governo.
+
+✅ *Como renovar agora:*
+
+1️⃣ Acesse o Portal do Fornecedor:
+👉 {urlPortal}
+
+2️⃣ Faça login e regularize a renovação do credenciamento
+
+3️⃣ Assista ao vídeo passo a passo:
+🎥 ${VIDEOS.atualizarSicaf}
+
+4️⃣ Ou fale conosco: 📞 ${LINKS.whatsappDisplay}
+
+❗ Tem licitação próxima? Informe *imediatamente* para *prioridade no atendimento*.
+
+❓ Precisa de ajuda? Solicite falar com um *atendente*! 📞
+
+${FOOTER}`}</WhatsAppMessage>
         }
         iaDo={
           <List
             items={[
-              "Tratar com urgência.",
-              "Orientar renovação imediata.",
+              "Tratar com urgência — tom de alerta, não de pânico.",
+              "Informar razaoSocial, CNPJ, data de validade expirada.",
+              "Alertar risco de desclassificação em licitações.",
+              "Orientar urlPortal, vídeo atualizar SICAF e WhatsApp.",
               "Licitação próxima → escalar humano com prioridade alta.",
             ]}
           />
@@ -274,18 +474,56 @@ export function ConsultaCnpjScenarios() {
           </>
         }
         clientMessage={
-          <>
-            Sua empresa <strong>{"{razaoSocial}"}</strong> está na CADBRASIL, mas o{" "}
-            <strong>processo SICAF ainda não foi iniciado</strong>. Acesse{" "}
-            <strong>{LINKS.portal}</strong> ou <strong>{LINKS.cadastro}</strong>.
-            Taxa: <strong>R$ 985,00</strong>.
-          </>
+          <WhatsAppMessage>{`🇧🇷 *CADBRASIL Oficial ®*
+💬 *Consulta de CNPJ — Resultado*
+
+Olá! 👋 Consultamos seu cadastro e identificamos que sua empresa *já está na base CADBRASIL*, porém o *processo de credenciamento SICAF ainda não foi iniciado*.
+
+📋 *Dados da empresa:*
+
+🏢 *Razão Social:*
+{razaoSocial}
+
+🔢 *CNPJ:*
+{cnpj}
+
+📊 *Status CADBRASIL:*
+Cadastrado
+
+📊 *Status SICAF:*
+Não iniciado
+
+━━━━━━━━━━━━━━━━
+
+⚠️ *Situação:*
+Sua empresa está na plataforma, mas *ainda não possui credenciamento SICAF ativo*. Sem o SICAF, não é possível participar de licitações públicas como fornecedor habilitado.
+
+✅ *Próximos passos:*
+
+1️⃣ Acesse o Portal do Fornecedor:
+👉 {urlPortal}
+
+2️⃣ Ou inicie/conclua pelo cadastro digital:
+👉 {urlCadastro}
+
+3️⃣ Efetue o pagamento da *taxa anual de credenciamento SICAF*
+💰 Valor: *R$ {valorTaxaAnual},00* (pagamento único)
+
+📌 Após o pagamento e conclusão das etapas, os *níveis do SICAF* serão liberados progressivamente.
+
+❓ Precisa de ajuda? Solicite falar com um *atendente*! 📞
+
+${FOOTER}`}</WhatsAppMessage>
         }
         iaDo={
           <List
             items={[
-              "Orientar início do credenciamento.",
-              "Informar valorTaxaAnual (R$ 985,00).",
+              "Informar: cliente na base, SICAF não iniciado (sicaf: null).",
+              "Montar bloco com razaoSocial e cnpj.",
+              "Orientar urlPortal e urlCadastro.",
+              "Informar valorTaxaAnual (padrão R$ 985,00).",
+              "Explicar que sem SICAF não há habilitação para licitar.",
+              "Se dúvida → pedir para falar com atendente.",
             ]}
           />
         }
@@ -301,19 +539,59 @@ export function ConsultaCnpjScenarios() {
           </>
         }
         clientMessage={
-          <>
-            Sua empresa <strong>{"{razaoSocial}"}</strong> tem cadastro, mas o{" "}
-            <strong>SICAF ainda não foi concluído</strong> (status:{" "}
-            <strong>{"{sicaf.status}"}</strong>, completude:{" "}
-            <strong>{"{sicaf.completude}"}%</strong>). Acesse{" "}
-            <strong>{LINKS.portal}</strong> para ver pendências.
-          </>
+          <WhatsAppMessage>{`🇧🇷 *CADBRASIL Oficial ®*
+💬 *Consulta de CNPJ — Resultado*
+
+Olá! 👋 Consultamos seu cadastro e identificamos que sua empresa está na CADBRASIL com o *credenciamento SICAF em andamento*, mas *ainda não concluído*.
+
+📋 *Dados da empresa:*
+
+🏢 *Razão Social:*
+{razaoSocial}
+
+🔢 *CNPJ:*
+{cnpj}
+
+📊 *Status SICAF:*
+{sicaf.status}
+
+📈 *Completude:*
+{sicaf.completude}% concluído
+
+━━━━━━━━━━━━━━━━
+
+⚠️ *Situação:*
+O processo SICAF foi iniciado, porém existem *pendências* (documentos, certidões ou etapas) que impedem a conclusão do credenciamento.
+
+✅ *O que fazer agora:*
+
+1️⃣ Acesse o Portal do Fornecedor:
+👉 {urlPortal}
+
+2️⃣ Faça login e verifique as *pendências* indicadas no painel
+
+3️⃣ Envie documentos pendentes ou regularize certidões conforme orientação
+
+4️⃣ Acompanhe a evolução da completude (atual: {sicaf.completude}%)
+
+📌 Quanto maior a completude, mais próximo você está da *habilitação completa* para licitar.
+
+🎥 Dúvidas sobre documentos ou certidões?
+Central de Ajuda: ${LINKS.ajuda}
+
+❓ Precisa de ajuda? Solicite falar com um *atendente*! 📞
+
+${FOOTER}`}</WhatsAppMessage>
         }
         iaDo={
           <List
             items={[
-              "Orientar acesso ao portal.",
-              "Mencionar completude e status Pendente.",
+              "Informar razaoSocial, sicaf.status e sicaf.completude.",
+              "Orientar urlPortal para ver pendências no painel.",
+              "Mencionar envio de documentos e certidões.",
+              "Oferecer link da Central de Ajuda para tutoriais.",
+              "Se completude muito baixa → reforçar urgência em regularizar.",
+              "Se dúvida → pedir para falar com atendente.",
             ]}
           />
         }
@@ -340,32 +618,120 @@ export function ConsultaCnpjScenarios() {
         }
         clientMessage={
           <>
-            <strong>Bloco 1:</strong> Prezado Fornecedor {"{razaoSocial}"},{" "}
-            {"{saudacao}"}! Cadastro <strong>Ativo</strong>, SICAF válido até{" "}
-            {"{dataValidade}"}. Pagamentos em dia.
-            <br />
-            <br />
-            <strong>Bloco 2 — Renovação:</strong> Se renovacaoUrgente (≤30 dias)
-            → alertar. Se renovacaoProxima (≤60 dias) → avisar. Senão → informar
-            dias restantes.
-            <br />
-            <br />
-            <strong>Bloco 3 — Níveis SICAF:</strong> Listar niveisSicaf com ícones
-            (✅ Válido · ⚠️ A Vencer · ❌ Vencido · ⏳ Pendente).
-            <br />
-            <br />
-            <strong>Bloco 4 — Links:</strong> Portal, WhatsApp, Central de Ajuda,
-            vídeo atualização SICAF.
+            <WhatsAppMessage note="Priorizar orientacaoUsuario quando existir. Enviar em 3–5 blocos. Listar todos os niveisSicaf[] com ícones. Adaptar bloco de renovação conforme renovacaoUrgente / renovacaoProxima.">{`🇧🇷 *CADBRASIL Oficial ®*
+💬 *Consulta de CNPJ — Resultado*
+
+Prezado(a) Fornecedor(a) *{razaoSocial}*, {saudacao}! 👋
+
+✅ *Parabéns!* Seu cadastro está *ATIVO* na CADBRASIL com credenciamento SICAF *válido e em ordem*.
+
+📋 *Resumo do cadastro:*
+
+🏢 *Razão Social:*
+{razaoSocial}
+
+🔢 *CNPJ:*
+{cnpj}
+
+📊 *Status SICAF:*
+{sicaf.status}
+
+📅 *Validade:*
+{sicaf.dataValidade formatada}
+
+⏳ *Dias restantes:*
+{diasParaRenovacao} dias
+
+💳 *Pagamentos:*
+{pagamentosEmDia ? "✅ Em dia" : "⚠️ Verificar pendências"}
+
+🔄 *Última renovação:*
+{renovacao.status} — referência {renovacao.anoReferencia}
+
+━━━━━━━━━━━━━━━━
+
+📈 *Validade do credenciamento:*
+{SE renovacaoUrgente → "⚠️ ATENÇÃO: seu SICAF vence em {diasParaRenovacao} dias! Recomendamos iniciar a renovação AGORA pelo portal ou WhatsApp."}
+{SE renovacaoProxima → "📌 Seu credenciamento vence em {diasParaRenovacao} dias — fique atento à renovação."}
+{SE tudo OK → "✅ Seu credenciamento está válido por mais {diasParaRenovacao} dias."}
+
+━━━━━━━━━━━━━━━━
+
+📊 *Seus níveis SICAF:*
+
+{icone} *Nível {nivel}* — {nome}
+Status: {status}{dataValidade ? " (válido até " + dataValidade + ")" : ""}
+(repetir para cada item de niveisSicaf[] — I a VI)
+
+━━━━━━━━━━━━━━━━
+
+🔗 *Links úteis:*
+
+📋 Portal do Fornecedor:
+{urlPortal}
+
+💳 Pagamentos e boletos:
+${LINKS.pagamentos}
+
+❓ Central de Ajuda (vídeos passo a passo):
+{urlAjuda}
+
+🎥 Como atualizar o SICAF:
+{urlVideoAtualizacaoSicaf}
+
+📞 WhatsApp CADBRASIL:
+{whatsappDisplay}
+
+❓ Precisa de boleto ou suporte? Estamos à disposição!
+
+${FOOTER}`}</WhatsAppMessage>
+            <SubTitle>Sub-cenário H2 — Ativo com certidão a vencer/vencida</SubTitle>
+            <WhatsAppMessage note="Usar quando certidaoVencendoOuVencida: true. Destacar níveis com ícone ⚠️ ou ❌.">{`🇧🇷 *CADBRASIL Oficial ®*
+💬 *Consulta de CNPJ — Resultado*
+
+Prezado(a) Fornecedor(a) *{razaoSocial}*, {saudacao}! 👋
+
+✅ Seu SICAF está *ativo* até *{sicaf.dataValidade formatada}*.
+
+⚠️ Porém, identificamos *certidão(ões) a vencer ou vencida(s)*:
+
+{icone} *Nível {nivel}* — {nome}
+Status: {status} — {dataValidade}
+(listar apenas níveis com ⚠️ ou ❌)
+
+━━━━━━━━━━━━━━━━
+
+📌 *Atenção:*
+Certidões vencidas podem impedir sua *habilitação* em licitações específicas, mesmo com SICAF ativo.
+
+✅ *Como regularizar:*
+
+1️⃣ Assista ao vídeo passo a passo:
+🎥 {urlVideoAtualizacaoSicaf}
+
+2️⃣ Acesse a Central de Ajuda:
+👉 {urlAjuda}
+
+3️⃣ Ou acesse o Portal do Fornecedor:
+👉 {urlPortal}
+
+❓ Precisa de ajuda? Solicite falar com um *atendente*! 📞
+
+${FOOTER}`}</WhatsAppMessage>
           </>
         }
         iaDo={
           <List
             items={[
               "Parabenizar — cliente em dia.",
-              "Resumir níveis SICAF com ícones de niveisSicaf.",
-              "Se renovacaoUrgente → alertar renovação.",
-              "Se certidaoVencendoOuVencida → destacar níveis ⚠️/❌ e enviar vídeo.",
+              "Usar saudacao do retorno da API (Bom dia/tarde/noite).",
+              "Resumir validade, diasParaRenovacao e pagamentosEmDia.",
+              "Listar todos os niveisSicaf com ícones e status.",
+              "Se renovacaoUrgente → alertar renovação com tom de atenção.",
+              "Se renovacaoProxima → avisar prazo.",
+              "Se certidaoVencendoOuVencida → usar template H2 e destacar níveis ⚠️/❌.",
               "Se possuiManutencao → mencionar plano R$ 155/mês.",
+              "Enviar links: portal, pagamentos, ajuda, vídeo, WhatsApp.",
               "Priorizar orientacaoUsuario quando existir.",
             ]}
           />
@@ -381,11 +747,15 @@ export function ConsultaCnpjScenarios() {
   "dataValidade": "15/06/2027",
   "certidoes": 3
 }`}</Code>
-        <H>Sub-cenário: ativo com certidão a vencer/vencida</H>
-        <H>
-          Quando <code>certidaoVencendoOuVencida: true</code> → destacar níveis
-          com ⚠️ ou ❌ e enviar vídeo {VIDEOS.atualizarSicaf} e Central de Ajuda.
-        </H>
+        <H>Ícones dos níveis:</H>
+        <List
+          items={[
+            "✅ Válido / Habilitado",
+            "⚠️ A Vencer",
+            "❌ Vencido",
+            "⏳ Pendente",
+          ]}
+        />
       </ScenarioBlock>
     </>
   );

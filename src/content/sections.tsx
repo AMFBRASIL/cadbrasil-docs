@@ -13,6 +13,10 @@ import {
 } from "@/lib/docs-ui";
 import { consultaCnpjSection } from "@/content/consulta-cnpj-api";
 import { sicafProcessSections } from "@/content/sicaf-processo-sections";
+import {
+  AssistenteLinksList,
+  AssistenteWhatsAppBlock,
+} from "@/content/assistente-ia";
 import { VIDEOS, LINKS } from "@/content/videos";
 
 export { VIDEOS };
@@ -152,6 +156,20 @@ Tecnologia, segurança e suporte para fornecedores do Brasil. 🇧🇷`}</Code>
           . Se ainda tiver dúvida após a orientação, peça para falar com um
           atendente (escalar para humano).
         </H>
+
+        <SubTitle>Assistente CADBRASIL (obrigatório quando perguntarem)</SubTitle>
+        <Callout tone="ok">
+          <strong>Regra fixa:</strong> quando o cliente perguntar sobre o{" "}
+          <strong>Assistente CADBRASIL</strong> — instalar, baixar, app,
+          programa, aplicativo, como usar, acessar — a IA deve explicar o que é
+          o Assistente e enviar <strong>sempre os 2 links</strong> abaixo (na
+          mesma resposta ou em blocos seguidos):
+          <AssistenteLinksList />
+          Não enviar apenas um link. Se ainda tiver dúvida → pedir para falar
+          com atendente.
+        </Callout>
+        <AssistenteWhatsAppBlock />
+
         <H>
           <strong>Horário comercial:</strong> Seg–Sex, 08h–18h (exceto
           feriados). Fora do horário → responder dúvidas simples e avisar que
@@ -171,7 +189,7 @@ Tecnologia, segurança e suporte para fornecedores do Brasil. 🇧🇷`}</Code>
             "2ª via / boleto / taxa / 985 / pagar → Página de pagamentos + API boleto",
             "mensalidade / 155 / manutenção → Página de pagamentos + API consulta-boletos",
             "cadastro / habilitação / fornecedor / consultar CNPJ → API consulta-cnpj",
-            "app / programa / aplicativo → Assistente CADBRASIL",
+            "app / programa / aplicativo / instalar / baixar / assistente / como usar o app → Assistente CADBRASIL (2 links obrigatórios)",
             "senha / login / acesso → Área do Fornecedor",
             "certidão / CND / FGTS / negativa → Atualizar certidões",
             "edital / impugnação / impugnar → Leitura de edital com IA + Gerador de Impugnação",
@@ -739,14 +757,17 @@ Tecnologia, segurança e suporte para fornecedores do Brasil. 🇧🇷`}</Code>
     body: (
       <>
         <ShortAnswer>
-          Primeiro passo do processo SICAF. Instale o Assistente — ele orienta
-          cadastro, documentos e atualizações. Vídeo na Central de Ajuda.
+          Acesse o Assistente em {LINKS.assistente} ou veja os vídeos na Central
+          de Ajuda ({LINKS.ajuda}). É o passo 1 do processo SICAF.
         </ShortAnswer>
         <H>
           O Assistente CADBRASIL é o aplicativo que conduz todo o processo de
           credenciamento e atualização do SICAF — instalação, envio de
           documentos, orientações GOV.BR e Situação do Fornecedor.
         </H>
+        <SubTitle>Links oficiais (IA — enviar sempre os 2)</SubTitle>
+        <AssistenteLinksList />
+        <AssistenteWhatsAppBlock note="Mensagem-modelo quando o cliente perguntar sobre instalação ou Assistente." />
         <H>
           É o <strong>passo 1</strong> do processo — veja{" "}
           <a href="#processo-cadastro-sicaf" className="underline underline-offset-4">
@@ -765,15 +786,17 @@ Tecnologia, segurança e suporte para fornecedores do Brasil. 🇧🇷`}</Code>
     body: (
       <>
         <ShortAnswer>
-          Siga as orientações passo a passo: envie docs, acesse GOV.BR quando
-          pedido, atualize a Situação do Fornecedor. Não precisa ser expert em
-          licitações.
+          Acesse {LINKS.assistente} e siga as orientações passo a passo. Dúvidas
+          práticas: vídeos em {LINKS.ajuda}.
         </ShortAnswer>
         <H>
           O Assistente CADBRASIL permite enviar documentos, atualizar certidões,
           acompanhar pendências, atualizar a Situação do Fornecedor e receber
           orientações sobre o GOV.BR.
         </H>
+        <SubTitle>Links oficiais (IA — enviar sempre os 2)</SubTitle>
+        <AssistenteLinksList />
+        <AssistenteWhatsAppBlock note="Mensagem-modelo quando o cliente perguntar como usar o Assistente." />
         <H>
           Detalhes:{" "}
           <a href="#assistente-papel" className="underline underline-offset-4">

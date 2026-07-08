@@ -104,9 +104,20 @@ Cliente informou CNPJ com menos ou mais de 14 dígitos, ou vazio.
 }
 ```
 
-### Mensagem para o cliente (IA)
-> O CNPJ informado não é válido. Por favor, envie os **14 números** do CNPJ da empresa, **sem pontos, barra ou traço**.  
-> Exemplo: `03751915000127`
+### Mensagem completa para o cliente (IA — enviar em blocos WhatsApp)
+
+> 🇧🇷 **CADBRASIL Oficial ®**  
+> 💬 **Consulta de CNPJ**  
+>  
+> ⚠️ **CNPJ não reconhecido**  
+>  
+> Olá! 👋 Tentamos consultar o número informado, mas **não foi possível validá-lo** como CNPJ válido.  
+>  
+> 🔢 **O que precisamos:** 14 números, **sem pontos, barra ou traço**  
+> ✅ **Exemplo:** `03751915000127`  
+>  
+> 📌 Assim que recebermos o CNPJ correto, consultaremos sua situação na CADBRASIL e Receita Federal.  
+> ❓ Dúvidas? Solicite falar com um **atendente**.
 
 ### O que a IA deve fazer
 - Pedir novamente o CNPJ no formato correto.
@@ -153,12 +164,28 @@ Cliente informou CNPJ com menos ou mais de 14 dígitos, ou vazio.
 }
 ```
 
-### Mensagem completa para o cliente (IA — use/adapte `orientacaoUsuario`)
-> Não localizamos esse CNPJ na CADBRASIL nem na Receita Federal.  
-> Por favor, **confira se os 14 dígitos estão corretos**.  
-> Se sua empresa ainda não se cadastrou, acesse:  
-> 👉 **https://cadastro.cadbrasil.com.br**  
-> Lá você inicia o cadastramento digital para obter acesso ao SICAF/CADBRASIL.
+### Mensagem completa para o cliente (IA — enviar em blocos WhatsApp)
+
+**Bloco 1 — Resultado da consulta**
+> 🇧🇷 **CADBRASIL Oficial ®**  
+> 💬 **Consulta de CNPJ — Resultado**  
+>  
+> Olá! 👋 **Não localizamos** o CNPJ informado na CADBRASIL nem na **Receita Federal**.
+
+**Bloco 2 — Dados consultados**
+> 📋 **Consulta realizada:**  
+> 🔢 **CNPJ:** {cnpj}  
+> 📊 **Status CADBRASIL:** Não cadastrado  
+> 📊 **Status Receita:** {erroReceitaFederal}
+
+**Bloco 3 — Orientação**
+> ⚠️ **Possíveis motivos:** CNPJ incorreto · empresa nova · cadastro não iniciado  
+>  
+> ✅ **O que fazer:**  
+> 1️⃣ Confira os 14 dígitos e informe novamente  
+> 2️⃣ Se ainda não cadastrou: 👉 **{urlCadastro}**  
+>  
+> ❓ Dúvidas? Solicite falar com um **atendente**.
 
 ### O que a IA deve fazer
 - Pedir confirmação do CNPJ (pode ter digitado errado).
@@ -228,22 +255,57 @@ Cliente informou CNPJ com menos ou mais de 14 dígitos, ou vazio.
 }
 ```
 
-### Mensagem completa para o cliente (IA)
-> Olá, empresa **{razaoSocial}**!  
-> Localizamos seus dados na **Receita Federal** (situação: **{situacaoReceitaFederal}**), porém o cadastro na **CADBRASIL ainda não foi concluído**.  
+### Mensagem completa para o cliente (IA — enviar em blocos WhatsApp)
+
+**Bloco 1 — Cabeçalho e identificação**
+> 🇧🇷 **CADBRASIL Oficial ®**  
+> 💬 **Consulta de CNPJ — Resultado**  
 >  
-> Para continuar:  
-> 👉 Acesse **https://cadastro.cadbrasil.com.br**  
-> Preencha todas as informações atualizadas e corretas.  
-> Durante o processo será necessário pagar a **taxa anual de R$ 985,00** (credenciamento SICAF).  
-> Sem concluir o cadastro e o pagamento, os **níveis do SICAF não serão liberados**.
+> Olá! 👋 Realizamos a consulta do seu CNPJ e identificamos que sua empresa está registrada na **Receita Federal**, porém o **cadastramento na CADBRASIL ainda não foi concluído**.
+
+**Bloco 2 — Dados da empresa (use `receitaFederal`; omita campos null)**
+> 📋 **Dados da empresa consultada:**  
+>  
+> 🏢 **Razão Social:** {razaoSocial}  
+> 🔢 **CNPJ:** {cnpj}  
+> 📛 **Nome Fantasia:** {nomeFantasia ou "Não informado"}  
+> 📊 **Situação Cadastral:** {situacaoReceitaFederal}  
+> ⚖️ **Natureza Jurídica:** {naturezaJuridica}  
+> 📍 **Endereço:** {logradouro}, {numero} — {bairro}  
+> {cidade}/{estado} — CEP {cep}  
+> 🏭 **Atividade Principal:** {atividadePrincipal}  
+> 📧 **E-mail:** {email}  
+> 📞 **Telefone:** {telefone}
+
+**Bloco 3 — Situação CADBRASIL e próximos passos**
+> ⚠️ **Situação na CADBRASIL:**  
+> Seu CNPJ **não consta** em nossa base de fornecedores com cadastro concluído.  
+>  
+> Para dar sequência ao **credenciamento SICAF**, conclua o cadastramento digital:  
+>  
+> ✅ **Próximos passos:**  
+> 1️⃣ Acesse: 👉 **{urlCadastro}**  
+> 2️⃣ Preencha todas as informações com **dados corretos e atualizados**  
+> 3️⃣ Efetue o pagamento da taxa anual SICAF  
+> 💰 Valor: **R$ {valorTaxaAnual},00**  
+>  
+> 📌 **Importante:** enquanto cadastro e pagamento não forem concluídos, os **níveis do SICAF não serão liberados**.
+
+**Bloco 4 — Encerramento**
+> ❓ **Precisa de ajuda?** Solicite falar com um **atendente** — estamos à disposição! 📞  
+>  
+> 🔐 **CADBRASIL Oficial**  
+> Tecnologia, segurança e suporte para fornecedores do Brasil. 🇧🇷
 
 ### O que a IA deve fazer
 - Cumprimentar pelo `razaoSocial` da Receita.
-- Enviar `urlCadastro`.
-- Informar valor da taxa (`valorTaxaAnual` — padrão R$ 985,00).
+- Montar o bloco de dados com campos de `receitaFederal` (endereço, atividade, contatos).
+- Omitir linhas cujo campo seja `null` ou vazio.
+- Enviar `urlCadastro` e informar `valorTaxaAnual` (padrão R$ 985,00).
+- Reforçar que SICAF só libera após cadastro + pagamento.
 - **Não** tratar como cliente ativo, **não** enviar boleto SICAF de cliente cadastrado (ainda não está na base).
 - Se `situacaoReceitaFederal` = Baixada/Inapta → escalar consultor.
+- Se cliente tiver dúvida → pedir para falar com atendente.
 
 ### O que a IA NÃO deve fazer
 - Dizer que o SICAF está ativo.
@@ -315,15 +377,33 @@ Cliente informou CNPJ com menos ou mais de 14 dígitos, ou vazio.
 }
 ```
 
-### Mensagem completa para o cliente (IA)
-> A empresa **{razaoSocial}** já possui cadastro na CADBRASIL, mas o **pagamento da taxa SICAF ainda está em aberto** — valor: **R$ {valorTotalPendente},00**.  
+### Mensagem completa para o cliente (IA — enviar em blocos WhatsApp)
+
+**Bloco 1 — Identificação**
+> 🇧🇷 **CADBRASIL Oficial ®**  
+> 💬 **Consulta de CNPJ — Resultado**  
 >  
-> Para liberar os níveis do credenciamento:  
-> 👉 Acesse **https://fornecedor.cadbrasil.com.br**, faça login e regularize o pagamento.  
+> Olá! 👋 Sua empresa **já está na CADBRASIL**, porém há **pagamento pendente** do credenciamento SICAF.
+
+**Bloco 2 — Dados da empresa**
+> 🏢 **Razão Social:** {razaoSocial}  
+> 🔢 **CNPJ:** {cnpj}  
+> 📧 **E-mail:** {cliente.email}  
+> 📊 **Status SICAF:** {sicaf.status} — {sicaf.completude}% concluído
+
+**Bloco 3 — Pendência financeira**
+> 💳 **Pagamento em aberto:** R$ {valorTotalPendente},00  
+> 📅 **Vencimento:** {dataVencimento}  
+> ⚠️ Enquanto não pagar, os **níveis do SICAF não serão concluídos**.
+
+**Bloco 4 — Regularização**
+> ✅ **Como pagar:**  
+> 1️⃣ 👉 **https://fornecedor.cadbrasil.com.br/pagamentos**  
+> 2️⃣ Login → emitir/pagar boleto  
+> 3️⃣ Ou confirme aqui para receber boleto pelo WhatsApp (link/PDF da API)  
 >  
-> ⚠️ Enquanto o pagamento não for confirmado, os **níveis do SICAF não serão concluídos**.  
->  
-> Se quiser, posso enviar o boleto aqui — me confirme que deseja receber.
+> 📌 Compensação: 1 a 3 dias úteis  
+> ❓ Dúvidas? Solicite falar com um **atendente**.
 
 ### O que a IA deve fazer
 - Informar claramente: **cadastro feito, pagamento pendente**.
@@ -371,16 +451,24 @@ Cliente informou CNPJ com menos ou mais de 14 dígitos, ou vazio.
 }
 ```
 
-### Mensagem completa para o cliente (IA)
-> A empresa **{razaoSocial}** está cadastrada na CADBRASIL, mas o **credenciamento SICAF está VENCIDO** (validade expirada em **{dataValidade}**).  
+### Mensagem completa para o cliente (IA — tom de URGÊNCIA)
+
+**Bloco 1 — Alerta**
+> 🇧🇷 **CADBRASIL Oficial ®**  
+> 🚨 **ALERTA — SICAF VENCIDO**  
 >  
-> ⚠️ **Não participe de licitações** com SICAF vencido — há risco de desclassificação.  
+> Olá! 👋 A empresa **{razaoSocial}** (CNPJ {cnpj}) possui cadastro, mas o **credenciamento SICAF está VENCIDO** desde **{dataValidade}**.
+
+**Bloco 2 — Riscos**
+> ⚠️ **Não participe de licitações** — risco de **desclassificação** e impedimento.
+
+**Bloco 3 — Renovação**
+> ✅ **Renove agora:**  
+> 👉 Portal: **{urlPortal}**  
+> 🎥 Vídeo: **{urlVideoAtualizacaoSicaf}**  
+> 📞 WhatsApp: **(11) 2122-0202**  
 >  
-> Para renovar:  
-> 👉 **https://fornecedor.cadbrasil.com.br** (login e senha)  
-> Ou fale conosco no WhatsApp **(11) 2122-0202**.  
->  
-> Vídeo como atualizar: https://www.youtube.com/watch?v=ZG3csRrz1rQ
+> ❗ Licitação próxima? Informe para **prioridade no atendimento**.
 
 ### O que a IA deve fazer
 - Tratar com **urgência**.
@@ -414,12 +502,21 @@ Cliente informou CNPJ com menos ou mais de 14 dígitos, ou vazio.
 }
 ```
 
-### Mensagem completa para o cliente (IA)
-> Sua empresa **{razaoSocial}** está na CADBRASIL, mas o **processo SICAF ainda não foi iniciado**.  
-> Para dar continuidade:  
-> 👉 Portal: **https://fornecedor.cadbrasil.com.br**  
-> 👉 Ou cadastro: **https://cadastro.cadbrasil.com.br**  
-> Taxa de credenciamento: **R$ 985,00** (pagamento único).
+### Mensagem completa para o cliente (IA — enviar em blocos WhatsApp)
+
+> 🇧🇷 **CADBRASIL Oficial ®**  
+> 💬 **Consulta de CNPJ — Resultado**  
+>  
+> Olá! 👋 A empresa **{razaoSocial}** (CNPJ {cnpj}) está na CADBRASIL, mas o **processo SICAF ainda não foi iniciado**.  
+>  
+> ⚠️ Sem SICAF ativo, não é possível licitar como fornecedor habilitado.  
+>  
+> ✅ **Próximos passos:**  
+> 👉 Portal: **{urlPortal}**  
+> 👉 Cadastro: **{urlCadastro}**  
+> 💰 Taxa credenciamento: **R$ {valorTaxaAnual},00**  
+>  
+> ❓ Dúvidas? Solicite falar com um **atendente**.
 
 ---
 
@@ -451,9 +548,21 @@ Cliente informou CNPJ com menos ou mais de 14 dígitos, ou vazio.
 }
 ```
 
-### Mensagem completa para o cliente (IA)
-> Sua empresa **{razaoSocial}** tem cadastro na CADBRASIL, mas o **SICAF ainda não foi concluído** (status: **{sicaf.status}**, completude: **{sicaf.completude}%**).  
-> Acesse **https://fornecedor.cadbrasil.com.br** para ver pendências de documentos e próximos passos.
+### Mensagem completa para o cliente (IA — enviar em blocos WhatsApp)
+
+> 🇧🇷 **CADBRASIL Oficial ®**  
+> 💬 **Consulta de CNPJ — Resultado**  
+>  
+> Olá! 👋 A empresa **{razaoSocial}** (CNPJ {cnpj}) tem SICAF **em andamento**, mas **não concluído**.  
+>  
+> 📊 **Status:** {sicaf.status} · **Completude:** {sicaf.completude}%  
+>  
+> ⚠️ Existem **pendências** (documentos/certidões) a regularizar.  
+>  
+> ✅ **Acesse o portal:** 👉 **{urlPortal}**  
+> 🎥 Central de Ajuda: **https://fornecedor.cadbrasil.com.br/ajuda**  
+>  
+> ❓ Dúvidas? Solicite falar com um **atendente**.
 
 ---
 
@@ -576,9 +685,12 @@ Cliente informou CNPJ com menos ou mais de 14 dígitos, ou vazio.
 
 **Bloco 4 — Links úteis**
 > 📋 Portal: **{urlPortal}**  
+> 💳 Pagamentos: **https://fornecedor.cadbrasil.com.br/pagamentos**  
 > 📞 Boleto pelo WhatsApp: **{whatsappDisplay}**  
-> ❓ Central de Ajuda (vídeos): **{urlAjuda}**  
-> 🎥 Como atualizar o SICAF: **{urlVideoAtualizacaoSicaf}**
+> ❓ Central de Ajuda: **{urlAjuda}**  
+> 🎥 Como atualizar o SICAF: **{urlVideoAtualizacaoSicaf}**  
+>  
+> ❓ Precisa de suporte? Estamos à disposição!
 
 ### Sub-cenário H2 — Ativo COM certidão a vencer/vencida
 

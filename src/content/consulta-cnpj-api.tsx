@@ -385,6 +385,7 @@ export const consultaCnpjSection: Section = {
           ["Portal do fornecedor", LINKS.portal],
           ["Pagamentos (boletos)", LINKS.pagamentos],
           ["Central de ajuda", LINKS.ajuda],
+          ["Assistente CADBRASIL", LINKS.assistente],
           ["Esqueci senha", LINKS.esqueciSenha],
           ["Vídeo — atualizar SICAF", VIDEOS.atualizarSicaf],
           ["WhatsApp", LINKS.whatsappDisplay],

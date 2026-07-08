@@ -9,7 +9,11 @@ import {
   VideoLink,
   WaLink,
 } from "@/lib/docs-ui";
-import { VIDEOS, CENTRAL_AJUDA } from "@/content/videos";
+import { VIDEOS, LINKS, CENTRAL_AJUDA } from "@/content/videos";
+import {
+  AssistenteLinksList,
+  AssistenteWhatsAppBlock,
+} from "@/content/assistente-ia";
 
 function AjudaLink() {
   return (
@@ -246,6 +250,9 @@ export const sicafProcessSections: Section[] = [
           Dessa forma, o processo se torna muito mais simples e seguro — sem
           exigir conhecimento técnico em licitações.
         </H>
+        <SubTitle>Links oficiais (IA — enviar sempre os 2)</SubTitle>
+        <AssistenteLinksList />
+        <AssistenteWhatsAppBlock />
         <H>
           Vídeo — como usar: <VideoLink href={VIDEOS.assistente} />
         </H>
@@ -258,13 +265,22 @@ export const sicafProcessSections: Section[] = [
     body: (
       <>
         <ShortAnswer>
-          Acesse fornecedor.cadbrasil.com.br/ajuda — vídeos sobre Assistente,
-          documentos, certidões, boletos, SICAF e Área do Fornecedor.
+          Central de Ajuda: {LINKS.ajuda}. Assistente CADBRASIL:{" "}
+          {LINKS.assistente}. Vídeos sobre instalação, documentos, certidões,
+          boletos e SICAF.
         </ShortAnswer>
         <H>
           Em caso de dúvidas durante o processo, consulte a{" "}
-          <AjudaLink />:
+          <AjudaLink /> ou acesse o Assistente:
         </H>
+        <AssistenteLinksList />
+        <Callout tone="info">
+          <strong>IA:</strong> se a pergunta for sobre o <strong>Assistente</strong>,
+          use a mensagem-modelo abaixo e envie <strong>sempre os 2 links</strong>.
+          Se for dúvida prática genérica (&quot;como faço&quot;), envie a Central de
+          Ajuda e o vídeo específico quando existir neste documento.
+        </Callout>
+        <AssistenteWhatsAppBlock note="Usar quando o cliente perguntar sobre Assistente, app ou instalação." />
         <H>
           <a
             href={CENTRAL_AJUDA}
@@ -286,9 +302,9 @@ export const sicafProcessSections: Section[] = [
           ]}
         />
         <H>
-          <strong>IA:</strong> sempre que o cliente tiver dúvida prática
-          (&quot;como faço&quot;), envie o link da Central de Ajuda e o vídeo
-          específico quando existir neste documento.
+          <strong>IA:</strong> dúvidas sobre Assistente → mensagem-modelo acima
+          com os 2 links. Outras dúvidas práticas → Central de Ajuda + vídeo
+          específico deste documento.
         </H>
         <Escalar>
           Dúvida não resolvida após Central de Ajuda e orientação do Assistente.
@@ -329,9 +345,12 @@ export const sicafProcessSections: Section[] = [
         />
         <SubTitle>Onde encontrar no Assistente?</SubTitle>
         <H>
-          Acesse o Assistente CADBRASIL, localize o menu{" "}
-          <strong>Situação do Fornecedor</strong> e selecione a opção
-          correspondente ao momento atual do processo.
+          Acesse o Assistente CADBRASIL em{" "}
+          <a href={LINKS.assistente} className="underline underline-offset-4">
+            {LINKS.assistente}
+          </a>
+          , localize o menu <strong>Situação do Fornecedor</strong> e selecione
+          a opção correspondente ao momento atual do processo.
         </H>
         <SubTitle>Por que é importante?</SubTitle>
         <H>

@@ -18,6 +18,7 @@ export const LINKS = {
   portal: "https://fornecedor.cadbrasil.com.br",
   pagamentos: "https://fornecedor.cadbrasil.com.br/pagamentos",
   ajuda: "https://fornecedor.cadbrasil.com.br/ajuda",
+  assistente: "https://fornecedor.cadbrasil.com.br/assistente",
   esqueciSenha: "https://fornecedor.cadbrasil.com.br/esqueci-senha",
   docs: "https://docs.cadbrasil.com.br",
   whatsapp: "https://wa.me/551121220202",
