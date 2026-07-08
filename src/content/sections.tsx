@@ -27,7 +27,7 @@ import { VIDEOS, LINKS } from "@/content/videos";
 
 export { VIDEOS };
 
-export const sections: Section[] = [
+export const technicalSections: Section[] = [
   {
     id: "instrucoes-ia",
     title: "Instruções para a IA (atendimento WhatsApp)",

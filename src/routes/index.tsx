@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
 
-import { sections } from "@/content/sections";
+import { navGroups, sections } from "@/content/nav";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -63,7 +63,7 @@ function DocsPage() {
             </div>
           </div>
           <a
-            href="https://fornecedor.CADBRASIL Oficial.com.br"
+            href="https://fornecedor.cadbrasil.com.br"
             target="_blank"
             rel="noreferrer"
             className="hidden rounded-md border border-border px-3 py-1.5 text-xs font-medium text-foreground transition-colors hover:bg-muted sm:inline-flex"
@@ -76,25 +76,31 @@ function DocsPage() {
       <div className="mx-auto grid max-w-6xl grid-cols-1 gap-10 px-6 py-12 lg:grid-cols-[220px_minmax(0,1fr)]">
         <aside className="hidden lg:block">
           <nav className="sticky top-24 max-h-[calc(100vh-7rem)] overflow-y-auto pr-2">
-            <p className="mb-3 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
-              Tópicos ({sections.length})
-            </p>
-            <ul className="space-y-0.5">
-              {sections.map((s) => (
-                <li key={s.id}>
-                  <a
-                    href={`#${s.id}`}
-                    className={`block rounded-md px-2.5 py-1.5 text-[13px] leading-snug transition-colors ${
-                      active === s.id
-                        ? "bg-muted font-medium text-foreground"
-                        : "text-muted-foreground hover:bg-muted/60 hover:text-foreground"
-                    }`}
-                  >
-                    {s.title}
-                  </a>
-                </li>
+            <div className="space-y-6">
+              {navGroups.map((group) => (
+                <div key={group.label}>
+                  <p className="mb-2 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
+                    {group.label} ({group.sections.length})
+                  </p>
+                  <ul className="space-y-0.5">
+                    {group.sections.map((s) => (
+                      <li key={s.id}>
+                        <a
+                          href={`#${s.id}`}
+                          className={`block rounded-md px-2.5 py-1.5 text-[13px] leading-snug transition-colors ${
+                            active === s.id
+                              ? "bg-muted font-medium text-foreground"
+                              : "text-muted-foreground hover:bg-muted/60 hover:text-foreground"
+                          }`}
+                        >
+                          {s.title}
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
               ))}
-            </ul>
+            </div>
           </nav>
         </aside>
 
@@ -107,9 +113,9 @@ function DocsPage() {
               Documentação CADBRASIL Oficial
             </h1>
             <p className="mt-3 max-w-2xl text-[15px] leading-relaxed text-muted-foreground">
-              Base de conhecimento para atendimento humano e por IA no WhatsApp.
-              Inclui respostas curtas, regras de escalonamento, APIs, valores,
-              vídeos e sinônimos de intenção.
+              Base de conhecimento RAG exclusiva do Assistente WhatsApp. Todo o
+              conteúdo é lido pelo bot: inteligência, fluxos, APIs, valores,
+              intenções, SICAF, portal, financeiro e escalonamento.
             </p>
           </div>
 
