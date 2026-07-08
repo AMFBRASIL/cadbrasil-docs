@@ -326,7 +326,7 @@ export const consultaCnpjSection: Section = {
           [
             "sicafPendentes[]",
             "array",
-            "Boletos SICAF: valor, status, dataVencimento, linkBoleto, pdfBoleto",
+            "Valor, status, dataVencimento. Link ao cliente → GET solicitar-boleto (urlPagamento + linkPdf). Não usar linkBoleto.",
           ],
           [
             "manutencaoPendentes[]",
@@ -396,8 +396,14 @@ export const consultaCnpjSection: Section = {
       <Callout tone="ok">
         <strong>Regra final para a IA:</strong> sempre priorize{" "}
         <code>orientacaoUsuario</code> quando existir. Nunca invente status,
-        valores ou links de boleto. Use apenas o retorno da API e este
-        documento.
+        valores ou links de boleto. Para enviar link de pagamento ao cliente, use{" "}
+        <code>GET /api/clients/solicitar-boleto</code> e o campo{" "}
+        <code>urlPagamento</code> (não <code>linkBoleto</code>). Alternativa:{" "}
+        <code>linkPdf</code>. Ver seção{" "}
+        <a href="#api-solicitar-boleto" className="underline underline-offset-4">
+          API solicitar-boleto
+        </a>
+        .
       </Callout>
     </>
   ),

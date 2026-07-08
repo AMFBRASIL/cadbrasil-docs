@@ -400,7 +400,10 @@ Cliente informou CNPJ com menos ou mais de 14 dígitos, ou vazio.
 > ✅ **Como pagar:**  
 > 1️⃣ 👉 **https://fornecedor.CADBRASIL Oficial.com.br/pagamentos**  
 > 2️⃣ Login → emitir/pagar boleto  
-> 3️⃣ Ou confirme aqui para receber boleto pelo WhatsApp (link/PDF da API)  
+> 3️⃣ Links de pagamento (API solicitar-boleto):  
+> 🔗 **urlPagamento:** {urlPagamento}  
+> 📄 **Se não abrir:** {linkPdf}  
+> *(Nunca enviar linkBoleto ao cliente.)*  
 >  
 > 📌 Compensação: 1 a 3 dias úteis  
 > ❓ Dúvidas? Solicite falar com um **atendente**.
@@ -408,8 +411,9 @@ Cliente informou CNPJ com menos ou mais de 14 dígitos, ou vazio.
 ### O que a IA deve fazer
 - Informar claramente: **cadastro feito, pagamento pendente**.
 - Orientar portal `urlPortal`.
-- Se `pagamentosResumo.sicafPendentes[].linkBoleto` ou `pdfBoleto` existir → enviar ao cliente.
-- Ou consultar API `GET /api/clients/solicitar-boleto?cnpj={cnpj}` para obter boleto e link de pagamento.
+- Chamar `GET /api/clients/solicitar-boleto?cnpj={cnpj}` e enviar ao cliente o campo **urlPagamento** (link principal para ver boleto e pagar).
+- Se o cliente não conseguir abrir, informar também **linkPdf**.
+- **Não** enviar `linkBoleto` nem `pagamentosResumo.sicafPendentes[].linkBoleto` — esses campos não são o link de pagamento correto.
 - Mencionar que `sicaf.completude` provavelmente está em 0% até pagar.
 
 ### O que a IA NÃO deve fazer

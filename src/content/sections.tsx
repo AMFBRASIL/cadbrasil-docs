@@ -182,19 +182,16 @@ Tecnologia, segurança e suporte para fornecedores do Brasil. 🇧🇷`}</Code>
           <strong>Regra fixa:</strong> boleto, 2ª via, renovação SICAF, taxa R$
           985, &quot;tem pendência?&quot; ou qualquer pedido de pagamento → peça
           CNPJ e chame{" "}
-          <code>GET /api/clients/solicitar-boleto?cnpj=CNPJ</code>. Use os
-          textos WhatsApp em{" "}
+          <code>GET /api/clients/solicitar-boleto?cnpj=CNPJ</code>. Textos em{" "}
           <a
             href="#api-solicitar-boleto"
             className="underline underline-offset-4"
           >
             API solicitar-boleto
-          </a>{" "}
-          conforme <code>pendentePagamento</code>,{" "}
-          <code>boletoReutilizado</code> e <code>geradoAgora</code>. Enviar ao
-          cliente o valor de <code>urlPagamento</code> (link principal). Se não
-          conseguir abrir, informar também <code>linkPdf</code>. Nunca inventar
-          links.
+          </a>
+          . Enviar <code>urlPagamento</code> (link principal). Se não abrir,{" "}
+          <code>linkPdf</code>. <strong>Nunca</strong> enviar{" "}
+          <code>linkBoleto</code>.
         </Callout>
 
         <SubTitle>SICAF gratuito vs pago (textos prontos WhatsApp)</SubTitle>
@@ -1023,8 +1020,10 @@ Tecnologia, segurança e suporte para fornecedores do Brasil. 🇧🇷`}</Code>
           <a href={LINKS.pagamentos} className="underline underline-offset-4">
             {LINKS.pagamentos}
           </a>{" "}
-          para emitir ou pagar boletos. A IA também pode consultar o CNPJ nas
-          APIs e enviar link/PDF do boleto.
+          para emitir ou pagar boletos. A IA consulta{" "}
+          <code>GET /api/clients/solicitar-boleto</code> e envia{" "}
+          <code>urlPagamento</code> (link principal) e <code>linkPdf</code>{" "}
+          (alternativa).
         </ShortAnswer>
         <List
           items={[
@@ -1035,15 +1034,15 @@ Tecnologia, segurança e suporte para fornecedores do Brasil. 🇧🇷`}</Code>
               </a>{" "}
               — boleto SICAF, manutenção e demais taxas
             </>,
-            "Boleto bancário — emitido via plataforma (link PDF ou código de barras)",
+            "Boleto SICAF — link de pagamento via API solicitar-boleto (campo urlPagamento; linkPdf se não abrir)",
             "Compensação bancária: geralmente 1 a 3 dias úteis após pagamento",
             "Não solicitamos PIX direto por WhatsApp — desconfie de cobranças informais",
           ]}
         />
         <Callout tone="warn">
-          A CADBRASIL Oficial não pede transferência PIX para números pessoais. Boletos
-          oficiais vêm da plataforma ou são enviados pela IA via API com link
-          verificável.
+          A CADBRASIL Oficial não pede transferência PIX para números pessoais. O
+          link oficial de pagamento é o campo <code>urlPagamento</code> retornado
+          pela API — nunca <code>linkBoleto</code>.
         </Callout>
       </>
     ),

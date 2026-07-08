@@ -19,7 +19,7 @@ const WA_NOTE =
   "Enviar em 1–2 blocos no WhatsApp. Use *asteriscos* para negrito. Preencha com dados da API — nunca invente valores, links ou datas. Formate dataVencimento para DD/MM/AAAA (horário de Brasília). O cliente deve receber o campo urlPagamento como link principal; linkPdf só como alternativa se não conseguir abrir.";
 
 /** Bloco de links — urlPagamento (principal) + linkPdf (alternativa). */
-const WA_LINKS_PAGAMENTO = `🔗 *Link de pagamento — acesse para ver o boleto e pagar (PIX ou boleto):*
+export const BOLETO_WA_LINKS_PAGAMENTO = `🔗 *Link de pagamento — acesse para ver o boleto e pagar (PIX ou boleto):*
 👉 {urlPagamento}
 
 📄 *Não conseguiu abrir o link acima?* Acesse também o PDF do boleto:
@@ -51,7 +51,7 @@ Olá! 👋 Consultei o cadastro e localizei a *taxa SICAF pendente* da empresa:
 📅 *Vencimento:* {dataVencimento}
 📋 *Protocolo:* {protocolo}
 
-${WA_LINKS_PAGAMENTO}
+${BOLETO_WA_LINKS_PAGAMENTO}
 
 📌 Este é o *mesmo boleto* já emitido — acesse o *link de pagamento* acima para ver o boleto e concluir o pagamento.
 
@@ -73,7 +73,7 @@ Olá! 👋 Para a empresa *{razaoSocial}*, *gerei agora* sua guia de pagamento S
 📅 *Vencimento:* {dataVencimento}
 📋 *Protocolo:* {protocolo}
 
-${WA_LINKS_PAGAMENTO}
+${BOLETO_WA_LINKS_PAGAMENTO}
 
 📌 Guia *nova* com vencimento em até *5 dias úteis* — acesse o *link de pagamento* para ver o boleto e liberar os *níveis do SICAF* na plataforma CADBRASIL Oficial.
 
@@ -96,7 +96,7 @@ Olá! 👋 Consultei o cadastro da *{razaoSocial}* e localizei a *renovação SI
 📋 *Protocolo:* {protocolo}
 📆 *SICAF válido até:* {sicafValidoAte} *(omitir linha se null)*
 
-${WA_LINKS_PAGAMENTO}
+${BOLETO_WA_LINKS_PAGAMENTO}
 
 📌 Regularize a renovação pelo *link de pagamento* para manter seu cadastro *ativo* e continuar licitando com segurança.
 
@@ -382,8 +382,10 @@ export const solicitarBoletoSection: Section = {
         <strong>obrigatório</strong> consultar esta API após obter CNPJ válido.
         Nunca inventar links, valores ou vencimentos. O cliente deve receber o
         campo <code>urlPagamento</code> como link principal (ver boleto e pagar).
-        Se não conseguir abrir, informar também <code>linkPdf</code>. Não enviar{" "}
-        <code>linkBoleto</code> ao cliente.
+        Se não conseguir abrir, informar também <code>linkPdf</code>.{" "}
+        <strong>Nunca</strong> enviar <code>linkBoleto</code> ao cliente nem
+        escrever &quot;Link para pagamento: linkBoleto&quot; — o campo correto é{" "}
+        <code>urlPagamento</code>.
       </Callout>
 
       <SubTitle>Quando acionar esta API</SubTitle>

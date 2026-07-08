@@ -6,6 +6,7 @@ import {
   SubTitle,
 } from "@/lib/docs-ui";
 import { LINKS, VIDEOS } from "@/content/videos";
+import { BOLETO_WA_LINKS_PAGAMENTO } from "@/content/solicitar-boleto-api";
 
 const WA_NOTE =
   "Enviar em blocos curtos no WhatsApp (ideal: 2–4 mensagens). Use os dados retornados pela API; omita linhas com valor null ou vazio. Formate CNPJ para exibição (XX.XXX.XXX/XXXX-XX).";
@@ -340,14 +341,18 @@ Olá! 👋 Consultamos seu cadastro e identificamos que sua empresa *já está n
 
 Enquanto o pagamento *não for confirmado*, os *níveis do SICAF não serão concluídos* e o credenciamento permanece *pendente*.
 
-✅ *Como regularizar:*
+${BOLETO_WA_LINKS_PAGAMENTO}
+
+*(Preencher urlPagamento e linkPdf com o retorno de GET /api/clients/solicitar-boleto?cnpj=CNPJ — nunca usar linkBoleto.)*
+
+✅ *Outras formas de regularizar:*
 
 1️⃣ Acesse a página de pagamentos:
 👉 ${LINKS.pagamentos}
 
 2️⃣ Faça login e emita ou pague o boleto
 
-3️⃣ Ou *confirme aqui* que deseja o boleto — enviamos o *link de pagamento* (campo urlPagamento da API) para ver o boleto e pagar; se não conseguir abrir, também o PDF (linkPdf)
+3️⃣ Os links acima vêm da API *solicitar-boleto* — campo *urlPagamento* (principal) e *linkPdf* (alternativa)
 
 📌 Compensação bancária: geralmente *1 a 3 dias úteis* após o pagamento.
 
@@ -361,8 +366,8 @@ ${FOOTER}`}</WhatsAppMessage>
               "Informar: cadastro feito, pagamento pendente.",
               "Montar bloco com razaoSocial, cnpj, cliente.email, cliente.telefone, sicaf.status, sicaf.completude.",
               `Orientar ${LINKS.pagamentos} para boleto e pagamento.`,
-              "Se pagamentosResumo.sicafPendentes existir → orientar solicitar-boleto para obter urlPagamento + linkPdf.",
-              "Ou consultar GET /api/clients/solicitar-boleto?cnpj=CNPJ — enviar urlPagamento (principal) e linkPdf (alternativa).",
+              "Chamar GET /api/clients/solicitar-boleto?cnpj=CNPJ e enviar urlPagamento (link principal) + linkPdf (alternativa).",
+              "Nunca enviar linkBoleto nem escrever \"Link para pagamento: linkBoleto\".",
               "Mencionar dataVencimento quando existir.",
               "Se ainda tiver dúvida → pedir para falar com atendente (escalar).",
             ]}
@@ -374,6 +379,7 @@ ${FOOTER}`}</WhatsAppMessage>
               "Dizer que o SICAF está ativo ou apto a licitar.",
               "Dizer que não há pendências.",
               "Inventar links de boleto.",
+              "Enviar linkBoleto ou pdfBoleto de pagamentosResumo — usar solicitar-boleto (urlPagamento + linkPdf).",
             ]}
           />
         }
@@ -386,8 +392,9 @@ ${FOOTER}`}</WhatsAppMessage>
   "valorTotalPendente": 985,
   "sicaf": { "status": "Pendente", "valido": false, "completude": 0 },
   "pagamentosResumo": {
-    "sicafPendentes": [{ "valor": 985, "linkBoleto": "https://...", "pdfBoleto": "https://...pdf" }]
+    "sicafPendentes": [{ "valor": 985, "dataVencimento": "2026-07-10" }]
   },
+  "nota": "Para link ao cliente → GET /api/clients/solicitar-boleto (urlPagamento + linkPdf). Não usar linkBoleto.",
   "urlPortal": "https://fornecedor.CADBRASIL Oficial.com.br"
 }`}</Code>
       </ScenarioBlock>
