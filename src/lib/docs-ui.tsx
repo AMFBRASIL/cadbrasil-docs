@@ -1,4 +1,4 @@
-/** Componentes reutilizáveis da documentação CADBRASIL. */
+/** Componentes reutilizáveis da documentação CADBRASIL Oficial. */
 
 export type Section = {
   id: string;

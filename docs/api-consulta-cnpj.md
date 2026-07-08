@@ -1,7 +1,7 @@
 # API consulta-cnpj — Documentação completa para IA e atendimento
 
 > **Versão:** 3.0 · **Atualizado:** julho/2026  
-> **Endpoint:** `GET https://fornecedor.cadbrasil.com.br/api/clients/consulta-cnpj?cnpj={14_dígitos}`  
+> **Endpoint:** `GET https://fornecedor.CADBRASIL Oficial.com.br/api/clients/consulta-cnpj?cnpj={14_dígitos}`  
 > **Autenticação:** header `x-api-key` (valor de `CNPJ_CONSULTA_API_KEY` no servidor da IA)
 
 ---
@@ -44,7 +44,7 @@ GET /api/clients/consulta-cnpj?cnpj=...
               │     ├─ encontradoNaReceitaFederal: true  ► cadastro_pendente
               │     └─ encontradoNaReceitaFederal: false ► nao_encontrado
               │
-              └─ possuiCadastro: true (cliente na base CADBRASIL)
+              └─ possuiCadastro: true (cliente na base CADBRASIL Oficial)
                     │
                     ├─ sicafValido: true ─────────────────► ativo
                     ├─ pagamento SICAF em aberto ──────────► aguardando_pagamento
@@ -72,7 +72,7 @@ GET /api/clients/consulta-cnpj?cnpj=...
 | `message` | string | Resumo curto da situação |
 | `orientacaoUsuario` | string | Texto completo para o cliente |
 | `orientacaoIA` | string | Texto para a IA montar o atendimento |
-| `possuiCadastro` | boolean | Existe na base `clientes` da CADBRASIL |
+| `possuiCadastro` | boolean | Existe na base `clientes` da CADBRASIL Oficial |
 | `possuiPagamentoPendente` | boolean | Há taxa/boleto SICAF ou manutenção em aberto |
 
 ### Valores de `situacaoCadastro`
@@ -80,10 +80,10 @@ GET /api/clients/consulta-cnpj?cnpj=...
 | Valor | Significado |
 |-------|-------------|
 | `cnpj_invalido` | CNPJ com formato inválido (erro 400) |
-| `nao_encontrado` | Não está na CADBRASIL nem confirmado na Receita |
-| `cadastro_pendente` | Achou na Receita Federal, mas não concluiu cadastro CADBRASIL |
-| `aguardando_pagamento` | Cadastro na CADBRASIL, taxa SICAF não quitada |
-| `sicaf_vencido` | Cadastro na CADBRASIL, credenciamento expirado |
+| `nao_encontrado` | Não está na CADBRASIL Oficial nem confirmado na Receita |
+| `cadastro_pendente` | Achou na Receita Federal, mas não concluiu cadastro CADBRASIL Oficial |
+| `aguardando_pagamento` | Cadastro na CADBRASIL Oficial, taxa SICAF não quitada |
+| `sicaf_vencido` | Cadastro na CADBRASIL Oficial, credenciamento expirado |
 | `cadastro_sem_sicaf` | Cliente na base, sem processo SICAF iniciado |
 | `sicaf_incompleto` | SICAF iniciado, ainda não concluído |
 | `ativo` | Credenciamento SICAF válido e em ordem |
@@ -116,7 +116,7 @@ Cliente informou CNPJ com menos ou mais de 14 dígitos, ou vazio.
 > 🔢 **O que precisamos:** 14 números, **sem pontos, barra ou traço**  
 > ✅ **Exemplo:** `03751915000127`  
 >  
-> 📌 Assim que recebermos o CNPJ correto, consultaremos sua situação na CADBRASIL e Receita Federal.  
+> 📌 Assim que recebermos o CNPJ correto, consultaremos sua situação na CADBRASIL Oficial e Receita Federal.  
 > ❓ Dúvidas? Solicite falar com um **atendente**.
 
 ### O que a IA deve fazer
@@ -129,7 +129,7 @@ Cliente informou CNPJ com menos ou mais de 14 dígitos, ou vazio.
 # CENÁRIO B — `nao_encontrado`
 
 ### Quando ocorre
-- CNPJ **não existe** na base CADBRASIL (`possuiCadastro: false`)
+- CNPJ **não existe** na base CADBRASIL Oficial (`possuiCadastro: false`)
 - E **não foi confirmado** na Receita Federal (`encontradoNaReceitaFederal: false`)
 
 ### Campos principais
@@ -153,14 +153,14 @@ Cliente informou CNPJ com menos ou mais de 14 dígitos, ou vazio.
   "sicaf": null,
   "renovacao": null,
   "manutencao": null,
-  "urlCadastro": "https://cadastro.cadbrasil.com.br",
+  "urlCadastro": "https://cadastro.CADBRASIL Oficial.com.br",
   "podeConcluirCadastro": true,
   "encontradoNaReceitaFederal": false,
   "receitaFederal": null,
   "erroReceitaFederal": "CNPJ não encontrado na base da Receita Federal.",
-  "message": "CNPJ não encontrado na base da CADBRASIL.",
-  "orientacaoUsuario": "O CNPJ informado não foi localizado na base da CADBRASIL nem confirmado na Receita Federal. Verifique se o número está correto. Caso sua empresa ainda não tenha cadastro, acesse https://cadastro.cadbrasil.com.br para iniciar o cadastramento digital e dar sequência ao processo SICAF.",
-  "orientacaoIA": "O CNPJ 00000000000000 não foi encontrado na base CADBRASIL. Consulta à Receita Federal: CNPJ não encontrado na base da Receita Federal. Oriente o cliente a verificar o número informado ou iniciar o cadastro em https://cadastro.cadbrasil.com.br."
+  "message": "CNPJ não encontrado na base da CADBRASIL Oficial.",
+  "orientacaoUsuario": "O CNPJ informado não foi localizado na base da CADBRASIL Oficial nem confirmado na Receita Federal. Verifique se o número está correto. Caso sua empresa ainda não tenha cadastro, acesse https://cadastro.CADBRASIL Oficial.com.br para iniciar o cadastramento digital e dar sequência ao processo SICAF.",
+  "orientacaoIA": "O CNPJ 00000000000000 não foi encontrado na base CADBRASIL Oficial. Consulta à Receita Federal: CNPJ não encontrado na base da Receita Federal. Oriente o cliente a verificar o número informado ou iniciar o cadastro em https://cadastro.CADBRASIL Oficial.com.br."
 }
 ```
 
@@ -170,12 +170,12 @@ Cliente informou CNPJ com menos ou mais de 14 dígitos, ou vazio.
 > 🇧🇷 **CADBRASIL Oficial ®**  
 > 💬 **Consulta de CNPJ — Resultado**  
 >  
-> Olá! 👋 **Não localizamos** o CNPJ informado na CADBRASIL nem na **Receita Federal**.
+> Olá! 👋 **Não localizamos** o CNPJ informado na CADBRASIL Oficial nem na **Receita Federal**.
 
 **Bloco 2 — Dados consultados**
 > 📋 **Consulta realizada:**  
 > 🔢 **CNPJ:** {cnpj}  
-> 📊 **Status CADBRASIL:** Não cadastrado  
+> 📊 **Status CADBRASIL Oficial:** Não cadastrado  
 > 📊 **Status Receita:** {erroReceitaFederal}
 
 **Bloco 3 — Orientação**
@@ -203,7 +203,7 @@ Cliente informou CNPJ com menos ou mais de 14 dígitos, ou vazio.
 # CENÁRIO C — `cadastro_pendente`
 
 ### Quando ocorre
-- CNPJ **não está** na base CADBRASIL (`possuiCadastro: false`)
+- CNPJ **não está** na base CADBRASIL Oficial (`possuiCadastro: false`)
 - Mas **foi encontrado** na Receita Federal (`encontradoNaReceitaFederal: true`)
 - Consulta automática via OpenCNPJ
 
@@ -228,7 +228,7 @@ Cliente informou CNPJ com menos ou mais de 14 dígitos, ou vazio.
   "sicaf": null,
   "renovacao": null,
   "manutencao": null,
-  "urlCadastro": "https://cadastro.cadbrasil.com.br",
+  "urlCadastro": "https://cadastro.CADBRASIL Oficial.com.br",
   "podeConcluirCadastro": true,
   "encontradoNaReceitaFederal": true,
   "situacaoReceitaFederal": "Ativa",
@@ -249,9 +249,9 @@ Cliente informou CNPJ com menos ou mais de 14 dígitos, ou vazio.
     "porte": null,
     "naturezaJuridica": "Sociedade Empresária Limitada"
   },
-  "message": "CNPJ localizado na Receita Federal. Cadastro na CADBRASIL ainda não foi concluído.",
-  "orientacaoUsuario": "Olá, empresa GOOGLE BRASIL INTERNET LTDA.! Localizamos seus dados na Receita Federal, porém o cadastro junto à CADBRASIL ainda não foi concluído corretamente no cadastramento digital. O caminho para continuar o processo é https://cadastro.cadbrasil.com.br. Preencha todas as informações atualizadas e corretas para obter acesso ao SICAF/CADBRASIL. Lembre-se: durante o processo será necessário pagar a taxa anual de R$ 985,00.",
-  "orientacaoIA": "O CNPJ corresponde a GOOGLE BRASIL INTERNET LTDA. (situação cadastral na Receita: Ativa) e foi encontrado na Receita Federal, mas NÃO possui cadastro concluído na CADBRASIL. Oriente o cliente a acessar https://cadastro.cadbrasil.com.br, concluir o cadastramento digital com dados atualizados e efetuar o pagamento da taxa anual de R$ 985,00 para obter acesso ao SICAF. Sem o cadastro completo e o pagamento, os níveis do SICAF não serão liberados."
+  "message": "CNPJ localizado na Receita Federal. Cadastro na CADBRASIL Oficial ainda não foi concluído.",
+  "orientacaoUsuario": "Olá, empresa GOOGLE BRASIL INTERNET LTDA.! Localizamos seus dados na Receita Federal, porém o cadastro junto à CADBRASIL Oficial ainda não foi concluído corretamente no cadastramento digital. O caminho para continuar o processo é https://cadastro.CADBRASIL Oficial.com.br. Preencha todas as informações atualizadas e corretas para obter acesso ao SICAF/CADBRASIL Oficial. Lembre-se: durante o processo será necessário pagar a taxa anual de R$ 985,00.",
+  "orientacaoIA": "O CNPJ corresponde a GOOGLE BRASIL INTERNET LTDA. (situação cadastral na Receita: Ativa) e foi encontrado na Receita Federal, mas NÃO possui cadastro concluído na CADBRASIL Oficial. Oriente o cliente a acessar https://cadastro.CADBRASIL Oficial.com.br, concluir o cadastramento digital com dados atualizados e efetuar o pagamento da taxa anual de R$ 985,00 para obter acesso ao SICAF. Sem o cadastro completo e o pagamento, os níveis do SICAF não serão liberados."
 }
 ```
 
@@ -261,7 +261,7 @@ Cliente informou CNPJ com menos ou mais de 14 dígitos, ou vazio.
 > 🇧🇷 **CADBRASIL Oficial ®**  
 > 💬 **Consulta de CNPJ — Resultado**  
 >  
-> Olá! 👋 Realizamos a consulta do seu CNPJ e identificamos que sua empresa está registrada na **Receita Federal**, porém o **cadastramento na CADBRASIL ainda não foi concluído**.
+> Olá! 👋 Realizamos a consulta do seu CNPJ e identificamos que sua empresa está registrada na **Receita Federal**, porém o **cadastramento na CADBRASIL Oficial ainda não foi concluído**.
 
 **Bloco 2 — Dados da empresa (use `receitaFederal`; omita campos null)**
 > 📋 **Dados da empresa consultada:**  
@@ -277,8 +277,8 @@ Cliente informou CNPJ com menos ou mais de 14 dígitos, ou vazio.
 > 📧 **E-mail:** {email}  
 > 📞 **Telefone:** {telefone}
 
-**Bloco 3 — Situação CADBRASIL e próximos passos**
-> ⚠️ **Situação na CADBRASIL:**  
+**Bloco 3 — Situação CADBRASIL Oficial e próximos passos**
+> ⚠️ **Situação na CADBRASIL Oficial:**  
 > Seu CNPJ **não consta** em nossa base de fornecedores com cadastro concluído.  
 >  
 > Para dar sequência ao **credenciamento SICAF**, conclua o cadastramento digital:  
@@ -316,7 +316,7 @@ Cliente informou CNPJ com menos ou mais de 14 dígitos, ou vazio.
 # CENÁRIO D — `aguardando_pagamento`
 
 ### Quando ocorre
-- Cliente **já está** na base CADBRASIL (`possuiCadastro: true`)
+- Cliente **já está** na base CADBRASIL Oficial (`possuiCadastro: true`)
 - Tem registro SICAF, mas **taxa de credenciamento não foi paga** (`sicafValido: false`)
 - `sicaf.status` geralmente **Pendente** e/ou há boletos em `pagamentosResumo`
 
@@ -337,8 +337,8 @@ Cliente informou CNPJ com menos ou mais de 14 dígitos, ou vazio.
   "possuiManutencao": false,
   "possuiPagamentoPendente": true,
   "razaoSocial": "35.270.386 BARBARA GLACIELE DA CONCEICAO",
-  "urlCadastro": "https://cadastro.cadbrasil.com.br",
-  "urlPortal": "https://fornecedor.cadbrasil.com.br",
+  "urlCadastro": "https://cadastro.CADBRASIL Oficial.com.br",
+  "urlPortal": "https://fornecedor.CADBRASIL Oficial.com.br",
   "valorTotalPendente": 985,
   "cliente": {
     "id": 192547,
@@ -372,8 +372,8 @@ Cliente informou CNPJ com menos ou mais de 14 dígitos, ou vazio.
     "manutencaoPendentes": []
   },
   "message": "Cadastro SICAF identificado com pagamento pendente de R$ 985,00.",
-  "orientacaoUsuario": "A empresa 35.270.386 BARBARA GLACIELE DA CONCEICAO já possui cadastro SICAF na CADBRASIL, porém o pagamento da taxa de credenciamento ainda está em aberto no valor de R$ 985,00. Para dar continuidade ao processo e liberar a conclusão dos níveis do SICAF, acesse o Portal do Fornecedor em https://fornecedor.cadbrasil.com.br, faça login com sua conta e regularize o pagamento. Enquanto o pagamento não for confirmado, os níveis do credenciamento SICAF não serão concluídos e sua empresa permanecerá com o credenciamento pendente.",
-  "orientacaoIA": "O CNPJ pertence a 35.270.386 BARBARA GLACIELE DA CONCEICAO, que já possui cadastro SICAF na CADBRASIL, mas ainda não quitou a taxa de credenciamento (R$ 985,00). Oriente o cliente a acessar https://fornecedor.cadbrasil.com.br, entrar com login e senha e efetuar o pagamento pendente para concluir os níveis do SICAF. Sem a regularização do pagamento, o credenciamento permanece incompleto (status Pendente) e os níveis do SICAF não serão liberados."
+  "orientacaoUsuario": "A empresa 35.270.386 BARBARA GLACIELE DA CONCEICAO já possui cadastro SICAF na CADBRASIL Oficial, porém o pagamento da taxa de credenciamento ainda está em aberto no valor de R$ 985,00. Para dar continuidade ao processo e liberar a conclusão dos níveis do SICAF, acesse o Portal do Fornecedor em https://fornecedor.CADBRASIL Oficial.com.br, faça login com sua conta e regularize o pagamento. Enquanto o pagamento não for confirmado, os níveis do credenciamento SICAF não serão concluídos e sua empresa permanecerá com o credenciamento pendente.",
+  "orientacaoIA": "O CNPJ pertence a 35.270.386 BARBARA GLACIELE DA CONCEICAO, que já possui cadastro SICAF na CADBRASIL Oficial, mas ainda não quitou a taxa de credenciamento (R$ 985,00). Oriente o cliente a acessar https://fornecedor.CADBRASIL Oficial.com.br, entrar com login e senha e efetuar o pagamento pendente para concluir os níveis do SICAF. Sem a regularização do pagamento, o credenciamento permanece incompleto (status Pendente) e os níveis do SICAF não serão liberados."
 }
 ```
 
@@ -383,7 +383,7 @@ Cliente informou CNPJ com menos ou mais de 14 dígitos, ou vazio.
 > 🇧🇷 **CADBRASIL Oficial ®**  
 > 💬 **Consulta de CNPJ — Resultado**  
 >  
-> Olá! 👋 Sua empresa **já está na CADBRASIL**, porém há **pagamento pendente** do credenciamento SICAF.
+> Olá! 👋 Sua empresa **já está na CADBRASIL Oficial**, porém há **pagamento pendente** do credenciamento SICAF.
 
 **Bloco 2 — Dados da empresa**
 > 🏢 **Razão Social:** {razaoSocial}  
@@ -398,7 +398,7 @@ Cliente informou CNPJ com menos ou mais de 14 dígitos, ou vazio.
 
 **Bloco 4 — Regularização**
 > ✅ **Como pagar:**  
-> 1️⃣ 👉 **https://fornecedor.cadbrasil.com.br/pagamentos**  
+> 1️⃣ 👉 **https://fornecedor.CADBRASIL Oficial.com.br/pagamentos**  
 > 2️⃣ Login → emitir/pagar boleto  
 > 3️⃣ Ou confirme aqui para receber boleto pelo WhatsApp (link/PDF da API)  
 >  
@@ -421,7 +421,7 @@ Cliente informou CNPJ com menos ou mais de 14 dígitos, ou vazio.
 # CENÁRIO E — `sicaf_vencido`
 
 ### Quando ocorre
-- Cliente na CADBRASIL (`possuiCadastro: true`)
+- Cliente na CADBRASIL Oficial (`possuiCadastro: true`)
 - SICAF com validade **expirada** (`sicaf.status` = **Vencido**, `sicafValido: false`)
 - Sem pendência financeira de credenciamento inicial detectada
 
@@ -436,7 +436,7 @@ Cliente informou CNPJ com menos ou mais de 14 dígitos, ou vazio.
   "cadastroValido": false,
   "sicafValido": false,
   "razaoSocial": "EMPRESA EXEMPLO LTDA",
-  "urlPortal": "https://fornecedor.cadbrasil.com.br",
+  "urlPortal": "https://fornecedor.CADBRASIL Oficial.com.br",
   "sicaf": {
     "id": 192280,
     "status": "Vencido",
@@ -446,8 +446,8 @@ Cliente informou CNPJ com menos ou mais de 14 dígitos, ou vazio.
     "completude": 17
   },
   "message": "Credenciamento SICAF vencido em 10/06/2026.",
-  "orientacaoUsuario": "A empresa EMPRESA EXEMPLO LTDA possui cadastro na CADBRASIL, porém o credenciamento SICAF está vencido (validade expirada em 10/06/2026). Para renovar e restabelecer o acesso, acesse o Portal do Fornecedor em https://fornecedor.cadbrasil.com.br, faça login e regularize a situação.",
-  "orientacaoIA": "O cliente EMPRESA EXEMPLO LTDA tem cadastro na CADBRASIL com SICAF vencido desde 10/06/2026. Oriente a renovação pelo portal https://fornecedor.cadbrasil.com.br."
+  "orientacaoUsuario": "A empresa EMPRESA EXEMPLO LTDA possui cadastro na CADBRASIL Oficial, porém o credenciamento SICAF está vencido (validade expirada em 10/06/2026). Para renovar e restabelecer o acesso, acesse o Portal do Fornecedor em https://fornecedor.CADBRASIL Oficial.com.br, faça login e regularize a situação.",
+  "orientacaoIA": "O cliente EMPRESA EXEMPLO LTDA tem cadastro na CADBRASIL Oficial com SICAF vencido desde 10/06/2026. Oriente a renovação pelo portal https://fornecedor.CADBRASIL Oficial.com.br."
 }
 ```
 
@@ -494,11 +494,11 @@ Cliente informou CNPJ com menos ou mais de 14 dígitos, ou vazio.
   "sicaf": null,
   "razaoSocial": "EMPRESA EXEMPLO LTDA",
   "valorTaxaAnual": 985,
-  "urlCadastro": "https://cadastro.cadbrasil.com.br",
-  "urlPortal": "https://fornecedor.cadbrasil.com.br",
-  "message": "Cliente cadastrado na CADBRASIL sem processo SICAF iniciado.",
-  "orientacaoUsuario": "A empresa EMPRESA EXEMPLO LTDA está na base da CADBRASIL, mas o processo de credenciamento SICAF ainda não foi iniciado ou concluído. Acesse https://fornecedor.cadbrasil.com.br ou https://cadastro.cadbrasil.com.br para dar continuidade ao cadastro e efetuar o pagamento da taxa anual de R$ 985,00.",
-  "orientacaoIA": "Cliente EMPRESA EXEMPLO LTDA existe na CADBRASIL sem registro SICAF ativo. Oriente a conclusão do credenciamento em https://cadastro.cadbrasil.com.br ou https://fornecedor.cadbrasil.com.br, incluindo pagamento de R$ 985,00."
+  "urlCadastro": "https://cadastro.CADBRASIL Oficial.com.br",
+  "urlPortal": "https://fornecedor.CADBRASIL Oficial.com.br",
+  "message": "Cliente cadastrado na CADBRASIL Oficial sem processo SICAF iniciado.",
+  "orientacaoUsuario": "A empresa EMPRESA EXEMPLO LTDA está na base da CADBRASIL Oficial, mas o processo de credenciamento SICAF ainda não foi iniciado ou concluído. Acesse https://fornecedor.CADBRASIL Oficial.com.br ou https://cadastro.CADBRASIL Oficial.com.br para dar continuidade ao cadastro e efetuar o pagamento da taxa anual de R$ 985,00.",
+  "orientacaoIA": "Cliente EMPRESA EXEMPLO LTDA existe na CADBRASIL Oficial sem registro SICAF ativo. Oriente a conclusão do credenciamento em https://cadastro.CADBRASIL Oficial.com.br ou https://fornecedor.CADBRASIL Oficial.com.br, incluindo pagamento de R$ 985,00."
 }
 ```
 
@@ -507,7 +507,7 @@ Cliente informou CNPJ com menos ou mais de 14 dígitos, ou vazio.
 > 🇧🇷 **CADBRASIL Oficial ®**  
 > 💬 **Consulta de CNPJ — Resultado**  
 >  
-> Olá! 👋 A empresa **{razaoSocial}** (CNPJ {cnpj}) está na CADBRASIL, mas o **processo SICAF ainda não foi iniciado**.  
+> Olá! 👋 A empresa **{razaoSocial}** (CNPJ {cnpj}) está na CADBRASIL Oficial, mas o **processo SICAF ainda não foi iniciado**.  
 >  
 > ⚠️ Sem SICAF ativo, não é possível licitar como fornecedor habilitado.  
 >  
@@ -523,7 +523,7 @@ Cliente informou CNPJ com menos ou mais de 14 dígitos, ou vazio.
 # CENÁRIO G — `sicaf_incompleto`
 
 ### Quando ocorre
-- Cliente na CADBRASIL com SICAF iniciado
+- Cliente na CADBRASIL Oficial com SICAF iniciado
 - `sicafValido: false`, mas **sem** pendência financeira clara de credenciamento
 - Status como Pendente, documentação incompleta, etc.
 
@@ -536,15 +536,15 @@ Cliente informou CNPJ com menos ou mais de 14 dígitos, ou vazio.
   "possuiCadastro": true,
   "sicafValido": false,
   "razaoSocial": "EMPRESA EXEMPLO LTDA",
-  "urlPortal": "https://fornecedor.cadbrasil.com.br",
+  "urlPortal": "https://fornecedor.CADBRASIL Oficial.com.br",
   "sicaf": {
     "status": "Pendente",
     "valido": false,
     "completude": 25
   },
   "message": "Cadastro SICAF em andamento (status: Pendente).",
-  "orientacaoUsuario": "A empresa EMPRESA EXEMPLO LTDA possui cadastro na CADBRASIL, mas o credenciamento SICAF ainda não foi concluído (situação atual: Pendente). Acesse o Portal do Fornecedor em https://fornecedor.cadbrasil.com.br para verificar pendências e concluir os níveis do SICAF.",
-  "orientacaoIA": "Cliente EMPRESA EXEMPLO LTDA com SICAF incompleto (Pendente). Oriente acesso a https://fornecedor.cadbrasil.com.br para regularizar pendências documentais e financeiras."
+  "orientacaoUsuario": "A empresa EMPRESA EXEMPLO LTDA possui cadastro na CADBRASIL Oficial, mas o credenciamento SICAF ainda não foi concluído (situação atual: Pendente). Acesse o Portal do Fornecedor em https://fornecedor.CADBRASIL Oficial.com.br para verificar pendências e concluir os níveis do SICAF.",
+  "orientacaoIA": "Cliente EMPRESA EXEMPLO LTDA com SICAF incompleto (Pendente). Oriente acesso a https://fornecedor.CADBRASIL Oficial.com.br para regularizar pendências documentais e financeiras."
 }
 ```
 
@@ -560,7 +560,7 @@ Cliente informou CNPJ com menos ou mais de 14 dígitos, ou vazio.
 > ⚠️ Existem **pendências** (documentos/certidões) a regularizar.  
 >  
 > ✅ **Acesse o portal:** 👉 **{urlPortal}**  
-> 🎥 Central de Ajuda: **https://fornecedor.cadbrasil.com.br/ajuda**  
+> 🎥 Central de Ajuda: **https://fornecedor.CADBRASIL Oficial.com.br/ajuda**  
 >  
 > ❓ Dúvidas? Solicite falar com um **atendente**.
 
@@ -569,7 +569,7 @@ Cliente informou CNPJ com menos ou mais de 14 dígitos, ou vazio.
 # CENÁRIO H — `ativo` ✅ (CNPJ em ordem)
 
 ### Quando ocorre
-- Cliente na CADBRASIL (`possuiCadastro: true`)
+- Cliente na CADBRASIL Oficial (`possuiCadastro: true`)
 - **`sicafValido: true`** — credenciamento vigente
 - Pagamentos em dia (`pagamentosEmDia: true` na maioria dos casos)
 
@@ -583,8 +583,8 @@ Cliente informou CNPJ com menos ou mais de 14 dígitos, ou vazio.
 | `renovacaoUrgente` | `true` se faltam ≤ 30 dias |
 | `diasParaRenovacao` | Dias até `sicaf.dataValidade` |
 | `niveisSicaf` | Array com níveis I a VI |
-| `urlPortal` | https://fornecedor.cadbrasil.com.br |
-| `urlAjuda` | https://fornecedor.cadbrasil.com.br/ajuda |
+| `urlPortal` | https://fornecedor.CADBRASIL Oficial.com.br |
+| `urlAjuda` | https://fornecedor.CADBRASIL Oficial.com.br/ajuda |
 | `urlVideoAtualizacaoSicaf` | https://www.youtube.com/watch?v=ZG3csRrz1rQ |
 | `certidaoVencendoOuVencida` | `true` se algum nível está A Vencer ou Vencido |
 | `urlWhatsApp` | Link wa.me |
@@ -625,8 +625,8 @@ Cliente informou CNPJ com menos ou mais de 14 dígitos, ou vazio.
   "renovacaoProxima": false,
   "renovacaoUrgente": false,
   "diasParaRenovacao": 364,
-  "urlPortal": "https://fornecedor.cadbrasil.com.br",
-  "urlAjuda": "https://fornecedor.cadbrasil.com.br/ajuda",
+  "urlPortal": "https://fornecedor.CADBRASIL Oficial.com.br",
+  "urlAjuda": "https://fornecedor.CADBRASIL Oficial.com.br/ajuda",
   "urlVideoAtualizacaoSicaf": "https://www.youtube.com/watch?v=ZG3csRrz1rQ",
   "certidaoVencendoOuVencida": false,
   "urlWhatsApp": "https://wa.me/551121220202",
@@ -655,8 +655,8 @@ Cliente informou CNPJ com menos ou mais de 14 dígitos, ou vazio.
     { "nivel": "VI", "nome": "Qualificação Econômico-Financeira", "status": "Habilitado", "icone": "✅", "pendencia": false, "dataValidade": null, "certidoes": 0 }
   ],
   "message": "Credenciamento SICAF ativo até 02/07/2027.",
-  "orientacaoUsuario": "Prezado Fornecedor LABORATORIO DE ANALISES CLINICAS BARROS LTDA, bom dia! Seu cadastro encontra-se Ativo na CADBRASIL com credenciamento SICAF válido até 02/07/2027. Os valores da taxa de credenciamento estão devidamente pagos e em ordem. Última renovação: Concluída (referência 2026). Seu credenciamento está válido por mais 364 dia(s), até 02/07/2027. Níveis SICAF: ✅ Nível I — Credenciamento: Habilitado (válido até 02/07/2027) | ✅ Nível II — Habilitação Jurídica: Habilitado | ✅ Nível III — Regularidade Fiscal Federal: Válido (válido até 15/06/2027) | ✅ Nível IV — Regularidade Fiscal Estadual/Municipal: Válido | ✅ Nível V — Qualificação Técnica: Habilitado | ✅ Nível VI — Qualificação Econômico-Financeira: Habilitado. Todos os níveis consultados estão em situação regular. Para emitir boletos ou acompanhar seu credenciamento, acesse https://fornecedor.cadbrasil.com.br. Você também pode solicitar o boleto pelo WhatsApp (11) 2122-0202. Dúvidas para atualizar seu SICAF? Acesse a Central de Ajuda em https://fornecedor.cadbrasil.com.br/ajuda — lá você encontra vídeos práticos passo a passo. Caso tenha alguma certidão a vencer ou vencida, você também pode assistir ao vídeo de como atualizar o SICAF: https://www.youtube.com/watch?v=ZG3csRrz1rQ",
-  "orientacaoIA": "Cliente LABORATORIO DE ANALISES CLINICAS BARROS LTDA com SICAF Ativo na CADBRASIL (validade 02/07/2027, 364 dias restantes) Pagamentos em dia. Níveis em ordem. Vídeo como atualizar SICAF (se certidão vencer): https://www.youtube.com/watch?v=ZG3csRrz1rQ. Portal: https://fornecedor.cadbrasil.com.br | Ajuda: https://fornecedor.cadbrasil.com.br/ajuda | WhatsApp: (11) 2122-0202."
+  "orientacaoUsuario": "Prezado Fornecedor LABORATORIO DE ANALISES CLINICAS BARROS LTDA, bom dia! Seu cadastro encontra-se Ativo na CADBRASIL Oficial com credenciamento SICAF válido até 02/07/2027. Os valores da taxa de credenciamento estão devidamente pagos e em ordem. Última renovação: Concluída (referência 2026). Seu credenciamento está válido por mais 364 dia(s), até 02/07/2027. Níveis SICAF: ✅ Nível I — Credenciamento: Habilitado (válido até 02/07/2027) | ✅ Nível II — Habilitação Jurídica: Habilitado | ✅ Nível III — Regularidade Fiscal Federal: Válido (válido até 15/06/2027) | ✅ Nível IV — Regularidade Fiscal Estadual/Municipal: Válido | ✅ Nível V — Qualificação Técnica: Habilitado | ✅ Nível VI — Qualificação Econômico-Financeira: Habilitado. Todos os níveis consultados estão em situação regular. Para emitir boletos ou acompanhar seu credenciamento, acesse https://fornecedor.CADBRASIL Oficial.com.br. Você também pode solicitar o boleto pelo WhatsApp (11) 2122-0202. Dúvidas para atualizar seu SICAF? Acesse a Central de Ajuda em https://fornecedor.CADBRASIL Oficial.com.br/ajuda — lá você encontra vídeos práticos passo a passo. Caso tenha alguma certidão a vencer ou vencida, você também pode assistir ao vídeo de como atualizar o SICAF: https://www.youtube.com/watch?v=ZG3csRrz1rQ",
+  "orientacaoIA": "Cliente LABORATORIO DE ANALISES CLINICAS BARROS LTDA com SICAF Ativo na CADBRASIL Oficial (validade 02/07/2027, 364 dias restantes) Pagamentos em dia. Níveis em ordem. Vídeo como atualizar SICAF (se certidão vencer): https://www.youtube.com/watch?v=ZG3csRrz1rQ. Portal: https://fornecedor.CADBRASIL Oficial.com.br | Ajuda: https://fornecedor.CADBRASIL Oficial.com.br/ajuda | WhatsApp: (11) 2122-0202."
 }
 ```
 
@@ -664,7 +664,7 @@ Cliente informou CNPJ com menos ou mais de 14 dígitos, ou vazio.
 
 **Bloco 1 — Saudação e status**
 > Prezado Fornecedor **{razaoSocial}**, {saudacao}!  
-> Seu cadastro está **{sicaf.status}** na CADBRASIL, com SICAF válido até **{sicaf.dataValidade formatada}**.  
+> Seu cadastro está **{sicaf.status}** na CADBRASIL Oficial, com SICAF válido até **{sicaf.dataValidade formatada}**.  
 > Os pagamentos estão **em dia** ✅
 
 **Bloco 2 — Renovação**
@@ -685,7 +685,7 @@ Cliente informou CNPJ com menos ou mais de 14 dígitos, ou vazio.
 
 **Bloco 4 — Links úteis**
 > 📋 Portal: **{urlPortal}**  
-> 💳 Pagamentos: **https://fornecedor.cadbrasil.com.br/pagamentos**  
+> 💳 Pagamentos: **https://fornecedor.CADBRASIL Oficial.com.br/pagamentos**  
 > 📞 Boleto pelo WhatsApp: **{whatsappDisplay}**  
 > ❓ Central de Ajuda: **{urlAjuda}**  
 > 🎥 Como atualizar o SICAF: **{urlVideoAtualizacaoSicaf}**  
@@ -703,7 +703,7 @@ Quando `certidaoVencendoOuVencida: true` e algum nível tem `icone` ⚠️ ou �
 > Para atualizar, assista ao vídeo passo a passo:  
 > 🎥 **https://www.youtube.com/watch?v=ZG3csRrz1rQ**  
 >  
-> Ou acesse a Central de Ajuda: **https://fornecedor.cadbrasil.com.br/ajuda**
+> Ou acesse a Central de Ajuda: **https://fornecedor.CADBRASIL Oficial.com.br/ajuda**
 
 ### O que a IA deve fazer (cenário ativo)
 - Parabenizar — cliente em dia.
@@ -726,7 +726,7 @@ Objeto `manutencao` aparece quando há registro de plano de manutenção:
 | `diasRestantes` | Dias até fim do período atual |
 | `dataFim` | Data de término do ciclo |
 
-**`possuiManutencao: true`** → cliente tem (ou teve) manutenção CADBRASIL ativa.  
+**`possuiManutencao: true`** → cliente tem (ou teve) manutenção CADBRASIL Oficial ativa.  
 Boletos de manutenção → API separada: `GET /api/clients/consulta-boletos?cnpj=CNPJ`
 
 ---
@@ -765,12 +765,12 @@ Renovação **Concluída** + `sicafValido: true` = cliente regularizado para o a
 | `situacaoCadastro` | Tom | Ação principal | Link principal |
 |--------------------|-----|----------------|----------------|
 | `cnpj_invalido` | Neutro | Pedir 14 dígitos | — |
-| `nao_encontrado` | Neutro | Confirmar CNPJ / cadastro novo | cadastro.cadbrasil.com.br |
-| `cadastro_pendente` | Acolhedor | Concluir cadastro + taxa R$ 985 | cadastro.cadbrasil.com.br |
-| `aguardando_pagamento` | Objetivo | Pagar taxa SICAF | fornecedor.cadbrasil.com.br + boleto |
-| `sicaf_vencido` | Urgente | Renovar SICAF | fornecedor.cadbrasil.com.br + vídeo |
+| `nao_encontrado` | Neutro | Confirmar CNPJ / cadastro novo | cadastro.CADBRASIL Oficial.com.br |
+| `cadastro_pendente` | Acolhedor | Concluir cadastro + taxa R$ 985 | cadastro.CADBRASIL Oficial.com.br |
+| `aguardando_pagamento` | Objetivo | Pagar taxa SICAF | fornecedor.CADBRASIL Oficial.com.br + boleto |
+| `sicaf_vencido` | Urgente | Renovar SICAF | fornecedor.CADBRASIL Oficial.com.br + vídeo |
 | `cadastro_sem_sicaf` | Orientativo | Iniciar SICAF | fornecedor / cadastro |
-| `sicaf_incompleto` | Orientativo | Ver pendências no portal | fornecedor.cadbrasil.com.br |
+| `sicaf_incompleto` | Orientativo | Ver pendências no portal | fornecedor.CADBRASIL Oficial.com.br |
 | `ativo` | Positivo | Confirmar status + níveis + links | portal + ajuda + vídeo |
 
 ---
@@ -779,13 +779,13 @@ Renovação **Concluída** + `sicafValido: true` = cliente regularizado para o a
 
 | Recurso | URL |
 |---------|-----|
-| Cadastro digital | https://cadastro.cadbrasil.com.br |
-| Portal do fornecedor | https://fornecedor.cadbrasil.com.br |
-| Central de ajuda | https://fornecedor.cadbrasil.com.br/ajuda |
-| Esqueci senha | https://fornecedor.cadbrasil.com.br/esqueci-senha |
+| Cadastro digital | https://cadastro.CADBRASIL Oficial.com.br |
+| Portal do fornecedor | https://fornecedor.CADBRASIL Oficial.com.br |
+| Central de ajuda | https://fornecedor.CADBRASIL Oficial.com.br/ajuda |
+| Esqueci senha | https://fornecedor.CADBRASIL Oficial.com.br/esqueci-senha |
 | Vídeo — atualizar SICAF | https://www.youtube.com/watch?v=ZG3csRrz1rQ |
 | WhatsApp | (11) 2122-0202 |
-| Documentação | https://docs.cadbrasil.com.br |
+| Documentação | https://docs.CADBRASIL Oficial.com.br |
 
 ---
 
@@ -797,8 +797,8 @@ Renovação **Concluída** + `sicafValido: true` = cliente regularizado para o a
 Após consultar GET /api/clients/consulta-cnpj?cnpj=... use situacaoCadastro:
 
 • cnpj_invalido → pedir 14 dígitos
-• nao_encontrado → verificar CNPJ; oferecer cadastro.cadbrasil.com.br
-• cadastro_pendente → empresa na Receita, sem CADBRASIL; urlCadastro + taxa R$ 985
+• nao_encontrado → verificar CNPJ; oferecer cadastro.CADBRASIL Oficial.com.br
+• cadastro_pendente → empresa na Receita, sem CADBRASIL Oficial; urlCadastro + taxa R$ 985
 • aguardando_pagamento → cadastro OK, pagamento pendente; urlPortal + boleto
 • sicaf_vencido → renovação urgente; urlPortal + vídeo YouTube
 • cadastro_sem_sicaf → iniciar processo SICAF
@@ -812,4 +812,4 @@ Nunca inventar status, valores ou links de boleto.
 
 ---
 
-© 2026 CADBRASIL · API consulta-cnpj v3.0
+© 2026 CADBRASIL Oficial · API consulta-cnpj v3.0

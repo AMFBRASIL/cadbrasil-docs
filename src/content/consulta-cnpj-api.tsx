@@ -20,7 +20,7 @@ export const consultaCnpjSection: Section = {
     <>
       <ShortAnswer>
         GET /api/clients/consulta-cnpj?cnpj=CNPJ — consulta situação do cliente
-        na CADBRASIL e, se necessário, na Receita Federal. Leia{" "}
+        na CADBRASIL Oficial e, se necessário, na Receita Federal. Leia{" "}
         <code>situacaoCadastro</code> para definir o cenário. Priorize{" "}
         <code>orientacaoUsuario</code> na resposta ao cliente.
       </ShortAnswer>
@@ -53,7 +53,7 @@ export const consultaCnpjSection: Section = {
           ["Método", "GET"],
           [
             "URL",
-            "https://fornecedor.cadbrasil.com.br/api/clients/consulta-cnpj?cnpj={14_dígitos}",
+            "https://fornecedor.CADBRASIL Oficial.com.br/api/clients/consulta-cnpj?cnpj={14_dígitos}",
           ],
           [
             "Autenticação",
@@ -64,7 +64,7 @@ export const consultaCnpjSection: Section = {
       />
       <Endpoint
         method="GET"
-        url="https://fornecedor.cadbrasil.com.br/api/clients/consulta-cnpj?cnpj=CNPJ"
+        url="https://fornecedor.CADBRASIL Oficial.com.br/api/clients/consulta-cnpj?cnpj=CNPJ"
       />
 
       <SubTitle>Códigos HTTP</SubTitle>
@@ -90,7 +90,7 @@ export const consultaCnpjSection: Section = {
               │     ├─ encontradoNaReceitaFederal: true  ► cadastro_pendente
               │     └─ encontradoNaReceitaFederal: false ► nao_encontrado
               │
-              └─ possuiCadastro: true (cliente na base CADBRASIL)
+              └─ possuiCadastro: true (cliente na base CADBRASIL Oficial)
                     │
                     ├─ sicafValido: true ─────────────────► ativo
                     ├─ pagamento SICAF em aberto ──────────► aguardando_pagamento
@@ -111,17 +111,17 @@ export const consultaCnpjSection: Section = {
           ["cnpj_invalido", "CNPJ com formato inválido (erro 400)"],
           [
             "nao_encontrado",
-            "Não está na CADBRASIL nem confirmado na Receita",
+            "Não está na CADBRASIL Oficial nem confirmado na Receita",
           ],
           [
             "cadastro_pendente",
-            "Achou na Receita Federal, cadastro CADBRASIL não concluído",
+            "Achou na Receita Federal, cadastro CADBRASIL Oficial não concluído",
           ],
           [
             "aguardando_pagamento",
-            "Cadastro na CADBRASIL, taxa SICAF não quitada",
+            "Cadastro na CADBRASIL Oficial, taxa SICAF não quitada",
           ],
-          ["sicaf_vencido", "Cadastro na CADBRASIL, credenciamento expirado"],
+          ["sicaf_vencido", "Cadastro na CADBRASIL Oficial, credenciamento expirado"],
           [
             "cadastro_sem_sicaf",
             "Cliente na base, sem processo SICAF iniciado",
@@ -148,7 +148,7 @@ export const consultaCnpjSection: Section = {
           [
             "possuiCadastro",
             "boolean",
-            "Existe na base clientes da CADBRASIL",
+            "Existe na base clientes da CADBRASIL Oficial",
           ],
           [
             "possuiPagamentoPendente",
@@ -165,8 +165,8 @@ export const consultaCnpjSection: Section = {
           ["razaoSocial", "string|null", "Da base ou da Receita"],
           ["valorTaxaAnual", "number", "Taxa credenciamento (padrão R$ 985)"],
           ["valorTotalPendente", "number", "Soma de boletos em aberto"],
-          ["urlCadastro", "string", "https://cadastro.cadbrasil.com.br"],
-          ["urlPortal", "string", "https://fornecedor.cadbrasil.com.br"],
+          ["urlCadastro", "string", "https://cadastro.CADBRASIL Oficial.com.br"],
+          ["urlPortal", "string", "https://fornecedor.CADBRASIL Oficial.com.br"],
         ]}
       />
 
@@ -179,25 +179,25 @@ export const consultaCnpjSection: Section = {
             "nao_encontrado",
             "Neutro",
             "Confirmar CNPJ / cadastro novo",
-            "cadastro.cadbrasil.com.br",
+            "cadastro.CADBRASIL Oficial.com.br",
           ],
           [
             "cadastro_pendente",
             "Acolhedor",
             "Concluir cadastro + taxa R$ 985",
-            "cadastro.cadbrasil.com.br",
+            "cadastro.CADBRASIL Oficial.com.br",
           ],
           [
             "aguardando_pagamento",
             "Objetivo",
             "Pagar taxa SICAF",
-            "fornecedor.cadbrasil.com.br/pagamentos + boleto",
+            "fornecedor.CADBRASIL Oficial.com.br/pagamentos + boleto",
           ],
           [
             "sicaf_vencido",
             "Urgente",
             "Renovar SICAF",
-            "fornecedor.cadbrasil.com.br + vídeo",
+            "fornecedor.CADBRASIL Oficial.com.br + vídeo",
           ],
           [
             "cadastro_sem_sicaf",
@@ -209,7 +209,7 @@ export const consultaCnpjSection: Section = {
             "sicaf_incompleto",
             "Orientativo",
             "Ver pendências no portal",
-            "fornecedor.cadbrasil.com.br",
+            "fornecedor.CADBRASIL Oficial.com.br",
           ],
           [
             "ativo",
@@ -234,7 +234,7 @@ export const consultaCnpjSection: Section = {
         ]}
       />
       <H>
-        <code>possuiManutencao: true</code> → cliente tem manutenção CADBRASIL
+        <code>possuiManutencao: true</code> → cliente tem manutenção CADBRASIL Oficial
         ativa. Boletos de manutenção →{" "}
         <code>GET /api/clients/consulta-boletos?cnpj=CNPJ</code>
       </H>

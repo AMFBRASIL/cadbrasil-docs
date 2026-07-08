@@ -43,7 +43,7 @@ export const sections: Section[] = [
         <Code>{`🇧🇷 **CADBRASIL Oficial ®**
 💬 **Central de Atendimento Online**
 
-Olá! Seja bem-vindo(a) ao atendimento oficial da **CADBRASIL**. 👋
+Olá! Seja bem-vindo(a) ao atendimento oficial da **CADBRASIL Oficial**. 👋
 
 Somos especialistas em soluções para fornecedores, auxiliando empresas em processos relacionados ao **SICAF**, **Compras Governamentais**, gestão cadastral e regularização de documentos. 📄✅
 
@@ -67,6 +67,11 @@ Tecnologia, segurança e suporte para fornecedores do Brasil. 🇧🇷`}</Code>
         <H>
           <strong>Tom:</strong> cordial, objetivo, frases curtas (ideal para
           WhatsApp). Trate o cliente por &quot;você&quot;.
+        </H>
+        <H>
+          <strong>Marca:</strong> nas mensagens ao cliente, use sempre{" "}
+          <strong>CADBRASIL Oficial</strong> — nunca apenas &quot;CADBRASIL&quot;.
+          Isso vale para textos WhatsApp, saudações, explicações e orientações.
         </H>
         <H>
           <strong>CNPJ:</strong> sempre peça os 14 dígitos (somente números,
@@ -101,10 +106,10 @@ Tecnologia, segurança e suporte para fornecedores do Brasil. 🇧🇷`}</Code>
             </>,
             <>
               <code>nao_encontrado</code> → verificar CNPJ; oferecer{" "}
-              <code>urlCadastro</code> (cadastro.cadbrasil.com.br)
+              <code>urlCadastro</code> (cadastro.CADBRASIL Oficial.com.br)
             </>,
             <>
-              <code>cadastro_pendente</code> → empresa na Receita, sem CADBRASIL;
+              <code>cadastro_pendente</code> → empresa na Receita, sem CADBRASIL Oficial;
               enviar <code>urlCadastro</code> + taxa R$ 985
             </>,
             <>
@@ -196,12 +201,12 @@ Tecnologia, segurança e suporte para fornecedores do Brasil. 🇧🇷`}</Code>
             "licitação / oportunidade / painel → Painel nacional de licitações por CNAE",
             "concorrente / preço / valor do certame → Preços de licitações de concorrentes",
             "certidão vencendo / alerta / e-mail → Alertas de certidões por e-mail",
-            "plataforma / o que vocês oferecem → O que é a CADBRASIL (plataforma completa)",
+            "plataforma / o que vocês oferecem → O que é a CADBRASIL Oficial (plataforma completa)",
             "atualizar sicaf / renovar cadastro → Como atualizar o SICAF",
             "gov.br / conta gov → Preciso acessar o GOV.BR?",
             "situação fornecedor / painel desatualizado → Situação do Fornecedor",
             "falta documento / pendência → Como sei se falta algum documento?",
-            "cadastro sicaf / fazem para mim → A CADBRASIL faz o cadastro?",
+            "cadastro sicaf / fazem para mim → A CADBRASIL Oficial faz o cadastro?",
             "vídeo / tutorial / central de ajuda → Central de Ajuda",
           ]}
         />
@@ -211,28 +216,28 @@ Tecnologia, segurança e suporte para fornecedores do Brasil. 🇧🇷`}</Code>
   consultaCnpjSection,
   {
     id: "o-que-e",
-    title: "O que é a CADBRASIL?",
+    title: "O que é a CADBRASIL Oficial?",
     body: (
       <>
         <ShortAnswer>
-          A CADBRASIL é uma empresa privada e uma plataforma completa para
+          A CADBRASIL Oficial é uma empresa privada e uma plataforma completa para
           licitações públicas: SICAF, gestão documental, inteligência de
           mercado, leitura de editais com IA e ferramentas que aumentam suas
           chances de ganhar contratos com o governo.
         </ShortAnswer>
         <H>
-          A CADBRASIL é uma empresa especializada em licitações públicas,
+          A CADBRASIL Oficial é uma empresa especializada em licitações públicas,
           credenciamento no SICAF, manutenção cadastral e suporte para empresas
           que desejam vender para órgãos públicos em todo o Brasil.
         </H>
         <Callout tone="info">
-          <strong>Importante para a IA:</strong> os serviços da CADBRASIL{" "}
+          <strong>Importante para a IA:</strong> os serviços da CADBRASIL Oficial{" "}
           <strong>não se limitam ao SICAF</strong>. Ao apresentar a empresa,
           sempre mencionar a <strong>plataforma completa</strong> e os
-          diferenciais abaixo — não reduzir a CADBRASIL apenas a
+          diferenciais abaixo — não reduzir a CADBRASIL Oficial apenas a
           &quot;credenciamento SICAF&quot;.
         </Callout>
-        <SubTitle>Plataforma e serviços CADBRASIL</SubTitle>
+        <SubTitle>Plataforma e serviços CADBRASIL Oficial</SubTitle>
         <List
           items={[
             <>
@@ -320,14 +325,14 @@ Tecnologia, segurança e suporte para fornecedores do Brasil. 🇧🇷`}</Code>
     body: (
       <>
         <ShortAnswer>
-          Sim, o cadastro no SICAF é gratuito (Governo Federal). A CADBRASIL
+          Sim, o cadastro no SICAF é gratuito (Governo Federal). A CADBRASIL Oficial
           cobra pela assessoria, plataforma e acompanhamento — não pelo SICAF
           em si.
         </ShortAnswer>
         <H>Sim. O cadastro no SICAF é gratuito e disponibilizado pelo Governo Federal.</H>
-        <H>A CADBRASIL não cobra pelo SICAF em si.</H>
+        <H>A CADBRASIL Oficial não cobra pelo SICAF em si.</H>
         <H>
-          O valor cobrado pela CADBRASIL refere-se à assessoria especializada,
+          O valor cobrado pela CADBRASIL Oficial refere-se à assessoria especializada,
           análise documental, suporte técnico, plataforma de gestão,
           monitoramento e execução do processo.
         </H>
@@ -357,7 +362,7 @@ Tecnologia, segurança e suporte para fornecedores do Brasil. 🇧🇷`}</Code>
               precisa ser revalidado.
             </>,
             <>
-              <strong>Manutenção CADBRASIL (R$ 155,00/mês):</strong> serviço
+              <strong>Manutenção CADBRASIL Oficial (R$ 155,00/mês):</strong> serviço
               contínuo após o credenciamento para manter SICAF, certidões e
               documentação sempre atualizados.
             </>,
@@ -371,13 +376,13 @@ Tecnologia, segurança e suporte para fornecedores do Brasil. 🇧🇷`}</Code>
     ),
   },
   {
-    id: "taxa-sicaf-vs-cadbrasil",
-    title: "Taxa SICAF vs Taxa CADBRASIL",
+    id: "taxa-sicaf-vs-CADBRASIL Oficial",
+    title: "Taxa SICAF vs Taxa CADBRASIL Oficial",
     body: (
       <>
         <ShortAnswer>
           Taxa SICAF = taxa governamental do credenciamento (R$ 985). Taxa
-          CADBRASIL = assessoria + plataforma. São coisas diferentes.
+          CADBRASIL Oficial = assessoria + plataforma. São coisas diferentes.
         </ShortAnswer>
         <List
           items={[
@@ -387,32 +392,32 @@ Tecnologia, segurança e suporte para fornecedores do Brasil. 🇧🇷`}</Code>
               boleto SICAF.
             </>,
             <>
-              <strong>Manutenção CADBRASIL (R$ 155,00/mês):</strong> serviço
-              mensal da CADBRASIL para acompanhamento contínuo — consultada via
+              <strong>Manutenção CADBRASIL Oficial (R$ 155,00/mês):</strong> serviço
+              mensal da CADBRASIL Oficial para acompanhamento contínuo — consultada via
               API de boletos de manutenção.
             </>,
           ]}
         />
         <H>
           O cadastro no portal do governo é gratuito; os valores acima referem-se
-          aos serviços de assessoria e gestão prestados pela CADBRASIL.
+          aos serviços de assessoria e gestão prestados pela CADBRASIL Oficial.
         </H>
       </>
     ),
   },
   {
     id: "por-que-contratar",
-    title: "Por que contratar a CADBRASIL?",
+    title: "Por que contratar a CADBRASIL Oficial?",
     body: (
       <>
         <ShortAnswer>
-          Porque a CADBRASIL vai além do SICAF: oferece plataforma com IA,
+          Porque a CADBRASIL Oficial vai além do SICAF: oferece plataforma com IA,
           gestão documental, alertas de certidões, painel de licitações por
           CNAE, inteligência de preços e Assistente exclusivo — tudo para você
           licitar com segurança e vantagem competitiva.
         </ShortAnswer>
         <H>
-          Contratar a CADBRASIL significa ter uma{" "}
+          Contratar a CADBRASIL Oficial significa ter uma{" "}
           <strong>operação completa de licitações</strong>, não apenas um
           cadastro no SICAF. A plataforma integra habilitação, monitoramento,
           inteligência de mercado e ferramentas que economizam tempo e reduzem
@@ -429,7 +434,7 @@ Tecnologia, segurança e suporte para fornecedores do Brasil. 🇧🇷`}</Code>
             "Risco de sanções e multas administrativas",
           ]}
         />
-        <SubTitle>O que a plataforma CADBRASIL entrega na prática</SubTitle>
+        <SubTitle>O que a plataforma CADBRASIL Oficial entrega na prática</SubTitle>
         <List
           items={[
             <>
@@ -474,7 +479,7 @@ Tecnologia, segurança e suporte para fornecedores do Brasil. 🇧🇷`}</Code>
         <Callout tone="warn">
           Participar de licitação com SICAF irregular ou certidões vencidas pode
           gerar desclassificação, multas severas e impedimento de participar de
-          certames por anos. A plataforma CADBRASIL existe para evitar esses
+          certames por anos. A plataforma CADBRASIL Oficial existe para evitar esses
           riscos e, ao mesmo tempo, ampliar suas chances de sucesso nas
           licitações.
         </Callout>
@@ -483,7 +488,7 @@ Tecnologia, segurança e suporte para fornecedores do Brasil. 🇧🇷`}</Code>
   },
   {
     id: "como-contratar",
-    title: "Como contratar a CADBRASIL?",
+    title: "Como contratar a CADBRASIL Oficial?",
     body: (
       <>
         <ShortAnswer>
@@ -497,7 +502,7 @@ Tecnologia, segurança e suporte para fornecedores do Brasil. 🇧🇷`}</Code>
             "Consultor orienta sobre documentos necessários",
             "Envie a documentação pela Área do Fornecedor ou Assistente",
             "Realize o pagamento do credenciamento (R$ 985,00 via boleto)",
-            "Equipe CADBRASIL inicia análise e credenciamento SICAF",
+            "Equipe CADBRASIL Oficial inicia análise e credenciamento SICAF",
             "Acompanhe status pela Área do Fornecedor",
           ]}
         />
@@ -560,7 +565,7 @@ Tecnologia, segurança e suporte para fornecedores do Brasil. 🇧🇷`}</Code>
             "Credenciamento SICAF",
             "Análise documental",
             "Suporte especializado",
-            "Plataforma CADBRASIL",
+            "Plataforma CADBRASIL Oficial",
             "Gestão documental",
             "Acompanhamento do processo",
             "Área do fornecedor",
@@ -575,13 +580,13 @@ Tecnologia, segurança e suporte para fornecedores do Brasil. 🇧🇷`}</Code>
     body: (
       <>
         <ShortAnswer>
-          Sim. A manutenção CADBRASIL custa R$ 155,00/mês e mantém SICAF e
+          Sim. A manutenção CADBRASIL Oficial custa R$ 155,00/mês e mantém SICAF e
           documentação atualizados.
         </ShortAnswer>
         <H>Sim.</H>
         <H>
           Após o credenciamento inicial, o cliente pode contratar a manutenção
-          CADBRASIL para manter o SICAF e a documentação sempre atualizados.
+          CADBRASIL Oficial para manter o SICAF e a documentação sempre atualizados.
         </H>
         <p className="my-3 text-xl font-semibold tracking-tight text-foreground">
           R$ 155,00 / mês
@@ -620,7 +625,7 @@ Tecnologia, segurança e suporte para fornecedores do Brasil. 🇧🇷`}</Code>
           ]}
         />
         <Callout tone="warn">
-          A CADBRASIL não pede transferência PIX para números pessoais. Boletos
+          A CADBRASIL Oficial não pede transferência PIX para números pessoais. Boletos
           oficiais vêm da plataforma ou são enviados pela IA via API com link
           verificável.
         </Callout>
@@ -634,7 +639,7 @@ Tecnologia, segurança e suporte para fornecedores do Brasil. 🇧🇷`}</Code>
       <>
         <ShortAnswer>
           1) Fale no WhatsApp (11) 2122-0202 → 2) Envie documentos → 3) Pague
-          boleto R$ 985 → 4) Acesse fornecedor.cadbrasil.com.br → 5) Instale o
+          boleto R$ 985 → 4) Acesse fornecedor.CADBRASIL Oficial.com.br → 5) Instale o
           Assistente CADBRASIL.
         </ShortAnswer>
         <List
@@ -642,7 +647,7 @@ Tecnologia, segurança e suporte para fornecedores do Brasil. 🇧🇷`}</Code>
             "Contato com consultor: WhatsApp (11) 2122-0202",
             "Envio de documentação: Área do Fornecedor ou Assistente CADBRASIL",
             "Pagamento do credenciamento: boleto de R$ 985,00",
-            "Acompanhamento: https://fornecedor.cadbrasil.com.br",
+            "Acompanhamento: https://fornecedor.CADBRASIL Oficial.com.br",
             "Instalar Assistente CADBRASIL para facilitar comunicação e envios",
           ]}
         />
@@ -691,7 +696,7 @@ Tecnologia, segurança e suporte para fornecedores do Brasil. 🇧🇷`}</Code>
         </ShortAnswer>
         <H>
           A atualização das certidões é realizada através do Assistente
-          CADBRASIL.
+          CADBRASIL Oficial.
         </H>
         <H>
           Assista ao vídeo: <VideoLink href={VIDEOS.certidoes} />
@@ -719,7 +724,7 @@ Tecnologia, segurança e suporte para fornecedores do Brasil. 🇧🇷`}</Code>
           Todos os documentos são enviados diretamente pelo{" "}
           <strong>Assistente CADBRASIL</strong> ou pela{" "}
           <a
-            href="https://fornecedor.cadbrasil.com.br"
+            href="https://fornecedor.CADBRASIL Oficial.com.br"
             className="font-medium underline underline-offset-4 hover:opacity-70"
           >
             Área do Fornecedor
@@ -742,7 +747,7 @@ Tecnologia, segurança e suporte para fornecedores do Brasil. 🇧🇷`}</Code>
         <H>
           Tutoriais:{" "}
           <a
-            href="https://fornecedor.cadbrasil.com.br/ajuda"
+            href="https://fornecedor.CADBRASIL Oficial.com.br/ajuda"
             className="font-medium underline underline-offset-4 hover:opacity-70"
           >
             Central de Ajuda
@@ -823,7 +828,7 @@ Tecnologia, segurança e suporte para fornecedores do Brasil. 🇧🇷`}</Code>
           SICAF e docs atualizados. Veja o vídeo.
         </ShortAnswer>
         <H>
-          A manutenção CADBRASIL mantém seu SICAF e documentação sempre
+          A manutenção CADBRASIL Oficial mantém seu SICAF e documentação sempre
           atualizados após o período inicial de credenciamento.
         </H>
         <H>
@@ -842,7 +847,7 @@ Tecnologia, segurança e suporte para fornecedores do Brasil. 🇧🇷`}</Code>
           Assistente. Vídeo tutorial disponível.
         </ShortAnswer>
         <H>
-          Saiba como acompanhar e utilizar os serviços de manutenção CADBRASIL
+          Saiba como acompanhar e utilizar os serviços de manutenção CADBRASIL Oficial
           pela plataforma e pelo Assistente.
         </H>
         <H>
@@ -857,15 +862,15 @@ Tecnologia, segurança e suporte para fornecedores do Brasil. 🇧🇷`}</Code>
     body: (
       <>
         <ShortAnswer>
-          Acesse fornecedor.cadbrasil.com.br com e-mail e senha cadastrados.
+          Acesse fornecedor.CADBRASIL Oficial.com.br com e-mail e senha cadastrados.
         </ShortAnswer>
         <H>
           Acesse:{" "}
           <a
-            href="https://fornecedor.cadbrasil.com.br"
+            href="https://fornecedor.CADBRASIL Oficial.com.br"
             className="font-medium text-foreground underline underline-offset-4 hover:opacity-70"
           >
-            https://fornecedor.cadbrasil.com.br
+            https://fornecedor.CADBRASIL Oficial.com.br
           </a>
         </H>
         <H>Utilize seu e-mail e senha cadastrados.</H>
@@ -906,7 +911,7 @@ Tecnologia, segurança e suporte para fornecedores do Brasil. 🇧🇷`}</Code>
         <H>
           Dúvidas:{" "}
           <a
-            href="https://fornecedor.cadbrasil.com.br/ajuda"
+            href="https://fornecedor.CADBRASIL Oficial.com.br/ajuda"
             className="font-medium underline underline-offset-4 hover:opacity-70"
           >
             Central de Ajuda
@@ -1009,7 +1014,7 @@ Tecnologia, segurança e suporte para fornecedores do Brasil. 🇧🇷`}</Code>
         </H>
         <Endpoint
           method="GET"
-          url="https://fornecedor.cadbrasil.com.br/api/clients/consulta-cnpj?cnpj=CNPJ"
+          url="https://fornecedor.CADBRASIL Oficial.com.br/api/clients/consulta-cnpj?cnpj=CNPJ"
         />
         <H>Indicadores de aptidão (situacaoCadastro: ativo):</H>
         <List
@@ -1136,7 +1141,7 @@ Tecnologia, segurança e suporte para fornecedores do Brasil. 🇧🇷`}</Code>
         </H>
         <Endpoint
           method="GET"
-          url="https://fornecedor.cadbrasil.com.br/api/clients/boleto-sicaf/CNPJ"
+          url="https://fornecedor.CADBRASIL Oficial.com.br/api/clients/boleto-sicaf/CNPJ"
         />
         <p className="mt-4 text-sm font-medium text-muted-foreground">
           Exemplo de resposta (com boleto)
@@ -1338,7 +1343,7 @@ Tecnologia, segurança e suporte para fornecedores do Brasil. 🇧🇷`}</Code>
         <H>Caso queira por aqui, posso enviar. Endpoint da API:</H>
         <Endpoint
           method="GET"
-          url="https://fornecedor.cadbrasil.com.br/api/clients/consulta-boletos?cnpj=CNPJ"
+          url="https://fornecedor.CADBRASIL Oficial.com.br/api/clients/consulta-boletos?cnpj=CNPJ"
         />
         <p className="mt-4 text-sm font-medium text-muted-foreground">
           Exemplo de retorno
@@ -1401,7 +1406,7 @@ Tecnologia, segurança e suporte para fornecedores do Brasil. 🇧🇷`}</Code>
     body: (
       <>
         <ShortAnswer>
-          Acesse fornecedor.cadbrasil.com.br → &quot;Esqueci minha senha&quot;
+          Acesse fornecedor.CADBRASIL Oficial.com.br → &quot;Esqueci minha senha&quot;
           → instruções por e-mail.
         </ShortAnswer>
         <H>
@@ -1410,7 +1415,7 @@ Tecnologia, segurança e suporte para fornecedores do Brasil. 🇧🇷`}</Code>
         </H>
         <Endpoint
           method="LINK"
-          url="https://fornecedor.cadbrasil.com.br/esqueci-senha"
+          url="https://fornecedor.CADBRASIL Oficial.com.br/esqueci-senha"
         />
         <Escalar>
           E-mail não cadastrado ou não recebe link de recuperação.
@@ -1420,16 +1425,16 @@ Tecnologia, segurança e suporte para fornecedores do Brasil. 🇧🇷`}</Code>
   },
   {
     id: "governo",
-    title: "A CADBRASIL é do governo?",
+    title: "A CADBRASIL Oficial é do governo?",
     body: (
       <>
         <ShortAnswer>
-          Não. CADBRASIL é empresa privada de assessoria. Não temos vínculo com
+          Não. CADBRASIL Oficial é empresa privada de assessoria. Não temos vínculo com
           órgãos governamentais.
         </ShortAnswer>
         <H>Não.</H>
         <H>
-          A CADBRASIL é uma empresa privada especializada em assessoria para
+          A CADBRASIL Oficial é uma empresa privada especializada em assessoria para
           participação em licitações públicas. Não possuímos vínculo com
           qualquer órgão governamental.
         </H>
@@ -1442,7 +1447,7 @@ Tecnologia, segurança e suporte para fornecedores do Brasil. 🇧🇷`}</Code>
     body: (
       <>
         <ShortAnswer>
-          A CADBRASIL é empresa legítima. Não pedimos PIX para números
+          A CADBRASIL Oficial é empresa legítima. Não pedimos PIX para números
           pessoais. Pagamentos são via boleto oficial da plataforma.
         </ShortAnswer>
         <Callout tone="warn">
@@ -1452,10 +1457,10 @@ Tecnologia, segurança e suporte para fornecedores do Brasil. 🇧🇷`}</Code>
         </Callout>
         <List
           items={[
-            "Boletos oficiais vêm da plataforma CADBRASIL ou via consulta API",
+            "Boletos oficiais vêm da plataforma CADBRASIL Oficial ou via consulta API",
             "WhatsApp oficial: (11) 2122-0202",
-            "Site oficial: fornecedor.cadbrasil.com.br",
-            "Documentação: docs.cadbrasil.com.br",
+            "Site oficial: fornecedor.CADBRASIL Oficial.com.br",
+            "Documentação: docs.CADBRASIL Oficial.com.br",
           ]}
         />
         <H>
@@ -1493,7 +1498,7 @@ Tecnologia, segurança e suporte para fornecedores do Brasil. 🇧🇷`}</Code>
   },
   {
     id: "atendimento-brasil",
-    title: "A CADBRASIL atende todo o Brasil?",
+    title: "A CADBRASIL Oficial atende todo o Brasil?",
     body: (
       <>
         <ShortAnswer>
@@ -1549,7 +1554,7 @@ Tecnologia, segurança e suporte para fornecedores do Brasil. 🇧🇷`}</Code>
         </H>
         <Endpoint
           method="GET"
-          url="https://fornecedor.cadbrasil.com.br/api/clients/consulta-cnpj?cnpj=CNPJ"
+          url="https://fornecedor.CADBRASIL Oficial.com.br/api/clients/consulta-cnpj?cnpj=CNPJ"
         />
         <H>Interpretação para a IA — por situacaoCadastro:</H>
         <List

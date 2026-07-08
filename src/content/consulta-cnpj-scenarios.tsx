@@ -61,7 +61,7 @@ Envie o CNPJ da empresa com *exatamente 14 números*, *sem pontos, barra ou tra�
 • 3751915000127 (13 dígitos)
 • Campo vazio ou incompleto
 
-📌 Assim que recebermos o CNPJ correto, consultaremos sua situação cadastral na CADBRASIL e na Receita Federal.
+📌 Assim que recebermos o CNPJ correto, consultaremos sua situação cadastral na CADBRASIL Oficial e na Receita Federal.
 
 ❓ Se precisar de ajuda para localizar o CNPJ, solicite falar com um *atendente*.
 
@@ -91,7 +91,7 @@ ${FOOTER}`}</WhatsAppMessage>
         badge="nao_encontrado"
         when={
           <>
-            CNPJ não existe na base CADBRASIL (<code>possuiCadastro: false</code>)
+            CNPJ não existe na base CADBRASIL Oficial (<code>possuiCadastro: false</code>)
             e não foi confirmado na Receita Federal (
             <code>encontradoNaReceitaFederal: false</code>).
           </>
@@ -113,7 +113,7 @@ Olá! 👋 Realizamos a consulta do CNPJ informado, porém *não localizamos* es
 🔢 *CNPJ informado:*
 {cnpj}
 
-📊 *Status CADBRASIL:*
+📊 *Status CADBRASIL Oficial:*
 Não cadastrado
 
 📊 *Status Receita Federal:*
@@ -124,13 +124,13 @@ Não cadastrado
 ⚠️ *Possíveis motivos:*
 • CNPJ digitado incorretamente
 • Empresa recém-aberta (cadastro ainda indisponível na base)
-• Empresa ainda não iniciou cadastro na CADBRASIL
+• Empresa ainda não iniciou cadastro na CADBRASIL Oficial
 
 ✅ *O que fazer agora:*
 
 1️⃣ *Confira os 14 dígitos* do CNPJ e informe novamente
 
-2️⃣ Se sua empresa *ainda não se cadastrou* na CADBRASIL, inicie aqui:
+2️⃣ Se sua empresa *ainda não se cadastrou* na CADBRASIL Oficial, inicie aqui:
 👉 {urlCadastro}
 
 Lá você dará sequência ao *credenciamento SICAF* e terá acesso à plataforma completa de fornecedores.
@@ -161,9 +161,9 @@ ${FOOTER}`}</WhatsAppMessage>
   "encontradoNaReceitaFederal": false,
   "cliente": null,
   "sicaf": null,
-  "urlCadastro": "https://cadastro.cadbrasil.com.br",
+  "urlCadastro": "https://cadastro.CADBRASIL Oficial.com.br",
   "erroReceitaFederal": "CNPJ não encontrado na base da Receita Federal.",
-  "orientacaoUsuario": "Verifique o CNPJ ou acesse https://cadastro.cadbrasil.com.br"
+  "orientacaoUsuario": "Verifique o CNPJ ou acesse https://cadastro.CADBRASIL Oficial.com.br"
 }`}</Code>
         <H>Valores possíveis em erroReceitaFederal:</H>
         <List
@@ -180,7 +180,7 @@ ${FOOTER}`}</WhatsAppMessage>
         badge="cadastro_pendente"
         when={
           <>
-            CNPJ não está na CADBRASIL, mas foi encontrado na Receita Federal (
+            CNPJ não está na CADBRASIL Oficial, mas foi encontrado na Receita Federal (
             <code>encontradoNaReceitaFederal: true</code>). Consulta via
             OpenCNPJ.
           </>
@@ -195,7 +195,7 @@ ${FOOTER}`}</WhatsAppMessage>
           <WhatsAppMessage note="Enviar em blocos curtos no WhatsApp (ideal: 2–4 mensagens). Use os campos de receitaFederal quando existirem; omita linhas com valor null ou vazio. Formate o CNPJ para exibição (XX.XXX.XXX/XXXX-XX).">{`🇧🇷 *CADBRASIL Oficial ®*
 💬 *Consulta de CNPJ — Resultado*
 
-Olá! 👋 Realizamos a consulta do seu CNPJ e identificamos que sua empresa está registrada na *Receita Federal*, porém o *cadastramento na CADBRASIL ainda não foi concluído*.
+Olá! 👋 Realizamos a consulta do seu CNPJ e identificamos que sua empresa está registrada na *Receita Federal*, porém o *cadastramento na CADBRASIL Oficial ainda não foi concluído*.
 
 📋 *Dados da empresa consultada:*
 
@@ -227,10 +227,10 @@ CEP: {cep}
 
 ━━━━━━━━━━━━━━━━
 
-⚠️ *Situação na CADBRASIL:*
+⚠️ *Situação na CADBRASIL Oficial:*
 Seu CNPJ *não consta* em nossa base de fornecedores com cadastro concluído.
 
-Para dar sequência ao *credenciamento SICAF* e acessar a plataforma CADBRASIL, é necessário concluir o cadastramento digital com dados atualizados.
+Para dar sequência ao *credenciamento SICAF* e acessar a plataforma CADBRASIL Oficial, é necessário concluir o cadastramento digital com dados atualizados.
 
 ✅ *Próximos passos:*
 
@@ -243,7 +243,7 @@ Para dar sequência ao *credenciamento SICAF* e acessar a plataforma CADBRASIL, 
 💰 Valor: *R$ {valorTaxaAnual},00*
 
 📌 *Importante:*
-Enquanto o cadastro e o pagamento não forem concluídos, os *níveis do SICAF não serão liberados* e sua empresa não poderá utilizar os serviços da plataforma CADBRASIL.
+Enquanto o cadastro e o pagamento não forem concluídos, os *níveis do SICAF não serão liberados* e sua empresa não poderá utilizar os serviços da plataforma CADBRASIL Oficial.
 
 ❓ *Precisa de ajuda?*
 Se tiver dúvidas durante o cadastro, solicite falar com um *atendente* — estamos à disposição! 📞
@@ -256,7 +256,7 @@ ${FOOTER}`}</WhatsAppMessage>
               "Cumprimentar pelo razaoSocial da Receita.",
               "Montar bloco de dados usando receitaFederal: razaoSocial, cnpj, nomeFantasia, situacaoCadastral, naturezaJuridica, endereço completo, atividadePrincipal, email, telefone.",
               "Omitir linhas cujo campo seja null ou vazio (ex.: nomeFantasia, porte).",
-              "Explicar claramente: encontrado na Receita, cadastro CADBRASIL pendente.",
+              "Explicar claramente: encontrado na Receita, cadastro CADBRASIL Oficial pendente.",
               "Enviar urlCadastro e valorTaxaAnual (padrão R$ 985,00).",
               "Reforçar que níveis SICAF só liberam após cadastro + pagamento.",
               "Se situacaoReceitaFederal = Baixada/Inapta → escalar consultor.",
@@ -282,7 +282,7 @@ ${FOOTER}`}</WhatsAppMessage>
   "razaoSocial": "GOOGLE BRASIL INTERNET LTDA.",
   "situacaoReceitaFederal": "Ativa",
   "valorTaxaAnual": 985,
-  "urlCadastro": "https://cadastro.cadbrasil.com.br",
+  "urlCadastro": "https://cadastro.CADBRASIL Oficial.com.br",
   "receitaFederal": { "razaoSocial": "...", "situacaoCadastral": "Ativa" },
   "orientacaoUsuario": "...",
   "orientacaoIA": "..."
@@ -295,7 +295,7 @@ ${FOOTER}`}</WhatsAppMessage>
         tone="warn"
         when={
           <>
-            Cliente na base CADBRASIL (<code>possuiCadastro: true</code>) com
+            Cliente na base CADBRASIL Oficial (<code>possuiCadastro: true</code>) com
             SICAF, mas taxa de credenciamento não paga (
             <code>sicafValido: false</code>, <code>possuiPagamentoPendente: true</code>
             ).
@@ -311,7 +311,7 @@ ${FOOTER}`}</WhatsAppMessage>
           <WhatsAppMessage>{`🇧🇷 *CADBRASIL Oficial ®*
 💬 *Consulta de CNPJ — Resultado*
 
-Olá! 👋 Consultamos seu cadastro e identificamos que sua empresa *já está na base CADBRASIL*, porém há *pagamento pendente* para conclusão do credenciamento SICAF.
+Olá! 👋 Consultamos seu cadastro e identificamos que sua empresa *já está na base CADBRASIL Oficial*, porém há *pagamento pendente* para conclusão do credenciamento SICAF.
 
 📋 *Dados da empresa:*
 
@@ -388,7 +388,7 @@ ${FOOTER}`}</WhatsAppMessage>
   "pagamentosResumo": {
     "sicafPendentes": [{ "valor": 985, "linkBoleto": "https://...", "pdfBoleto": "https://...pdf" }]
   },
-  "urlPortal": "https://fornecedor.cadbrasil.com.br"
+  "urlPortal": "https://fornecedor.CADBRASIL Oficial.com.br"
 }`}</Code>
       </ScenarioBlock>
 
@@ -398,7 +398,7 @@ ${FOOTER}`}</WhatsAppMessage>
         tone="warn"
         when={
           <>
-            Cliente na CADBRASIL com SICAF expirado (<code>sicaf.status: Vencido</code>
+            Cliente na CADBRASIL Oficial com SICAF expirado (<code>sicaf.status: Vencido</code>
             , <code>sicafValido: false</code>).
           </>
         }
@@ -477,7 +477,7 @@ ${FOOTER}`}</WhatsAppMessage>
           <WhatsAppMessage>{`🇧🇷 *CADBRASIL Oficial ®*
 💬 *Consulta de CNPJ — Resultado*
 
-Olá! 👋 Consultamos seu cadastro e identificamos que sua empresa *já está na base CADBRASIL*, porém o *processo de credenciamento SICAF ainda não foi iniciado*.
+Olá! 👋 Consultamos seu cadastro e identificamos que sua empresa *já está na base CADBRASIL Oficial*, porém o *processo de credenciamento SICAF ainda não foi iniciado*.
 
 📋 *Dados da empresa:*
 
@@ -487,7 +487,7 @@ Olá! 👋 Consultamos seu cadastro e identificamos que sua empresa *já está n
 🔢 *CNPJ:*
 {cnpj}
 
-📊 *Status CADBRASIL:*
+📊 *Status CADBRASIL Oficial:*
 Cadastrado
 
 📊 *Status SICAF:*
@@ -542,7 +542,7 @@ ${FOOTER}`}</WhatsAppMessage>
           <WhatsAppMessage>{`🇧🇷 *CADBRASIL Oficial ®*
 💬 *Consulta de CNPJ — Resultado*
 
-Olá! 👋 Consultamos seu cadastro e identificamos que sua empresa está na CADBRASIL com o *credenciamento SICAF em andamento*, mas *ainda não concluído*.
+Olá! 👋 Consultamos seu cadastro e identificamos que sua empresa está na CADBRASIL Oficial com o *credenciamento SICAF em andamento*, mas *ainda não concluído*.
 
 📋 *Dados da empresa:*
 
@@ -603,7 +603,7 @@ ${FOOTER}`}</WhatsAppMessage>
         tone="ok"
         when={
           <>
-            Cliente na CADBRASIL com <code>sicafValido: true</code> —
+            Cliente na CADBRASIL Oficial com <code>sicafValido: true</code> —
             credenciamento vigente. Pagamentos em dia na maioria dos casos.
           </>
         }
@@ -623,7 +623,7 @@ ${FOOTER}`}</WhatsAppMessage>
 
 Prezado(a) Fornecedor(a) *{razaoSocial}*, {saudacao}! 👋
 
-✅ *Parabéns!* Seu cadastro está *ATIVO* na CADBRASIL com credenciamento SICAF *válido e em ordem*.
+✅ *Parabéns!* Seu cadastro está *ATIVO* na CADBRASIL Oficial com credenciamento SICAF *válido e em ordem*.
 
 📋 *Resumo do cadastro:*
 
@@ -679,7 +679,7 @@ ${LINKS.pagamentos}
 🎥 Como atualizar o SICAF:
 {urlVideoAtualizacaoSicaf}
 
-📞 WhatsApp CADBRASIL:
+📞 WhatsApp CADBRASIL Oficial:
 {whatsappDisplay}
 
 ❓ Precisa de boleto ou suporte? Estamos à disposição!

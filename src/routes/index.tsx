@@ -6,17 +6,17 @@ import { sections } from "@/content/sections";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Documentação CADBRASIL — Central de Dúvidas" },
+      { title: "Documentação CADBRASIL Oficial — Central de Dúvidas" },
       {
         name: "description",
         content:
-          "Base de conhecimento CADBRASIL para IA e atendimento: SICAF, valores, boletos, APIs, vídeos, manutenção e escalonamento humano.",
+          "Base de conhecimento CADBRASIL Oficial para IA e atendimento: SICAF, valores, boletos, APIs, vídeos, manutenção e escalonamento humano.",
       },
-      { property: "og:title", content: "Documentação CADBRASIL" },
+      { property: "og:title", content: "Documentação CADBRASIL Oficial" },
       {
         property: "og:description",
         content:
-          "Central de dúvidas frequentes e referência técnica da CADBRASIL para atendimento via WhatsApp.",
+          "Central de dúvidas frequentes e referência técnica da CADBRASIL Oficial para atendimento via WhatsApp.",
       },
     ],
   }),
@@ -55,7 +55,7 @@ function DocsPage() {
             </div>
             <div className="flex flex-col leading-tight">
               <span className="text-sm font-semibold tracking-tight">
-                CADBRASIL
+                CADBRASIL Oficial
               </span>
               <span className="text-[11px] text-muted-foreground">
                 Documentação · v2.0 · IA + WhatsApp
@@ -63,7 +63,7 @@ function DocsPage() {
             </div>
           </div>
           <a
-            href="https://fornecedor.cadbrasil.com.br"
+            href="https://fornecedor.CADBRASIL Oficial.com.br"
             target="_blank"
             rel="noreferrer"
             className="hidden rounded-md border border-border px-3 py-1.5 text-xs font-medium text-foreground transition-colors hover:bg-muted sm:inline-flex"
@@ -104,7 +104,7 @@ function DocsPage() {
               Central de Dúvidas Frequentes
             </p>
             <h1 className="text-3xl font-semibold tracking-tight text-foreground sm:text-4xl">
-              Documentação CADBRASIL
+              Documentação CADBRASIL Oficial
             </h1>
             <p className="mt-3 max-w-2xl text-[15px] leading-relaxed text-muted-foreground">
               Base de conhecimento para atendimento humano e por IA no WhatsApp.
@@ -132,7 +132,7 @@ function DocsPage() {
           </div>
 
           <footer className="mt-20 border-t border-border pt-6 text-xs text-muted-foreground">
-            © {new Date().getFullYear()} CADBRASIL · Documentação v2.0 ·
+            © {new Date().getFullYear()} CADBRASIL Oficial · Documentação v2.0 ·
             Atendimento: (11) 2122-0202
           </footer>
         </main>
