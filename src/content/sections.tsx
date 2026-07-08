@@ -17,6 +17,10 @@ import {
   AssistenteLinksList,
   AssistenteWhatsAppBlock,
 } from "@/content/assistente-ia";
+import {
+  SicafComparativoWhatsAppKit,
+  sicafGratuitoVsPagoSection,
+} from "@/content/sicaf-gratuito-vs-pago";
 import { VIDEOS, LINKS } from "@/content/videos";
 
 export { VIDEOS };
@@ -162,6 +166,23 @@ Tecnologia, segurança e suporte para fornecedores do Brasil. 🇧🇷`}</Code>
           atendente (escalar para humano).
         </H>
 
+        <SubTitle>SICAF gratuito vs pago (textos prontos WhatsApp)</SubTitle>
+        <Callout tone="ok">
+          <strong>Regra fixa:</strong> quando o cliente perguntar sobre{" "}
+          <strong>SICAF gratuito</strong>, <strong>SICAF pago</strong>,{" "}
+          pagamento obrigatório, fazer sozinho, vale a pena, por que pagar ou
+          diferença governo vs CADBRASIL Oficial — use os{" "}
+          <strong>4 blocos de texto</strong> em{" "}
+          <a
+            href="#sicaf-gratuito-vs-pago"
+            className="underline underline-offset-4"
+          >
+            SICAF gratuito vs pago — textos WhatsApp
+          </a>
+          . Enviar em 3–5 mensagens com ícones e <code>*negrito*</code>. Não
+          inventar texto.
+        </Callout>
+
         <SubTitle>Assistente CADBRASIL (obrigatório quando perguntarem)</SubTitle>
         <Callout tone="ok">
           <strong>Regra fixa:</strong> quando o cliente perguntar sobre o{" "}
@@ -202,9 +223,9 @@ Tecnologia, segurança e suporte para fornecedores do Brasil. 🇧🇷`}</Code>
             "concorrente / preço / valor do certame → Preços de licitações de concorrentes",
             "certidão vencendo / alerta / e-mail → Alertas de certidões por e-mail",
             "plataforma / o que vocês oferecem → O que é a CADBRASIL Oficial (plataforma completa)",
-            "sicaf gratuito / sicaf gratis / fazer sozinho / governo cobra → O SICAF é gratuito?",
-            "pagamento sicaf obrigatório / preciso pagar / tem que pagar / 985 obrigatório / taxa obrigatória / vale a pena pagar → O pagamento do SICAF é obrigatório?",
-            "cadastrar sozinho / fazer gratis / risco sicaf / multa sicaf / problema cadastro gratuito → O pagamento do SICAF é obrigatório?",
+            "sicaf gratuito / sicaf gratis / sicaf pago / fazer sozinho / governo cobra / vale a pena / diferença gratuito pago → SICAF gratuito vs pago (textos WhatsApp)",
+            "pagamento sicaf obrigatório / preciso pagar / tem que pagar / 985 obrigatório / taxa obrigatória / vale a pena pagar → SICAF gratuito vs pago (textos WhatsApp)",
+            "cadastrar sozinho / fazer gratis / risco sicaf / multa sicaf / problema cadastro gratuito / por que pagar → SICAF gratuito vs pago (textos WhatsApp)",
             "atualizar sicaf / renovar cadastro → Como atualizar o SICAF",
             "gov.br / conta gov → Preciso acessar o GOV.BR?",
             "situação fornecedor / painel desatualizado → Situação do Fornecedor",
@@ -475,17 +496,23 @@ Tecnologia, segurança e suporte para fornecedores do Brasil. 🇧🇷`}</Code>
           ]}
         />
         <Callout tone="ok">
-          <strong>Resumo para o cliente (WhatsApp):</strong> o SICAF do governo
-          é gratuito, mas fazer sozinho é arriscado — um erro na licitação pode
-          custar multas e impedir sua empresa de vender para o governo por
-          anos. Com a CADBRASIL Oficial você tem o SICAF feito com segurança{" "}
-          <strong>e</strong> um portal completo: licitações, editais com IA,
-          certidões, concorrentes, pregões e muito mais — tudo em um só lugar.
+          <strong>Resumo para o cliente (WhatsApp):</strong> use os textos
+          prontos em{" "}
+          <a
+            href="#sicaf-gratuito-vs-pago"
+            className="underline underline-offset-4"
+          >
+            SICAF gratuito vs pago — textos WhatsApp
+          </a>{" "}
+          (4 blocos com ícones). O SICAF do governo é gratuito, mas fazer sozinho
+          é arriscado. Com a CADBRASIL Oficial: segurança + portal completo.
           Veja também:{" "}
           <a href="#por-que-contratar" className="underline underline-offset-4">
             Por que contratar a CADBRASIL Oficial?
           </a>
         </Callout>
+        <SubTitle>Textos prontos para WhatsApp (copiar/enviar em blocos)</SubTitle>
+        <SicafComparativoWhatsAppKit />
         <H>
           Valores da CADBRASIL Oficial referem-se à assessoria, plataforma e
           serviços de gestão — não à taxa governamental do SICAF em si. Detalhes
@@ -501,6 +528,7 @@ Tecnologia, segurança e suporte para fornecedores do Brasil. 🇧🇷`}</Code>
       </>
     ),
   },
+  sicafGratuitoVsPagoSection,
   {
     id: "credenciamento-renovacao-manutencao",
     title: "Credenciamento vs Renovação vs Manutenção",
@@ -717,109 +745,19 @@ Tecnologia, segurança e suporte para fornecedores do Brasil. 🇧🇷`}</Code>
           ]}
         />
 
-        <SubTitle>Mensagens para o cliente (WhatsApp — enviar em blocos)</SubTitle>
-        <p className="mb-3 text-[13px] text-muted-foreground">
-          Ideal: 3–4 mensagens separadas. Use <code>*asteriscos*</code> para
-          negrito no WhatsApp.
-        </p>
-
-        <p className="mt-4 text-sm font-medium text-muted-foreground">
-          Bloco 1 — Esclarecimento (gratuito vs CADBRASIL Oficial)
-        </p>
-        <Code>{`🇧🇷 *CADBRASIL Oficial ®*
-💬 *Pagamento do SICAF — Esclarecimento*
-
-Olá! 👋 Ótima pergunta — vou explicar de forma clara:
-
-━━━━━━━━━━━━━━━━
-
-🏛️ *No Governo Federal:*
-✅ O cadastro SICAF é *GRATUITO*
-✅ O governo *não cobra* taxa de credenciamento
-
-🏢 *Com a CADBRASIL Oficial:*
-💰 Para concluir o *credenciamento assistido* e liberar os níveis do SICAF na plataforma, é necessário o pagamento de *R$ 985,00*
-
-📌 *Importante:* esse valor *NÃO é taxa do governo* — é o investimento no *serviço completo* de assessoria + plataforma + suporte especializado.`}</Code>
-
-        <p className="mt-4 text-sm font-medium text-muted-foreground">
-          Bloco 2 — Riscos de cadastrar sozinho (gratuito)
-        </p>
-        <Code>{`⚠️ *ATENÇÃO — Cadastrar sozinho de graça*
-
-Sim, o SICAF do governo é gratuito — *mas isso não significa que é simples ou seguro*.
-
-Quem faz *sozinho* precisa dominar *todo o processo sem erro*:
-
-❌ Documento enviado errado ou incompleto
-❌ Certidão *vencida* no dia da licitação
-❌ Nível SICAF *pendente* sem perceber
-❌ Prazo de renovação *perdido*
-❌ Edital interpretado *incorretamente*
-❌ *Nenhum suporte* quando algo dá errado
-
-🚨 *Consequências reais:*
-• *Desclassificação* na licitação
-• *Multas administrativas* severas
-• *Impedimento* de licitar por *anos*
-• Perda de contratos milionários
-
-💡 Um único erro na habilitação pode custar *muito mais* que R$ 985,00 — e em alguns casos, a empresa *nunca mais* consegue vender para o governo.`}</Code>
-
-        <p className="mt-4 text-sm font-medium text-muted-foreground">
-          Bloco 3 — Benefícios da CADBRASIL Oficial
-        </p>
-        <Code>{`✅ *Por que investir na CADBRASIL Oficial?*
-
-Com a CADBRASIL Oficial, você *não corre esses riscos sozinho*:
-
-🔹 *Credenciamento SICAF assistido*
-   Equipe + Assistente CADBRASIL passo a passo
-
-🔹 *Análise documental especializada*
-   Conferência antes de enviar — menos erro
-
-🔹 *Portal completo em um só lugar*
-   Licitações · Pregões · Editais · Concorrentes
-   (sem criar contas em várias empresas)
-
-🔹 *Leitura de edital com IA* 🤖
-   Requisitos e prazos analisados em minutos
-
-🔹 *Gestão de certidões* 📄
-   Alertas por e-mail — saiba *quais* vencem e quando
-
-🔹 *Inteligência de mercado* 📊
-   Preços de concorrentes em certames similares
-
-🔹 *Assistente CADBRASIL* 📲
-   Envio de docs e suporte no dia a dia
-
-🔹 *Suporte humano* 📞
-   WhatsApp e consultores quando precisar
-
-🛡️ *Tranquilidade:* licite com *segurança*, sabendo que seu cadastro está em ordem.`}</Code>
-
-        <p className="mt-4 text-sm font-medium text-muted-foreground">
-          Bloco 4 — Pagamento e encerramento
-        </p>
-        <Code>{`💳 *Como pagar o credenciamento:*
-
-1️⃣ Acesse a página de pagamentos:
-👉 ${LINKS.pagamentos}
-
-2️⃣ Faça login e emita/pague o boleto de *R$ 985,00*
-
-3️⃣ Ou *informe seu CNPJ* aqui — envio o boleto pelo WhatsApp
-
-📌 Compensação bancária: *1 a 3 dias úteis*
-Após confirmação, os *níveis do SICAF* são liberados na plataforma.
-
-❓ *Ainda com dúvida?*
-Solicite falar com um *atendente* — estamos à disposição! 📞
-
-🔐 *CADBRASIL Oficial*
-Tecnologia, segurança e suporte para fornecedores do Brasil. 🇧🇷`}</Code>
+        <SubTitle>Textos prontos para o cliente (WhatsApp)</SubTitle>
+        <H>
+          Use os mesmos 4 blocos de{" "}
+          <a
+            href="#sicaf-gratuito-vs-pago"
+            className="underline underline-offset-4"
+          >
+            SICAF gratuito vs pago — textos WhatsApp
+          </a>
+          . Se a pergunta for especificamente sobre obrigatoriedade de pagamento,
+          envie todos os blocos (comparativo → riscos → benefícios → pagamento).
+        </H>
+        <SicafComparativoWhatsAppKit />
 
         <H>
           Referências:{" "}
