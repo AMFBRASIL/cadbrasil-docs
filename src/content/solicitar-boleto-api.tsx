@@ -1,9 +1,11 @@
 import {
   Callout,
+  ClienteWhatsApp,
   Code,
   DataTable,
   Endpoint,
   H,
+  IaInstrucao,
   List,
   ScenarioBlock,
   Section,
@@ -15,8 +17,8 @@ import { LINKS } from "@/content/videos";
 const API_BASE = LINKS.portal;
 const ENDPOINT = `${API_BASE}/api/clients/solicitar-boleto?cnpj={14_dígitos}`;
 
-const WA_NOTE =
-  "Enviar em 1–2 blocos no WhatsApp. Use *asteriscos* para negrito. Copiar o valor literal do campo urlPagamento da API (ex.: https://fornecedor.cadbrasil.com.br/pay/t-636). Formate dataVencimento para DD/MM/AAAA. Nunca usar linkBoleto.";
+const WA_IA_NOTE =
+  "Preencher {urlPagamento} com o link exato retornado pela API (ex.: https://fornecedor.cadbrasil.com.br/pay/t-636). Formate dataVencimento DD/MM/AAAA. Omitir bloco PDF se linkPdf for null. Nunca enviar linkBoleto. Não escrever urlPagamento, API ou nomes técnicos na mensagem ao cliente.";
 
 /**
  * Bloco principal — o cliente DEVE ver o valor de urlPagamento.
@@ -46,15 +48,6 @@ export const BOLETO_WA_LINKS_SOMENTE_URL = `━━━━━━━━━━━━
 
 const FOOTER = `🔐 *CADBRASIL Oficial*
 Tecnologia, segurança e suporte para fornecedores do Brasil. 🇧🇷`;
-
-function WhatsAppMessage({ children }: { children: string }) {
-  return (
-    <>
-      <p className="mb-3 text-[13px] text-muted-foreground">{WA_NOTE}</p>
-      <Code>{children}</Code>
-    </>
-  );
-}
 
 /**
  * Mensagem padrão de retorno — usar sempre que solicitar-boleto retornar
@@ -155,7 +148,7 @@ Olá! 👋 Localizei a *taxa SICAF pendente* da empresa:
 
 ${BOLETO_WA_LINKS_PAGAMENTO}
 
-📌 *Boleto já emitido* — o link acima (urlPagamento) continua válido para pagamento.
+📌 *Boleto já emitido* — o link acima continua válido para pagamento.
 
 ⏱️ Compensação: *1 a 3 dias úteis*. Níveis do SICAF liberados após confirmação.
 
@@ -308,7 +301,7 @@ function SolicitarBoletoScenarios() {
   return (
     <>
       <ScenarioBlock
-        title="Pedido do cliente — “Quero pagar / pode me mandar o boleto?”"
+        title="Pedido do cliente — “Pode me mandar o boleto aqui?”"
         badge="enviar_agora"
         tone="ok"
         when={
@@ -325,7 +318,7 @@ function SolicitarBoletoScenarios() {
           </>
         }
         clientMessage={
-          <WhatsAppMessage>{BOLETO_WA_PEDIDO_CLIENTE}</WhatsAppMessage>
+          <ClienteWhatsApp iaNote={WA_IA_NOTE}>{BOLETO_WA_PEDIDO_CLIENTE}</ClienteWhatsApp>
         }
         iaDo={
           <List
@@ -346,7 +339,7 @@ function SolicitarBoletoScenarios() {
         <p className="mt-4 text-sm font-medium text-muted-foreground">
           Mensagem WhatsApp preenchida — link = urlPagamento da API
         </p>
-        <WhatsAppMessage>{BOLETO_WA_EXEMPLO_PREENCHIDO}</WhatsAppMessage>
+        <ClienteWhatsApp iaNote={WA_IA_NOTE}>{BOLETO_WA_EXEMPLO_PREENCHIDO}</ClienteWhatsApp>
       </ScenarioBlock>
 
       <ScenarioBlock
@@ -361,9 +354,9 @@ function SolicitarBoletoScenarios() {
           </>
         }
         clientMessage={
-          <WhatsAppMessage>
-            {`Use BOLETO_WA_PEDIDO_CLIENTE, BOLETO_WA_REUTILIZADO ou BOLETO_WA_GERADO_AGORA conforme boletoReutilizado / geradoAgora.`}
-          </WhatsAppMessage>
+          <ClienteWhatsApp iaNote={WA_IA_NOTE}>
+            {BOLETO_WA_REUTILIZADO}
+          </ClienteWhatsApp>
         }
         iaDo={
           <List
@@ -389,7 +382,7 @@ function SolicitarBoletoScenarios() {
           </>
         }
         clientMessage={
-          <WhatsAppMessage>{BOLETO_WA_SOMENTE_URL}</WhatsAppMessage>
+          <ClienteWhatsApp iaNote={WA_IA_NOTE}>{BOLETO_WA_SOMENTE_URL}</ClienteWhatsApp>
         }
         iaDo={
           <List
@@ -410,7 +403,7 @@ function SolicitarBoletoScenarios() {
         tone="info"
         when={<code>renovacaoAntecipada: true</code>}
         clientMessage={
-          <WhatsAppMessage>{BOLETO_WA_RENOVACAO}</WhatsAppMessage>
+          <ClienteWhatsApp iaNote={WA_IA_NOTE}>{BOLETO_WA_RENOVACAO}</ClienteWhatsApp>
         }
         iaDont={IA_NAO_ESCALAR}
       />
@@ -426,7 +419,7 @@ function SolicitarBoletoScenarios() {
           </>
         }
         clientMessage={
-          <WhatsAppMessage>{BOLETO_WA_SEM_PENDENCIA}</WhatsAppMessage>
+          <ClienteWhatsApp iaNote={WA_IA_NOTE}>{BOLETO_WA_SEM_PENDENCIA}</ClienteWhatsApp>
         }
         iaDo={
           <List
@@ -452,7 +445,7 @@ function SolicitarBoletoScenarios() {
         tone="warn"
         when={<>HTTP 404 · <code>possuiCadastro: false</code></>}
         clientMessage={
-          <WhatsAppMessage>{BOLETO_WA_NAO_CADASTRO}</WhatsAppMessage>
+          <ClienteWhatsApp iaNote={WA_IA_NOTE}>{BOLETO_WA_NAO_CADASTRO}</ClienteWhatsApp>
         }
         iaDo={
           <List
@@ -518,6 +511,37 @@ export const solicitarBoletoSection: Section = {
         ou link.
       </Callout>
 
+      <Callout tone="warn">
+        <strong>Prioridade — pedido de boleto:</strong> frases como &quot;Pode me
+        mandar o boleto aqui&quot;, &quot;quero pagar&quot;, &quot;manda o
+        link&quot;, &quot;2ª via&quot; → a IA <strong>envia o link na hora</strong>.
+        <strong> Proibido</strong> transferir para consultor humano.{" "}
+        <strong>Proibido</strong> escrever urlPagamento, solicitar-boleto ou
+        nomes de API na mensagem ao cliente.
+      </Callout>
+
+      <SubTitle>Resposta errada vs correta</SubTitle>
+      <DataTable
+        headers={["Cliente diz", "❌ Nunca responder", "✅ Ação da IA"]}
+        rows={[
+          [
+            "Pode me mandar o boleto aqui?",
+            "Vou transferir para um consultor humano",
+            "GET solicitar-boleto → enviar mensagem BOLETO_WA_PEDIDO_CLIENTE com link real",
+          ],
+          [
+            "Quero pagar / manda o link",
+            "Peça ao atendente / vou encaminhar",
+            "Enviar link de pagamento imediatamente",
+          ],
+          [
+            "2ª via do boleto",
+            "Acesse o portal sozinho",
+            "Mesma API → reenviar link vigente ou novo",
+          ],
+        ]}
+      />
+
       <Callout tone="ok">
         <strong>Regra fixa — NÃO escalar humano:</strong> frases como &quot;Quero
         pagar o boleto&quot;, &quot;pode me mandar?&quot;, &quot;manda o link&quot;,
@@ -531,11 +555,12 @@ export const solicitarBoletoSection: Section = {
         atendente enviar o link&quot;.
       </Callout>
 
-      <SubTitle>Quando acionar (gatilhos)</SubTitle>
+      <SubTitle>Quando acionar (gatilhos do cliente)</SubTitle>
       <List
         items={[
-          "Quero pagar o boleto / pode me mandar? / manda o link",
-          "Preciso pagar / quero pagar o SICAF / os R$ 985",
+          "Pode me mandar o boleto? / pode me mandar o boleto aqui",
+          "Quero pagar o boleto / manda o link / preciso pagar",
+          "Quero pagar o SICAF / os R$ 985",
           "2ª via / perdi o boleto / emitir boleto",
           "Renovação SICAF / quero renovar",
           "Link de pagamento / como pago",
@@ -560,8 +585,12 @@ export const solicitarBoletoSection: Section = {
             "Só consulta-cnpj — mostrar processo completo. NÃO solicitar-boleto",
           ],
           [
+            "Pode me mandar o boleto aqui?",
+            "Chama solicitar-boleto → envia link (NÃO escalar)",
+          ],
+          [
             "Quero pagar o boleto / pode me mandar?",
-            "Chama solicitar-boleto → envia urlPagamento (NÃO escalar)",
+            "Chama solicitar-boleto → envia link (NÃO escalar)",
           ],
           [
             "Manda o link / 2ª via / perdi o boleto",
@@ -606,7 +635,12 @@ export const solicitarBoletoSection: Section = {
       />
       <Endpoint method="GET" url={ENDPOINT} />
 
-      <SubTitle>Campo que o cliente deve receber</SubTitle>
+      <SubTitle>Instruções internas — campos da API</SubTitle>
+      <IaInstrucao>
+        O cliente recebe o <strong>link</strong> (valor do campo urlPagamento).
+        Nunca enviar linkBoleto. linkPdf só como alternativa. Não copiar estes
+        nomes de campo na mensagem WhatsApp.
+      </IaInstrucao>
       <Callout tone="info">
         <strong>urlPagamento</strong> — único link principal. Copiar valor
         literal da API, ex.:
@@ -618,14 +652,14 @@ export const solicitarBoletoSection: Section = {
         <strong>linkBoleto</strong> — não enviar ao cliente.
       </Callout>
 
-      <SubTitle>Exemplo visual — JSON → mensagem ao cliente</SubTitle>
+      <SubTitle>Exemplo visual — mensagem ao cliente</SubTitle>
       <p className="mb-2 text-[13px] text-muted-foreground">
-        Quando a API retorna <code>urlPagamento</code>, a IA envia a mensagem
-        abaixo com esse link (nunca linkBoleto).
+        Quando o cliente pede o boleto, envie uma mensagem como a abaixo (com
+        link real da API — nunca mencionar urlPagamento ou nome de API).
       </p>
-      <WhatsAppMessage>{BOLETO_WA_EXEMPLO_PREENCHIDO}</WhatsAppMessage>
+      <ClienteWhatsApp iaNote={WA_IA_NOTE}>{BOLETO_WA_EXEMPLO_PREENCHIDO}</ClienteWhatsApp>
 
-      <SubTitle>Retorno JSON — campos principais</SubTitle>
+      <SubTitle>Retorno JSON — campos principais (só IA)</SubTitle>
       <DataTable
         headers={["Campo", "Tipo", "Uso para IA"]}
         rows={[

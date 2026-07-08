@@ -85,6 +85,36 @@ export function ShortAnswer({ children }: { children: React.ReactNode }) {
   );
 }
 
+export function IaInstrucao({ children }: { children: React.ReactNode }) {
+  return (
+    <div className="my-3 rounded-md border border-amber-500/40 bg-amber-500/5 px-3 py-2 text-[13px] leading-relaxed text-muted-foreground">
+      <p className="mb-1 text-[11px] font-semibold uppercase tracking-wider text-amber-700 dark:text-amber-400">
+        Instrução interna — não enviar ao cliente
+      </p>
+      {children}
+    </div>
+  );
+}
+
+/** Texto pronto para copiar no WhatsApp. A nota (se houver) é só para a IA. */
+export function ClienteWhatsApp({
+  children,
+  iaNote,
+}: {
+  children: string;
+  iaNote?: string;
+}) {
+  return (
+    <>
+      {iaNote ? <IaInstrucao>{iaNote}</IaInstrucao> : null}
+      <p className="mb-1.5 text-[11px] font-semibold uppercase tracking-wider text-emerald-700 dark:text-emerald-400">
+        Enviar ao cliente no WhatsApp
+      </p>
+      <Code>{children}</Code>
+    </>
+  );
+}
+
 export function Escalar({ children }: { children: React.ReactNode }) {
   return (
     <p className="mt-3 text-[13px] leading-relaxed text-muted-foreground">

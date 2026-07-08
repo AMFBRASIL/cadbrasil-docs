@@ -1,4 +1,5 @@
 import {
+  ClienteWhatsApp,
   Code,
   H,
   List,
@@ -7,23 +8,8 @@ import {
 } from "@/lib/docs-ui";
 import { LINKS, VIDEOS } from "@/content/videos";
 
-const WA_NOTE =
-  "Enviar em blocos curtos no WhatsApp (ideal: 2–4 mensagens). Use os dados retornados pela API; omita linhas com valor null ou vazio. Formate CNPJ para exibição (XX.XXX.XXX/XXXX-XX).";
-
-function WhatsAppMessage({
-  note = WA_NOTE,
-  children,
-}: {
-  note?: string;
-  children: string;
-}) {
-  return (
-    <>
-      <p className="mb-3 text-[13px] text-muted-foreground">{note}</p>
-      <Code>{children}</Code>
-    </>
-  );
-}
+const WA_IA_NOTE =
+  "Use os dados retornados pela API. Omita linhas null/vazias. Formate CNPJ (XX.XXX.XXX/XXXX-XX). Não mencione nomes de API ou campos técnicos ao cliente.";
 
 const FOOTER = `🔐 *CADBRASIL Oficial*
 Tecnologia, segurança e suporte para fornecedores do Brasil. 🇧🇷`;
@@ -43,7 +29,7 @@ export function ConsultaCnpjScenarios() {
           </>
         }
         clientMessage={
-          <WhatsAppMessage>{`🇧🇷 *CADBRASIL Oficial ®*
+          <ClienteWhatsApp>{`🇧🇷 *CADBRASIL Oficial ®*
 💬 *Consulta de CNPJ*
 
 ⚠️ *CNPJ não reconhecido*
@@ -65,7 +51,7 @@ Envie o CNPJ da empresa com *exatamente 14 números*, *sem pontos, barra ou tra�
 
 ❓ Se precisar de ajuda para localizar o CNPJ, solicite falar com um *atendente*.
 
-${FOOTER}`}</WhatsAppMessage>
+${FOOTER}`}</ClienteWhatsApp>
         }
         iaDo={
           <List
@@ -103,7 +89,7 @@ ${FOOTER}`}</WhatsAppMessage>
           </>
         }
         clientMessage={
-          <WhatsAppMessage>{`🇧🇷 *CADBRASIL Oficial ®*
+          <ClienteWhatsApp>{`🇧🇷 *CADBRASIL Oficial ®*
 💬 *Consulta de CNPJ — Resultado*
 
 Olá! 👋 Realizamos a consulta do CNPJ informado, porém *não localizamos* esse número em nossa base nem conseguimos confirmá-lo na *Receita Federal*.
@@ -137,7 +123,7 @@ Lá você dará sequência ao *credenciamento SICAF* e terá acesso à plataform
 
 ❓ Ainda com dúvidas? Solicite falar com um *atendente* — estamos à disposição! 📞
 
-${FOOTER}`}</WhatsAppMessage>
+${FOOTER}`}</ClienteWhatsApp>
         }
         iaDo={
           <List
@@ -192,7 +178,7 @@ ${FOOTER}`}</WhatsAppMessage>
           </>
         }
         clientMessage={
-          <WhatsAppMessage note="Enviar em blocos curtos no WhatsApp (ideal: 2–4 mensagens). Use os campos de receitaFederal quando existirem; omita linhas com valor null ou vazio. Formate o CNPJ para exibição (XX.XXX.XXX/XXXX-XX).">{`🇧🇷 *CADBRASIL Oficial ®*
+          <ClienteWhatsApp iaNote="Enviar em 2–4 blocos. Use receitaFederal quando existir; omita null. Não mencionar API ao cliente.">{`🇧🇷 *CADBRASIL Oficial ®*
 💬 *Consulta de CNPJ — Resultado*
 
 Olá! 👋 Realizamos a consulta do seu CNPJ e identificamos que sua empresa está registrada na *Receita Federal*, porém o *cadastramento na CADBRASIL Oficial ainda não foi concluído*.
@@ -248,7 +234,7 @@ Enquanto o cadastro e o pagamento não forem concluídos, os *níveis do SICAF n
 ❓ *Precisa de ajuda?*
 Se tiver dúvidas durante o cadastro, solicite falar com um *atendente* — estamos à disposição! 📞
 
-${FOOTER}`}</WhatsAppMessage>
+${FOOTER}`}</ClienteWhatsApp>
         }
         iaDo={
           <List
@@ -308,7 +294,7 @@ ${FOOTER}`}</WhatsAppMessage>
           </>
         }
         clientMessage={
-          <WhatsAppMessage>{`🇧🇷 *CADBRASIL Oficial ®*
+          <ClienteWhatsApp>{`🇧🇷 *CADBRASIL Oficial ®*
 💬 *Consulta de CNPJ — Resultado*
 
 Olá! 👋 Consultamos seu cadastro e identificamos que sua empresa *já está na base CADBRASIL Oficial*, porém há *pagamento pendente* para conclusão do credenciamento SICAF.
@@ -350,20 +336,21 @@ Basta pedir: *"quero pagar"* ou *"manda o boleto"* — enviamos o *link de pagam
 
 2️⃣ Faça login e emita ou pague o boleto
 
-3️⃣ Ou *peça o link aqui* — enviamos o campo *urlPagamento* da API solicitar-boleto
+3️⃣ Ou peça aqui mesmo: *"pode me mandar o boleto"* — enviamos o link na hora
 
 📌 Compensação bancária: geralmente *1 a 3 dias úteis* após o pagamento.
 
 ❓ Precisa de ajuda? Solicite falar com um *atendente*! 📞
 
-${FOOTER}`}</WhatsAppMessage>
+${FOOTER}`}</ClienteWhatsApp>
         }
         iaDo={
           <List
             items={[
               "Informar: cadastro feito, pagamento pendente (consulta-cnpj apenas).",
               "Montar bloco com razaoSocial, cnpj, cliente.email, cliente.telefone, sicaf.status, sicaf.completude.",
-              `Orientar ${LINKS.pagamentos} e convidar a pedir o boleto pelo WhatsApp.`,
+              `Orientar ${LINKS.pagamentos} e convidar a pedir o boleto pelo WhatsApp (linguagem simples, sem citar API).`,
+              "Se o cliente pedir na sequência (ex.: pode me mandar o boleto) → Etapa 2 solicitar-boleto e enviar link — NÃO escalar humano.",
               "NÃO chamar solicitar-boleto nesta primeira resposta — só quando o cliente pedir boleto/link.",
               "Mencionar dataVencimento de pagamentosResumo quando existir.",
             ]}
@@ -376,7 +363,7 @@ ${FOOTER}`}</WhatsAppMessage>
               "Dizer que não há pendências.",
               "Inventar links de boleto.",
               "Chamar solicitar-boleto automaticamente só por aguardando_pagamento.",
-              "Enviar linkBoleto ou urlPagamento sem pedido do cliente.",
+              "Copiar texto técnico (urlPagamento, solicitar-boleto, nomes de API) na mensagem ao cliente.",
             ]}
           />
         }
@@ -407,7 +394,7 @@ ${FOOTER}`}</WhatsAppMessage>
           </>
         }
         clientMessage={
-          <WhatsAppMessage note="Tom de URGÊNCIA. Enviar em blocos curtos. Licitação próxima → escalar humano com prioridade alta.">{`🇧🇷 *CADBRASIL Oficial ®*
+          <ClienteWhatsApp iaNote="Tom de urgência. Licitação próxima → escalar humano (prioridade alta). Não mencionar API ao cliente.">{`🇧🇷 *CADBRASIL Oficial ®*
 💬 *Consulta de CNPJ — Resultado*
 
 Olá! 👋 Consultamos seu cadastro e identificamos uma situação que *requer atenção imediata*.
@@ -447,7 +434,7 @@ Olá! 👋 Consultamos seu cadastro e identificamos uma situação que *requer a
 
 ❓ Precisa de ajuda? Solicite falar com um *atendente*! 📞
 
-${FOOTER}`}</WhatsAppMessage>
+${FOOTER}`}</ClienteWhatsApp>
         }
         iaDo={
           <List
@@ -478,7 +465,7 @@ ${FOOTER}`}</WhatsAppMessage>
           </>
         }
         clientMessage={
-          <WhatsAppMessage>{`🇧🇷 *CADBRASIL Oficial ®*
+          <ClienteWhatsApp>{`🇧🇷 *CADBRASIL Oficial ®*
 💬 *Consulta de CNPJ — Resultado*
 
 Olá! 👋 Consultamos seu cadastro e identificamos que sua empresa *já está na base CADBRASIL Oficial*, porém o *processo de credenciamento SICAF ainda não foi iniciado*.
@@ -517,7 +504,7 @@ Sua empresa está na plataforma, mas *ainda não possui credenciamento SICAF ati
 
 ❓ Precisa de ajuda? Solicite falar com um *atendente*! 📞
 
-${FOOTER}`}</WhatsAppMessage>
+${FOOTER}`}</ClienteWhatsApp>
         }
         iaDo={
           <List
@@ -543,7 +530,7 @@ ${FOOTER}`}</WhatsAppMessage>
           </>
         }
         clientMessage={
-          <WhatsAppMessage>{`🇧🇷 *CADBRASIL Oficial ®*
+          <ClienteWhatsApp>{`🇧🇷 *CADBRASIL Oficial ®*
 💬 *Consulta de CNPJ — Resultado*
 
 Olá! 👋 Consultamos seu cadastro e identificamos que sua empresa está na CADBRASIL Oficial com o *credenciamento SICAF em andamento*, mas *ainda não concluído*.
@@ -585,7 +572,7 @@ Central de Ajuda: ${LINKS.ajuda}
 
 ❓ Precisa de ajuda? Solicite falar com um *atendente*! 📞
 
-${FOOTER}`}</WhatsAppMessage>
+${FOOTER}`}</ClienteWhatsApp>
         }
         iaDo={
           <List
@@ -622,7 +609,7 @@ ${FOOTER}`}</WhatsAppMessage>
         }
         clientMessage={
           <>
-            <WhatsAppMessage note="Priorizar orientacaoUsuario quando existir. Enviar em 3–5 blocos. Listar todos os niveisSicaf[] com ícones. Adaptar bloco de renovação conforme renovacaoUrgente / renovacaoProxima.">{`🇧🇷 *CADBRASIL Oficial ®*
+            <ClienteWhatsApp iaNote="Priorizar orientacaoUsuario. 3–5 blocos. Listar niveisSicaf[]. Adaptar renovação. Não mencionar API ao cliente.">{`🇧🇷 *CADBRASIL Oficial ®*
 💬 *Consulta de CNPJ — Resultado*
 
 Prezado(a) Fornecedor(a) *{razaoSocial}*, {saudacao}! 👋
@@ -688,9 +675,9 @@ ${LINKS.pagamentos}
 
 ❓ Precisa de boleto ou suporte? Estamos à disposição!
 
-${FOOTER}`}</WhatsAppMessage>
+${FOOTER}`}</ClienteWhatsApp>
             <SubTitle>Sub-cenário H2 — Ativo com certidão a vencer/vencida</SubTitle>
-            <WhatsAppMessage note="Usar quando certidaoVencendoOuVencida: true. Destacar níveis com ícone ⚠️ ou ❌.">{`🇧🇷 *CADBRASIL Oficial ®*
+            <ClienteWhatsApp iaNote="Usar quando certidaoVencendoOuVencida: true. Não mencionar API ao cliente.">{`🇧🇷 *CADBRASIL Oficial ®*
 💬 *Consulta de CNPJ — Resultado*
 
 Prezado(a) Fornecedor(a) *{razaoSocial}*, {saudacao}! 👋
@@ -721,7 +708,7 @@ Certidões vencidas podem impedir sua *habilitação* em licitações específic
 
 ❓ Precisa de ajuda? Solicite falar com um *atendente*! 📞
 
-${FOOTER}`}</WhatsAppMessage>
+${FOOTER}`}</ClienteWhatsApp>
           </>
         }
         iaDo={

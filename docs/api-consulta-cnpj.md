@@ -398,12 +398,9 @@ Cliente informou CNPJ com menos ou mais de 14 dígitos, ou vazio.
 
 **Bloco 4 — Regularização**
 > ✅ **Como pagar:**  
-> 1️⃣ 👉 **https://fornecedor.CADBRASIL Oficial.com.br/pagamentos**  
+> 1️⃣ 👉 **https://fornecedor.cadbrasil.com.br/pagamentos**  
 > 2️⃣ Login → emitir/pagar boleto  
-> 3️⃣ Links de pagamento (API solicitar-boleto):  
-> 🔗 **urlPagamento:** {urlPagamento}  
-> 📄 **Se não abrir:** {linkPdf}  
-> *(Nunca enviar linkBoleto ao cliente.)*  
+> 3️⃣ Ou peça aqui no WhatsApp: *"pode me mandar o boleto"* — enviamos o link na hora  
 >  
 > 📌 Compensação: 1 a 3 dias úteis  
 > ❓ Dúvidas? Solicite falar com um **atendente**.
@@ -411,9 +408,9 @@ Cliente informou CNPJ com menos ou mais de 14 dígitos, ou vazio.
 ### O que a IA deve fazer
 - Informar claramente: **cadastro feito, pagamento pendente** (via consulta-cnpj).
 - Orientar portal `urlPortal` e página de pagamentos.
-- Convidar o cliente a pedir o boleto pelo WhatsApp se quiser o link.
+- Convidar o cliente a pedir o boleto pelo WhatsApp com linguagem simples (sem citar API ou campos).
 - **Não** chamar `solicitar-boleto` nesta primeira resposta.
-- Quando o cliente pedir boleto/link → `GET /api/clients/solicitar-boleto` → enviar **urlPagamento**.
+- Quando o cliente pedir boleto/link → `GET /api/clients/solicitar-boleto` → enviar o **link de pagamento** (valor de urlPagamento — só o link, não o nome do campo).
 - Mencionar que `sicaf.completude` provavelmente está em 0% até pagar.
 
 ### O que a IA NÃO deve fazer

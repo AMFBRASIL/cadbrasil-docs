@@ -10,6 +10,7 @@ import {
   SubTitle,
   VideoLink,
   WaLink,
+  DataTable,
 } from "@/lib/docs-ui";
 import { consultaCnpjSection } from "@/content/consulta-cnpj-api";
 import { solicitarBoletoSection } from "@/content/solicitar-boleto-api";
@@ -35,6 +36,41 @@ export const sections: Section[] = [
         <Callout tone="info">
           Este bloco orienta agentes de IA. Use como regras fixas de
           comportamento — não invente informações fora deste documento.
+        </Callout>
+
+        <SubTitle>Como ler este documento (3 camadas)</SubTitle>
+        <DataTable
+          headers={["Camada", "O que é", "Enviar ao cliente?"]}
+          rows={[
+            [
+              "1 — Instrução interna",
+              "Regras, APIs, campos JSON, gatilhos, o que fazer/não fazer",
+              "NÃO — nunca copiar nomes de API, campos (urlPagamento) ou instruções técnicas",
+            ],
+            [
+              "2 — Mensagem WhatsApp",
+              "Blocos em caixa verde “Enviar ao cliente”",
+              "SIM — copiar e adaptar com dados reais (CNPJ, valor, link)",
+            ],
+            [
+              "3 — Escalar humano",
+              "Reclamação, reembolso, golpe, CNPJ inválido 2x, cliente irritado",
+              "Só nesses casos — pedido de boleto NÃO é escalar",
+            ],
+          ]}
+        />
+
+        <Callout tone="warn">
+          <strong>Prioridade máxima — boleto e pagamento:</strong> se o cliente
+          pedir boleto, link, 2ª via ou &quot;pode me mandar?&quot; → a IA{" "}
+          <strong>envia o link na hora</strong> (seção{" "}
+          <a href="#api-solicitar-boleto" className="underline underline-offset-4">
+            API solicitar-boleto
+          </a>
+          ).{" "}
+          <strong>Proibido</strong> responder que vai transferir para consultor
+          humano. <strong>Proibido</strong> mencionar urlPagamento, solicitar-boleto
+          ou nomes de API na mensagem ao cliente.
         </Callout>
 
         <SubTitle>Mensagem inicial da conversa (obrigatória)</SubTitle>
@@ -102,8 +138,11 @@ Tecnologia, segurança e suporte para fornecedores do Brasil. 🇧🇷`}</Code>
         </H>
         <H>
           <strong>Valores e prazos:</strong> use apenas os valores e prazos
-          descritos neste documento. Se não souber, diga que vai encaminhar a
-          um consultor.
+          descritos neste documento. Se não souber algo{" "}
+          <strong>fora de boleto/pagamento</strong> (já cobertos neste doc),
+          informe que vai encaminhar a um consultor.{" "}
+          <strong>Pedido de boleto ou link → nunca escalar</strong> — enviar o
+          link pela API.
         </H>
         <H>
           <strong>Links:</strong> envie links de vídeo ou da Área do Fornecedor
@@ -227,7 +266,10 @@ Tecnologia, segurança e suporte para fornecedores do Brasil. 🇧🇷`}</Code>
           <strong>Escalar para humano imediatamente:</strong> reclamação,
           cancelamento, pedido de reembolso, suspeita de golpe, erro técnico
           repetido, cliente irritado, CNPJ não encontrado após 2 tentativas,
-          situação jurídica complexa ou restrição cadastral.
+          situação jurídica complexa ou restrição cadastral.{" "}
+          <strong>Não escalar:</strong> boleto, link de pagamento, 2ª via,
+          &quot;pode me mandar o boleto&quot;, &quot;manda aqui&quot;, renovação
+          SICAF para pagar.
         </H>
         <H>
           <strong>Sinônimos comuns</strong> (mapear intenção do cliente):
@@ -235,7 +277,7 @@ Tecnologia, segurança e suporte para fornecedores do Brasil. 🇧🇷`}</Code>
         <List
           items={[
             "cadastro / habilitação / fornecedor / informou CNPJ → #api-consulta-cnpj (Etapa 1)",
-            "boleto / pagar / 2ª via / renovação sicaf / manda o link → #api-solicitar-boleto (Etapa 2)",
+            "boleto / pagar / 2ª via / renovação sicaf / manda o link / pode me mandar o boleto / manda aqui → #api-solicitar-boleto (Etapa 2 — enviar link, NÃO escalar)",
             "mensalidade / 155 / manutenção → Página de pagamentos + API consulta-boletos",
             "app / programa / aplicativo / instalar / baixar / assistente / como usar o app → Assistente CADBRASIL (2 links obrigatórios)",
             "senha / login / acesso → Área do Fornecedor",
@@ -2026,6 +2068,40 @@ Tecnologia, segurança e suporte para fornecedores do Brasil. 🇧🇷`}</Code>
           Reclamação, cancelamento, reembolso, golpe, erro técnico, cliente
           irritado ou CNPJ não encontrado após 2 tentativas.
         </ShortAnswer>
+
+        <Callout tone="warn">
+          <strong>Nunca escalar humano nestes pedidos:</strong> &quot;Pode me
+          mandar o boleto&quot;, &quot;manda o link&quot;, &quot;quero pagar&quot;,
+          &quot;2ª via&quot;, &quot;preciso do boleto aqui&quot;, renovação SICAF
+          para pagar. A IA consulta a API e envia o link — ver{" "}
+          <a href="#api-solicitar-boleto" className="underline underline-offset-4">
+            solicitar-boleto
+          </a>
+          .
+        </Callout>
+
+        <SubTitle>Resposta errada vs correta (boleto)</SubTitle>
+        <DataTable
+          headers={["Cliente diz", "❌ Errado", "✅ Correto"]}
+          rows={[
+            [
+              "Pode me mandar o boleto aqui?",
+              "Vou transferir para um consultor humano",
+              "Consultar API → enviar link de pagamento na mensagem",
+            ],
+            [
+              "Quero pagar o SICAF",
+              "Acesse o portal e emita sozinho",
+              "Enviar link oficial com valor e vencimento",
+            ],
+            [
+              "Manda o link",
+              "Peça ao atendente",
+              "Enviar link na hora (sem mencionar API ou urlPagamento)",
+            ],
+          ]}
+        />
+
         <H>
           Pedido de boleto ou link de pagamento <strong>não</strong> é escalar
           humano — ver{" "}
@@ -2060,12 +2136,20 @@ Tecnologia, segurança e suporte para fornecedores do Brasil. 🇧🇷`}</Code>
     body: (
       <>
         <ShortAnswer>
-          Pergunte o que precisar! Se for algo específico, encaminho a um
-          atendente humano.
+          Pergunte o que precisar! Para boleto ou pagamento, envio o link aqui
+          mesmo. Para assuntos complexos, encaminho a um atendente.
         </ShortAnswer>
         <H>
-          Se tiver dúvidas específicas, basta solicitar e você será encaminhado
-          para um atendente humano.
+          Antes de escalar: verifique se a dúvida está neste documento
+          (consulta CNPJ, boleto, SICAF, Assistente). Pedido de boleto →{" "}
+          <a href="#api-solicitar-boleto" className="underline underline-offset-4">
+            enviar link
+          </a>
+          , não transferir humano.
+        </H>
+        <H>
+          Se for algo específico não coberto aqui, informe que será encaminhado
+          a um atendente humano.
         </H>
         <H>
           WhatsApp: <WaLink /> · Horário: Seg–Sex 08h–18h
