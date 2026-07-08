@@ -202,6 +202,7 @@ Tecnologia, segurança e suporte para fornecedores do Brasil. 🇧🇷`}</Code>
             "concorrente / preço / valor do certame → Preços de licitações de concorrentes",
             "certidão vencendo / alerta / e-mail → Alertas de certidões por e-mail",
             "plataforma / o que vocês oferecem → O que é a CADBRASIL Oficial (plataforma completa)",
+            "sicaf gratuito / sicaf gratis / fazer sozinho / governo cobra → O SICAF é gratuito?",
             "atualizar sicaf / renovar cadastro → Como atualizar o SICAF",
             "gov.br / conta gov → Preciso acessar o GOV.BR?",
             "situação fornecedor / painel desatualizado → Situação do Fornecedor",
@@ -325,16 +326,175 @@ Tecnologia, segurança e suporte para fornecedores do Brasil. 🇧🇷`}</Code>
     body: (
       <>
         <ShortAnswer>
-          Sim, o cadastro no SICAF é gratuito (Governo Federal). A CADBRASIL Oficial
-          cobra pela assessoria, plataforma e acompanhamento — não pelo SICAF
-          em si.
+          Sim — o cadastro no portal do Governo Federal é gratuito. Porém fazer
+          tudo sozinho exige dominar todo o processo sem erro; um deslize na
+          habilitação pode gerar multas severas e impedir a empresa de licitar
+          por anos. Com a CADBRASIL Oficial, você tem assessoria, SICAF em
+          ordem e uma plataforma completa (licitações, editais com IA,
+          certidões, concorrentes e muito mais) — sem precisar contratar várias
+          ferramentas separadas.
         </ShortAnswer>
-        <H>Sim. O cadastro no SICAF é gratuito e disponibilizado pelo Governo Federal.</H>
-        <H>A CADBRASIL Oficial não cobra pelo SICAF em si.</H>
+
+        <Callout tone="info">
+          <strong>Importante para a IA:</strong> nunca diga que a CADBRASIL Oficial
+          &quot;cobra pelo SICAF do governo&quot;. O SICAF em si é gratuito no
+          portal federal. O cliente contrata a <strong>assessoria</strong>, a{" "}
+          <strong>plataforma</strong> e o <strong>acompanhamento</strong> para
+          fazer certo, evitar riscos e ganhar vantagem nas licitações.
+        </Callout>
+
+        <SubTitle>SICAF gratuito — o que o Governo oferece</SubTitle>
         <H>
-          O valor cobrado pela CADBRASIL Oficial refere-se à assessoria especializada,
-          análise documental, suporte técnico, plataforma de gestão,
-          monitoramento e execução do processo.
+          Sim. O cadastro no SICAF é <strong>gratuito</strong> e disponibilizado
+          pelo Governo Federal. Qualquer empresa pode, em tese, acessar o portal
+          oficial, enviar documentos e manter o credenciamento sem pagar taxa
+          de cadastro ao governo.
+        </H>
+        <H>
+          O problema não é o custo do cadastro — é a{" "}
+          <strong>complexidade e o risco</strong> de executar todo o processo
+          sozinho, sem orientação especializada.
+        </H>
+
+        <SubTitle>SICAF gratuito feito sozinho — os riscos reais</SubTitle>
+        <H>
+          Quem opta pelo caminho 100% gratuito precisa dominar{" "}
+          <strong>todo o fluxo de ponta a ponta</strong>, sem erro, sem
+          esquecer prazo e sem documento vencido:
+        </H>
+        <List
+          items={[
+            "Credenciamento inicial com dezenas de documentos e certidões",
+            "Renovação anual e atualização de certidões fiscais, trabalhistas e previdenciárias",
+            "Situação do Fornecedor sempre alinhada ao que o órgão exige",
+            "Regras específicas de cada edital e de cada modalidade de licitação",
+            "Prazos curtos — um dia de atraso pode significar desclassificação",
+          ]}
+        />
+        <Callout tone="warn">
+          <strong>Atenção — risco financeiro e cadastral:</strong> se houver
+          erro na habilitação no momento de participar de uma licitação
+          (certidão vencida, documento incorreto, SICAF irregular, nível
+          pendente), a empresa pode ser <strong>desclassificada</strong>, sofrer{" "}
+          <strong>multas administrativas</strong> e, em casos graves, ficar{" "}
+          <strong>impedida de participar de licitações por longos anos</strong>
+          . Multas e sanções podem ser tão elevadas que inviabilizam
+          permanentemente a atuação da empresa no mercado público.
+        </Callout>
+        <H>
+          O SICAF gratuito <strong>não inclui</strong> suporte, alertas,
+          conferência documental, acompanhamento de prazos nem ferramentas de
+          inteligência para licitar. Qualquer falha fica por conta do
+          fornecedor.
+        </H>
+
+        <SubTitle>SICAF com a CADBRASIL Oficial — segurança e tranquilidade</SubTitle>
+        <H>
+          Ao contratar a CADBRASIL Oficial, sua empresa{" "}
+          <strong>não percorre esse caminho sozinha</strong>. Nossa equipe e
+          nossa plataforma conduzem o credenciamento, a renovação e a
+          manutenção cadastral com análise documental, suporte humano e
+          tecnologia — reduzindo drasticamente o risco de erro na hora H da
+          licitação.
+        </H>
+        <List
+          items={[
+            <>
+              <strong>Credenciamento SICAF assistido:</strong> processo
+              orientado passo a passo pelo Assistente CADBRASIL e equipe
+              especializada — menos chance de pendência ou documento errado.
+            </>,
+            <>
+              <strong>Renovação e certidões em dia:</strong> alertas por e-mail,
+              gestão centralizada e acompanhamento para não licitar com
+              documentação vencida.
+            </>,
+            <>
+              <strong>Situação do Fornecedor atualizada:</strong> painel
+              sincronizado com o andamento real do seu cadastro.
+            </>,
+            <>
+              <strong>Suporte quando precisar:</strong> WhatsApp e consultores
+              para dúvidas que o portal do governo não resolve.
+            </>,
+          ]}
+        />
+
+        <SubTitle>
+          Além do SICAF — portal completo (sem criar contas em várias empresas)
+        </SubTitle>
+        <H>
+          A CADBRASIL Oficial não é apenas &quot;fazer o cadastro SICAF&quot;. Ao
+          contratar, o cliente acessa um <strong>portal integrado</strong> com
+          soluções que, em outras empresas, exigiriam várias assinaturas e
+          ferramentas separadas:
+        </H>
+        <List
+          items={[
+            <>
+              <strong>Módulo de licitações:</strong> painel nacional de
+              oportunidades filtradas pelo CNAE da empresa.
+            </>,
+            <>
+              <strong>Pregões e editais:</strong> acompanhamento e gestão das
+              melhores oportunidades para o perfil do fornecedor.
+            </>,
+            <>
+              <strong>Leitura de edital com IA:</strong> análise inteligente de
+              requisitos, prazos, exigências e pontos críticos — muito mais
+              rápido que ler manualmente centenas de páginas.
+            </>,
+            <>
+              <strong>Procedimentos com IA:</strong> apoio em etapas do
+              processo licitatório com inteligência artificial.
+            </>,
+            <>
+              <strong>Concorrentes e preços:</strong> inteligência de mercado
+              com referência de valores praticados por concorrentes em
+              certames semelhantes.
+            </>,
+            <>
+              <strong>Gestão de certidões:</strong> centralização, envio,
+              conferência e alertas de vencimento — com indicação de{" "}
+              <strong>quais certidões</strong> precisam ser atualizadas.
+            </>,
+            <>
+              <strong>Gerador de Impugnação:</strong> elaboração de
+              impugnações com mais agilidade e fundamentação.
+            </>,
+            <>
+              <strong>Assistente CADBRASIL:</strong> aplicativo para
+              comunicação, envio de documentos e orientação no dia a dia.
+            </>,
+            <>
+              <strong>Manutenção cadastral (R$ 155/mês):</strong> serviço
+              contínuo para manter SICAF e documentação sempre regulares.
+            </>,
+          ]}
+        />
+        <Callout tone="ok">
+          <strong>Resumo para o cliente (WhatsApp):</strong> o SICAF do governo
+          é gratuito, mas fazer sozinho é arriscado — um erro na licitação pode
+          custar multas e impedir sua empresa de vender para o governo por
+          anos. Com a CADBRASIL Oficial você tem o SICAF feito com segurança{" "}
+          <strong>e</strong> um portal completo: licitações, editais com IA,
+          certidões, concorrentes, pregões e muito mais — tudo em um só lugar.
+          Veja também:{" "}
+          <a href="#por-que-contratar" className="underline underline-offset-4">
+            Por que contratar a CADBRASIL Oficial?
+          </a>
+        </Callout>
+        <H>
+          Valores da CADBRASIL Oficial referem-se à assessoria, plataforma e
+          serviços de gestão — não à taxa governamental do SICAF em si. Detalhes
+          em{" "}
+          <a
+            href="#taxa-sicaf-vs-cadbrasil"
+            className="underline underline-offset-4"
+          >
+            Taxa SICAF vs Taxa CADBRASIL Oficial
+          </a>
+          .
         </H>
       </>
     ),
@@ -376,31 +536,46 @@ Tecnologia, segurança e suporte para fornecedores do Brasil. 🇧🇷`}</Code>
     ),
   },
   {
-    id: "taxa-sicaf-vs-CADBRASIL Oficial",
+    id: "taxa-sicaf-vs-cadbrasil",
     title: "Taxa SICAF vs Taxa CADBRASIL Oficial",
     body: (
       <>
         <ShortAnswer>
-          Taxa SICAF = taxa governamental do credenciamento (R$ 985). Taxa
-          CADBRASIL Oficial = assessoria + plataforma. São coisas diferentes.
+          O SICAF no portal do governo é gratuito. Os R$ 985 referem-se ao
+          credenciamento assistido pela CADBRASIL Oficial (análise, plataforma e
+          suporte). A manutenção mensal (R$ 155) mantém tudo em dia. Fazer
+          sozinho não tem taxa, mas o risco de multa e impedimento em licitações
+          é muito maior — veja{" "}
+          <a href="#sicaf-gratuito" className="underline underline-offset-4">
+            O SICAF é gratuito?
+          </a>
         </ShortAnswer>
         <List
           items={[
             <>
-              <strong>Taxa SICAF (R$ 985,00):</strong> referente ao
-              credenciamento inicial. Pode ser consultada/emitida via API de
-              boleto SICAF.
+              <strong>SICAF gratuito (governo):</strong> cadastro sem custo no
+              portal federal — porém o fornecedor assume 100% do processo e dos
+              riscos de erro.
             </>,
             <>
-              <strong>Manutenção CADBRASIL Oficial (R$ 155,00/mês):</strong> serviço
-              mensal da CADBRASIL Oficial para acompanhamento contínuo — consultada via
-              API de boletos de manutenção.
+              <strong>Taxa SICAF / credenciamento (R$ 985,00):</strong>{" "}
+              serviço da CADBRASIL Oficial para habilitar a empresa com
+              assessoria, análise documental e acesso à plataforma. Boleto via
+              API boleto-sicaf ou página de pagamentos.
+            </>,
+            <>
+              <strong>Manutenção CADBRASIL Oficial (R$ 155,00/mês):</strong>{" "}
+              acompanhamento contínuo de SICAF, certidões e documentação —
+              consultada via API consulta-boletos.
             </>,
           ]}
         />
         <H>
           O cadastro no portal do governo é gratuito; os valores acima referem-se
-          aos serviços de assessoria e gestão prestados pela CADBRASIL Oficial.
+          aos serviços de assessoria, gestão e plataforma prestados pela
+          CADBRASIL Oficial — que incluem módulos de licitações, editais com
+          IA, certidões, concorrentes e ferramentas exclusivas em um único
+          ecossistema.
         </H>
       </>
     ),
@@ -479,9 +654,14 @@ Tecnologia, segurança e suporte para fornecedores do Brasil. 🇧🇷`}</Code>
         <Callout tone="warn">
           Participar de licitação com SICAF irregular ou certidões vencidas pode
           gerar desclassificação, multas severas e impedimento de participar de
-          certames por anos. A plataforma CADBRASIL Oficial existe para evitar esses
+          certames por anos — em alguns casos, a ponto de a empresa não voltar
+          a licitar. A plataforma CADBRASIL Oficial existe para evitar esses
           riscos e, ao mesmo tempo, ampliar suas chances de sucesso nas
-          licitações.
+          licitações. Compare com o caminho gratuito em{" "}
+          <a href="#sicaf-gratuito" className="underline underline-offset-4">
+            O SICAF é gratuito?
+          </a>
+          .
         </Callout>
       </>
     ),
