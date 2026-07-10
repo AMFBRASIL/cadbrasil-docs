@@ -25,7 +25,12 @@ Cliente pergunta preço, valor, quanto custa, mensalidade, formas de pagar.
 | Credenciamento SICAF (taxa anual) | R$ 985,00 | Serviço CADBRASIL, não taxa do governo |
 | Manutenção mensal | R$ 155,00/mês | Quando contratada |
 
-**Sempre confirmar o valor real** via `apis/consulta-cnpj.md` (`valorTaxaAnual`, `valorTotalPendente`) ou `apis/solicitar-boleto.md` (`valorFormatado`). Nunca inventar.
+**Sempre confirmar o valor real** via:
+- `apis/consulta-cnpj.md` → `valorTotalPendente`, `pagamentosResumo`
+- `apis/consulta-boletos.md` → `valorTotalPendente`, `boletos.sicafPendentes[].valor`
+- `apis/solicitar-boleto.md` → `valorFormatado`
+
+Nunca inventar.
 
 ## Formas de pagamento
 

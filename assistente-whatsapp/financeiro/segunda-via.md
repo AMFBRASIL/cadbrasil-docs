@@ -19,7 +19,7 @@ Segunda via, boleto vencido, perdi o boleto, novo link.
 
 ## Resposta padrão IA
 
-**Instrução interna:** Mesmo fluxo de `boleto.md` — API solicitar-boleto com CNPJ → urlPagamento. Não escalar humano.
+**Instrução interna:** Mesmo fluxo de `apis/solicitar-boleto.md` — Etapa 2 com CNPJ → urlPagamento. Não escalar humano. Opcional: `consulta-boletos` para confirmar boleto pendente antes.
 
 **Mensagem ao cliente:**
 

@@ -20,6 +20,7 @@
     { "id": "kb-intel-sentimento", "group": "Inteligência", "path": "inteligencia/sentimento-cliente.md" },
     { "id": "kb-intel-score", "group": "Inteligência", "path": "inteligencia/score-transferencia.md" },
     { "id": "kb-api-consulta", "group": "APIs", "path": "apis/consulta-cnpj.md" },
+    { "id": "kb-api-boletos", "group": "APIs", "path": "apis/consulta-boletos.md" },
     { "id": "kb-api-boleto", "group": "APIs", "path": "apis/solicitar-boleto.md" },
     { "id": "kb-ctx-memoria", "group": "Contexto", "path": "contexto/memoria-atendimento.md" },
     { "id": "kb-fluxo-novo", "group": "Fluxos", "path": "fluxos/fluxo-novo-cliente.md" },

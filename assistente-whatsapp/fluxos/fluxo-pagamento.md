@@ -17,26 +17,24 @@ boleto, pagar, link, comprovante, quando libera, pix, 2ª via
 ```
 MENSAGEM: financeiro
 │
-├─ Tipo?
-│   ├─ Pede boleto/link/2ª via
-│   │   ├─ CNPJ na memória?
-│   │   │   ├─ NÃO → Solicitar CNPJ
-│   │   │   └─ SIM → API solicitar-boleto → urlPagamento
-│   │   └─ NUNCA escalar humano
-│   │
-│   ├─ Diz que pagou / comprovante
-│   │   ├─ Agradecer + prazo 24h úteis
-│   │   ├─ Orientar portal + Assistente
-│   │   └─ CNPJ → consulta-cnpj para status real
-│   │
-│   ├─ Pergunta valor
-│   │   └─ consulta-cnpj (não inventar)
-│   │
-│   └─ Reembolso / desconto / contestação
-│       └─ Transferir humano (+10 ou regra financeira)
+├─ CNPJ na memória?
+│   ├─ NÃO → Solicitar CNPJ
+│   └─ SIM
 │
-└─ Memória: boleto já enviado?
-    └─ Não reenviar sem novo pedido
+├─ Tipo?
+│   ├─ Primeira consulta / status geral
+│   │   └─ API consulta-cnpj (sem link)
+│   │
+│   ├─ "Quais boletos?" / detalhes pendência
+│   │   └─ API consulta-boletos
+│   │
+│   ├─ Pede boleto/link/2ª via / quero pagar
+│   │   └─ API solicitar-boleto → urlPagamento (NUNCA escalar)
+│   │
+│   ├─ Diz que pagou
+│   │   └─ consulta-cnpj para status + prazo 1-3 dias úteis
+│   │
+│   └─ Reembolso / desconto → humano
 ```
 
 ## Resposta padrão IA (boleto)
@@ -51,10 +49,9 @@ Confirmação em até 24h úteis. Depois acesse o portal e o Assistente CADBRASI
 
 ## Artigos relacionados
 
-- `financeiro/boleto.md`
-- `financeiro/segunda-via.md`
-- `intencoes/cliente-ja-pagou.md`
-- `financeiro/pagamento-confirmado.md`
+- `apis/consulta-cnpj.md` (Etapa 1)
+- `apis/consulta-boletos.md` (listar pendentes)
+- `apis/solicitar-boleto.md` (Etapa 2 — link)
 
 ## Quando NÃO usar
 

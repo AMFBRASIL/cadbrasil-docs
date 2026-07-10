@@ -2,20 +2,18 @@
 
 ## Objetivo
 
-Gerar/obter o link de pagamento quando o cliente pedir boleto. **Única API que envia link ao cliente.**
+Obter e enviar o link de pagamento quando o cliente pedir boleto. **API principal para enviar link ao cliente.**
 
 ## Quando usar
 
-Cliente pede boleto, link, 2ª via, renovação ou "quero pagar". Etapa 2 (após consulta-cnpj).
+Cliente pede boleto, link, 2ª via, "quero pagar", PIX, renovação com pagamento.
 
 ## Palavras-chave do cliente
 
-- pode me mandar o boleto
-- quero pagar / manda o link
-- 2ª via / perdi o boleto
-- quero pagar o SICAF / os 985
-- link de pagamento / como pago
-- quero renovar
+- manda o boleto / link / 2ª via
+- quero pagar / como pago
+- quero pagar os 985
+- perdi o boleto
 
 ## Endpoint
 
@@ -26,71 +24,85 @@ Header: x-api-key
 
 ## Regra do link (obrigatória)
 
-- Enviar ao cliente **somente** o campo `urlPagamento` (ou `URLpagamento`).
-- **Nunca** usar `linkBoleto` — mesmo se vier com a mesma URL.
-- `linkPdf` apenas como alternativa opcional (se não `null`).
-- **Nunca** enviar `codigoBarras`, `message`, `emailEnviado`, `emailPara` ou campos `email*` ao cliente.
-- **Nunca** escrever nomes de API/campos na mensagem.
-- **Nunca** escalar humano para enviar boleto.
-- Converter `dataVencimento` ISO → DD/MM/AAAA (ex.: 2026-07-13 → 13/07/2026).
+- Enviar ao cliente **somente** `urlPagamento` (ou `URLpagamento`).
+- **Nunca** usar `linkBoleto` — mesmo URL igual.
+- **Nunca** enviar `codigoBarras`, `message`, `emailEnviado`, `emailPara`, `emailAssunto`, `chargeId`.
+- **Nunca** citar nomes de API/campos na mensagem.
+- **Nunca** escalar humano só por pedido de boleto.
+- `dataVencimento` ISO → DD/MM/AAAA (2026-07-13 → 13/07/2026).
+- `linkPdf` — só se vier preenchido; omitir se `null`.
 
 ## Quando NÃO acionar
 
-- Primeiro CNPJ da conversa → só `consulta-cnpj`.
-- Consulta de status sem pedido de link.
-- `aguardando_pagamento` sem o cliente pedir boleto.
+- Primeiro CNPJ → só `consulta-cnpj`.
+- Status sem pedido de link → informar pendência sem URL.
+- `aguardando_pagamento` sem cliente pedir boleto → convidar, não enviar link.
 
 ## Mapeamento API → mensagem WhatsApp
 
-| Campo JSON | Enviar? | Como usar |
-|------------|---------|-----------|
-| urlPagamento / URLpagamento | SIM (obrigatório) | Único link principal da mensagem |
-| linkBoleto | NÃO | Ignorar, mesmo se = urlPagamento |
-| linkPdf | SIM (opcional) | Bloco PDF alternativo se não null |
-| valorFormatado | SIM | Linha "Valor" |
-| razaoSocial | SIM | Nome da empresa |
-| protocolo | SIM | Ex.: SICAF-2026-637 |
-| dataVencimento | SIM | Converter ISO → DD/MM/AAAA |
-| boletoReutilizado / geradoAgora / renovacaoAntecipada | Só IA | Escolher qual mensagem usar |
-| codigoBarras / message / email* | NÃO | Interno |
+| Campo JSON | Enviar? | Uso |
+|------------|---------|-----|
+| urlPagamento / URLpagamento | **SIM** | Único link na mensagem |
+| linkBoleto | **NÃO** | Ignorar sempre |
+| linkPdf | Opcional | Se não null |
+| valorFormatado | SIM | Linha Valor |
+| razaoSocial | SIM | Nome empresa |
+| protocolo | SIM | SICAF-2026-636 |
+| dataVencimento | SIM | DD/MM/AAAA |
+| boletoReutilizado | Só IA | true = boleto já existia |
+| geradoAgora | Só IA | true = gerado nesta chamada |
+| renovacaoAntecipada | Só IA | true = renovação antecipada |
+| pendentePagamento | Só IA | false = sem pendência |
+| codigoBarras / email* / message | **NÃO** | Interno |
 
-## Qual mensagem usar (decisão)
+## Exemplo real — CNPJ 01744605000150 (J A R E)
 
-| Campo do JSON | Mensagem |
-|---------------|----------|
-| `boletoReutilizado: true` | Boleto reutilizado |
-| `geradoAgora: true` | Boleto gerado agora |
-| `renovacaoAntecipada: true` | Renovação |
-| `linkPdf: null` | Só link (sem PDF) |
-| `pendentePagamento: false` | Sem pendência |
-| `possuiCadastro: false` (404) | Não cadastrado |
+```json
+{
+  "ok": true,
+  "possuiCadastro": true,
+  "clienteId": 192803,
+  "cnpj": "01744605000150",
+  "razaoSocial": "J A R E ASSESSORIA E CONSULTORIA DE SEGURANCA E EMPRESARIAL LTDA",
+  "pendentePagamento": true,
+  "valor": 985,
+  "valorFormatado": "R$ 985,00",
+  "linkBoleto": "https://fornecedor.cadbrasil.com.br/pay/t-636",
+  "protocolo": "SICAF-2026-636",
+  "dataVencimento": "2026-07-13T03:00:00.000Z",
+  "taxaId": 636,
+  "pagamentoId": 1377,
+  "payCode": "t-636",
+  "urlPagamento": "https://fornecedor.cadbrasil.com.br/pay/t-636",
+  "boletoReutilizado": true,
+  "geradoAgora": false,
+  "renovacaoAntecipada": false,
+  "message": "Boleto ou pagamento pendente localizado. URL de pagamento online retornada."
+}
+```
 
-## Mensagens de retorno ao cliente
+**Link ao cliente:** `https://fornecedor.cadbrasil.com.br/pay/t-636` (de `urlPagamento`, **não** `linkBoleto`).
 
-### Padrão / boleto reutilizado
+## Mensagem ao cliente — boleto reutilizado (padrão)
 
 ```
 🇧🇷 *CADBRASIL Oficial ®*
 💳 *Pagamento SICAF — link pronto para você*
 
-Olá! 👋 Conforme solicitado, preparei seu pagamento:
+Olá! 👋 Conforme solicitado, localizei seu pagamento:
 
-🏢 *{razaoSocial}*
+🏢 *J A R E ASSESSORIA E CONSULTORIA DE SEGURANCA E EMPRESARIAL LTDA*
 
 ━━━━━━━━━━━━━━━━
 
-💰 *Valor:* {valorFormatado}
-📅 *Vencimento:* {dataVencimento}
-📋 *Protocolo:* {protocolo}
+💰 *Valor:* R$ 985,00
+📅 *Vencimento:* 13/07/2026
+📋 *Protocolo:* SICAF-2026-636
 
 ✅ *LINK DE PAGAMENTO*
-👉 *{urlPagamento}*
+👉 *https://fornecedor.cadbrasil.com.br/pay/t-636*
 
 📌 Toque no link para pagar por *PIX* ou *boleto bancário*.
-
-📄 *Não conseguiu abrir?* PDF do boleto:
-👉 {linkPdf}
-(omitir bloco do PDF se linkPdf for null)
 
 ⏱️ *Após o pagamento:* compensação em *1 a 3 dias úteis*.
 Os *níveis do SICAF* são liberados após a confirmação.
@@ -98,126 +110,42 @@ Os *níveis do SICAF* são liberados após a confirmação.
 🔐 *CADBRASIL Oficial*
 ```
 
-### Boleto gerado agora
+## Decisão de mensagem
 
-```
-🇧🇷 *CADBRASIL Oficial ®*
-💳 *Guia de pagamento gerada agora*
+| Retorno API | Mensagem |
+|-------------|----------|
+| boletoReutilizado: true | Boleto já emitido — link continua válido |
+| geradoAgora: true | Guia gerada agora — vencimento até 5 dias úteis |
+| renovacaoAntecipada: true | Renovação SICAF disponível |
+| pendentePagamento: false | Sem taxa pendente — não inventar link |
+| possuiCadastro: false | Orientar cadastro |
 
-Olá! 👋 Para *{razaoSocial}*, gerei agora sua guia SICAF:
-
-💰 *Valor:* {valorFormatado}
-📅 *Vencimento:* {dataVencimento}
-📋 *Protocolo:* {protocolo}
-
-✅ *LINK DE PAGAMENTO*
-👉 *{urlPagamento}*
-
-📌 Guia nova — vencimento em até *5 dias úteis*. Pague por *PIX* ou *boleto*.
-
-⏱️ Compensação: *1 a 3 dias úteis*.
-
-🔐 *CADBRASIL Oficial*
-```
-
-### Renovação
-
-```
-🇧🇷 *CADBRASIL Oficial ®*
-🔄 *Renovação SICAF — pagamento disponível*
-
-Olá! 👋 Para *{razaoSocial}*, localizei a renovação SICAF:
-
-💰 *Valor:* {valorFormatado}
-📅 *Vencimento:* {dataVencimento}
-📋 *Protocolo:* {protocolo}
-
-✅ *LINK DE PAGAMENTO*
-👉 *{urlPagamento}*
-
-📌 Regularize pelo link para manter o cadastro *ativo*.
-
-⏱️ Compensação: *1 a 3 dias úteis*.
-
-🔐 *CADBRASIL Oficial*
-```
-
-### Só link (linkPdf null)
-
-```
-🇧🇷 *CADBRASIL Oficial ®*
-💳 *Link de pagamento SICAF*
-
-Olá! 👋 Localizei a taxa pendente da *{razaoSocial}*.
-
-💰 *Valor:* {valorFormatado}
-
-✅ *LINK DE PAGAMENTO*
-👉 *{urlPagamento}*
-
-📌 Pague por *PIX* ou *boleto* na página oficial.
-
-⏱️ Compensação: *1 a 3 dias úteis*.
-
-🔐 *CADBRASIL Oficial*
-```
-
-### Sem pendência (pendentePagamento false)
+## Sem pendência
 
 ```
 🇧🇷 *CADBRASIL Oficial ®*
 
-Consultei o cadastro da *{razaoSocial}*. ✅
+Consultei *{razaoSocial}*. ✅
 
-No momento *não há taxa SICAF pendente*. Pode significar pagamento já confirmado, credenciamento em dia ou renovação ainda não disponível.
-
-🔐 Portal: https://fornecedor.cadbrasil.com.br
-```
-> Não inventar urlPagamento quando não há pendência.
-
-### Não cadastrado (404)
-
-```
-🇧🇷 *CADBRASIL Oficial ®*
-
-Não localizei cadastro para este CNPJ. 🔎
-
-Para obter o boleto de credenciamento SICAF:
-1️⃣ Inicie o cadastro no portal
-2️⃣ Conclua as etapas iniciais
-3️⃣ Informe seu CNPJ aqui — consulto e envio o link
+No momento *não há taxa SICAF pendente*.
 
 🔐 https://fornecedor.cadbrasil.com.br
 ```
 
-## Exemplos reais
-
-**A — CNPJ 28552323000107:** `urlPagamento = https://fornecedor.cadbrasil.com.br/pay/t-637`, `valorFormatado = R$ 985,00`, `protocolo = SICAF-2026-637`, `dataVencimento = 12/07/2026`.
-
-**B — CNPJ 01744605000150:** `urlPagamento = https://fornecedor.cadbrasil.com.br/pay/t-636`, `valorFormatado = R$ 985,00`, `protocolo = SICAF-2026-636`, `dataVencimento = 13/07/2026`.
-
-Em ambos, enviar o link de `urlPagamento` (nunca `linkBoleto`).
-
 ## Errado vs certo
 
-| Cliente diz | ❌ Nunca | ✅ IA faz |
-|-------------|---------|-----------|
-| Pode me mandar o boleto? | "Vou transferir para consultor" | Chama API → envia urlPagamento |
-| Quero pagar / manda o link | "Peça ao atendente" | Envia link na hora |
-| 2ª via | "Acesse o portal sozinho" | Mesma API → reenvia link |
+| Cliente | ❌ Nunca | ✅ IA |
+|---------|---------|------|
+| Manda o boleto | Transferir para humano | solicitar-boleto → urlPagamento |
+| Quero pagar | "Acesse o portal sozinho" | Envia link na hora |
+| 2ª via | Escalar humano | Mesma API → link |
 
-## Erros da API
+## Fluxo completo (3 APIs)
 
-| Status | Ação |
-|--------|------|
-| 400 (CNPJ inválido) | Pedir 14 dígitos (não escalar) |
-| 401 (API Key) | Problema interno — não escalar cliente por boleto |
-| 500 (falha ao gerar) | Informar indisponibilidade; tentar de novo; escalar só se falhar 2x |
-
-## Quando NÃO usar
-
-Reembolso, desconto, contestação de cobrança → humano.
+1. Cliente informa CNPJ → **consulta-cnpj** (situação, sem link)
+2. (Opcional) "Quais boletos?" → **consulta-boletos**
+3. Cliente pede link → **solicitar-boleto** → **urlPagamento**
 
 ## Transferência humana
 
-**Nunca** por pedido de boleto. Só reembolso/negociação. Erro 500 repetido 2x → informar indisponibilidade.
+**Nunca** por boleto. Reembolso/negociação → humano. Erro 500 2x → indisponibilidade.

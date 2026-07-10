@@ -22,12 +22,11 @@ Cliente pede boleto, link, PIX, valor, como pagar, 2ª via de pagamento.
 ## Resposta padrão IA
 
 **Instrução interna (não enviar ao cliente):**
-1. Cliente deve ter informado CNPJ
-2. Chamar `GET /api/clients/solicitar-boleto?cnpj=CNPJ`
-3. Enviar ao cliente o link de **urlPagamento** (ex: https://fornecedor.cadbrasil.com.br/pay/t-637)
-4. **Nunca** usar campo linkBoleto
-5. **Nunca** escalar humano só por pedido de boleto
-6. **Nunca** citar API ou nomes de campos na mensagem
+1. Etapa 1: `consulta-cnpj` — situação sem link
+2. Detalhes de boletos: `consulta-boletos` — se cliente perguntar
+3. Etapa 2: `solicitar-boleto` — quando pedir boleto/link
+4. Enviar **urlPagamento** (ex.: https://fornecedor.cadbrasil.com.br/pay/t-636)
+5. **Nunca** usar linkBoleto | **Nunca** escalar humano por boleto
 
 **Mensagem ao cliente:**
 

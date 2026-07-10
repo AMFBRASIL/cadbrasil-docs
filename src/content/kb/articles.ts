@@ -2,6 +2,7 @@ import coreIdentidade from "../../../assistente-whatsapp/core/00-identidade.md?r
 import coreRegras from "../../../assistente-whatsapp/core/01-regras-criticas.md?raw";
 import coreQualidade from "../../../assistente-whatsapp/core/02-qualidade-respostas.md?raw";
 import apiConsulta from "../../../assistente-whatsapp/apis/consulta-cnpj.md?raw";
+import apiBoletos from "../../../assistente-whatsapp/apis/consulta-boletos.md?raw";
 import apiBoleto from "../../../assistente-whatsapp/apis/solicitar-boleto.md?raw";
 import intelClassificador from "../../../assistente-whatsapp/inteligencia/classificador-intencao.md?raw";
 import intelSentimento from "../../../assistente-whatsapp/inteligencia/sentimento-cliente.md?raw";
@@ -93,6 +94,7 @@ export const kbArticles: KbArticle[] = [
   article("kb-intel-score", "Inteligência", "inteligencia/score-transferencia.md", intelScore),
   // APIs (fonte única do bot)
   article("kb-api-consulta", "APIs", "apis/consulta-cnpj.md", apiConsulta),
+  article("kb-api-boletos", "APIs", "apis/consulta-boletos.md", apiBoletos),
   article("kb-api-boleto", "APIs", "apis/solicitar-boleto.md", apiBoleto),
   // Contexto
   article("kb-ctx-memoria", "Contexto", "contexto/memoria-atendimento.md", ctxMemoria),

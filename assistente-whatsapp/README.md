@@ -47,10 +47,11 @@ Toda mensagem segue:
 
 ## APIs (dentro do RAG — `apis/`)
 
-- **Etapa 1 — `apis/consulta-cnpj.md`:** identificar empresa (sem link de boleto)
-- **Etapa 2 — `apis/solicitar-boleto.md`:** enviar `urlPagamento` quando cliente pedir boleto
-
-A documentação técnica completa com JSON de produção fica no site (`docs.cadbrasil.com.br` → "Referência técnica/humana"), para devs — não é indexada pelo bot.
+| Etapa | API | Função |
+|-------|-----|--------|
+| 1 | `apis/consulta-cnpj.md` | Situação da empresa (sem link) |
+| 1b | `apis/consulta-boletos.md` | Listar boletos pendentes |
+| 2 | `apis/solicitar-boleto.md` | Enviar urlPagamento ao cliente |
 
 ## Regra máxima
 
