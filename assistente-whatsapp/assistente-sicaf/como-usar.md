@@ -33,6 +33,8 @@ O **Assistente CADBRASIL** fica dentro do portal e guia todo o SICAF:
 
 O Assistente mostra o que falta e o que já foi aprovado.
 
+**Vídeo passo a passo:** `videos/videos-tutoriais.md` — Acessar o Assistente: https://youtu.be/ZG3csRrz1rQ
+
 ## Exemplos
 
 **Cliente:** "Onde envio os documentos?"

@@ -37,6 +37,8 @@ Para licitar, a empresa precisa dos níveis exigidos pelo edital, em geral **ní
 
 O **Assistente CADBRASIL** no portal guia cada etapa.
 
+**Vídeo:** Atualizar níveis do SICAF — https://youtu.be/zFRPSquKXyk (ver `videos/videos-tutoriais.md`).
+
 🔐 https://fornecedor.cadbrasil.com.br
 
 ## Exemplos de perguntas

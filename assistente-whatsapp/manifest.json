@@ -45,6 +45,7 @@
     { "id": "kb-portal-primeiro", "group": "Portal", "path": "portal-fornecedor/primeiro-acesso.md" },
     { "id": "kb-portal-problemas", "group": "Portal", "path": "portal-fornecedor/problemas-acesso.md" },
     { "id": "kb-assistente-como", "group": "Assistente", "path": "assistente-sicaf/como-usar.md" },
+    { "id": "kb-videos-tutoriais", "group": "Vídeos", "path": "videos/videos-tutoriais.md" },
     { "id": "kb-cert-precisa", "group": "Certificado", "path": "certificado-digital/precisa-certificado.md" },
     { "id": "kb-cert-a1", "group": "Certificado", "path": "certificado-digital/certificado-a1.md" },
     { "id": "kb-cert-a3", "group": "Certificado", "path": "certificado-digital/certificado-a3.md" },

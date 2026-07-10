@@ -124,6 +124,7 @@ Qualquer mensagem recebida.
 |-----------------|-----------|-------|
 | Quero fazer SICAF | NOVO_CLIENTE | fluxo-novo-cliente |
 | Meu SICAF venceu | CLIENTE_ATIVO | fluxo-renovacao |
+| Certidão / vídeo / assistente | SUPORTE | videos/videos-tutoriais.md |
 | Manda o boleto | FINANCEIRO | fluxo-pagamento |
 | Esqueci a senha | SUPORTE | portal-fornecedor/senha |
 | Isso é golpe | RISCO | fluxo-reclamacao |

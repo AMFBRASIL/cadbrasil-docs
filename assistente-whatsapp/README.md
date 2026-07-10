@@ -25,6 +25,7 @@ A IA deve consultar este hub antes de responder qualquer cliente. Cada pasta res
 | `sicaf/` | Credenciamento e níveis |
 | `portal-fornecedor/` | Login, senha, acesso |
 | `assistente-sicaf/` | App Assistente CADBRASIL |
+| `videos/` | Tutoriais YouTube (assistente, certidão, níveis, balanço, manutenção) |
 | `certificado-digital/` | A1, A3, erros |
 | `documentos/` | Documentos necessários |
 | `financeiro/` | Valores, boleto, pagamento, renovação |

@@ -32,6 +32,7 @@ import portalSenha from "../../../assistente-whatsapp/portal-fornecedor/senha.md
 import portalPrimeiro from "../../../assistente-whatsapp/portal-fornecedor/primeiro-acesso.md?raw";
 import portalProblemas from "../../../assistente-whatsapp/portal-fornecedor/problemas-acesso.md?raw";
 import assistenteComo from "../../../assistente-whatsapp/assistente-sicaf/como-usar.md?raw";
+import videosTutoriais from "../../../assistente-whatsapp/videos/videos-tutoriais.md?raw";
 import certPrecisa from "../../../assistente-whatsapp/certificado-digital/precisa-certificado.md?raw";
 import certA1 from "../../../assistente-whatsapp/certificado-digital/certificado-a1.md?raw";
 import certA3 from "../../../assistente-whatsapp/certificado-digital/certificado-a3.md?raw";
@@ -125,6 +126,8 @@ export const kbArticles: KbArticle[] = [
   article("kb-portal-problemas", "Portal", "portal-fornecedor/problemas-acesso.md", portalProblemas),
   // Assistente
   article("kb-assistente-como", "Assistente", "assistente-sicaf/como-usar.md", assistenteComo),
+  // Vídeos
+  article("kb-videos-tutoriais", "Vídeos", "videos/videos-tutoriais.md", videosTutoriais),
   // Certificado
   article("kb-cert-precisa", "Certificado", "certificado-digital/precisa-certificado.md", certPrecisa),
   article("kb-cert-a1", "Certificado", "certificado-digital/certificado-a1.md", certA1),
@@ -166,6 +169,7 @@ export const kbGroupOrder = [
   "SICAF",
   "Portal",
   "Assistente",
+  "Vídeos",
   "Certificado",
   "Documentos",
   "Financeiro",

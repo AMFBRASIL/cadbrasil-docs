@@ -39,6 +39,8 @@ Certidões precisam estar **válidas** na data da licitação.
 
 O Assistente indica exatamente qual certidão atualizar.
 
+**Vídeo:** Atualizar Certidão (Nível 4) — https://youtu.be/BjvNEI0IsHM (ver `videos/videos-tutoriais.md`).
+
 ## QUANDO TRANSFERIR HUMANO
 
 Certidão correta mas sistema não valida 48h+; licitação em menos de 48h.
