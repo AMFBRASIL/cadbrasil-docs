@@ -42,7 +42,7 @@ Nunca inventar.
 
 🇧🇷 **CADBRASIL Oficial ®**
 
-O credenciamento SICAF assistido pela CADBRASIL é **R$ 985,00** (serviço privado — o cadastro no governo é gratuito).
+O credenciamento SICAF assistido pela CADBRASIL é **R$ 985,00** — **serviço privado**, não taxa do Governo Federal.
 
 Pagamento por **PIX** ou **boleto**, com compensação em 1 a 3 dias úteis.
 
@@ -61,7 +61,7 @@ Quer que eu gere o link? Me confirme o **CNPJ**.
 
 ## Quando NÃO usar
 
-Objeção "por que pagar se é gratuito" → `comercial/objecoes.md`.
+Objeção "posso fazer sozinho / por que pagar" → `comercial/objecoes.md`.
 
 ## Transferência humana
 

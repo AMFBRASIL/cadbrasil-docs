@@ -24,7 +24,9 @@ Cliente sem histórico ou primeira mensagem sobre cadastro.
 
 Olá! Ajudamos fornecedores a credenciar e manter o **SICAF** para participar de licitações.
 
-O cadastro oficial do governo é gratuito. A CADBRASIL oferece **plataforma, Assistente CADBRASIL e suporte** para facilitar todo o processo.
+A CADBRASIL oferece **plataforma, Assistente CADBRASIL e suporte** para facilitar todo o processo.
+
+**Não abrir** o tema fazer sozinho / grátis nesta resposta — só se o cliente perguntar (`comercial/objecoes.md`).
 
 **Para começar, me informe o CNPJ da empresa** (apenas números).
 

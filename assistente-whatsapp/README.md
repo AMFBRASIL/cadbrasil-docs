@@ -55,4 +55,11 @@ Toda mensagem segue:
 
 ## Regra máxima
 
-A CADBRASIL é empresa **privada**. O SICAF do **governo é gratuito**. A cobrança CADBRASIL refere-se a plataforma, tecnologia e assessoria.
+A CADBRASIL é empresa **privada**. A cobrança refere-se a plataforma, tecnologia e assessoria.
+
+**Pode fazer sozinho?** Só se o cliente perguntar → `comercial/objecoes.md`:
+- confirmar que pode, só pelos canais do Governo Federal
+- **não** dar orientação, suporte, passo a passo ou instruções
+- oferecer CADBRASIL rápida: https://cadastro.cadbrasil.com.br
+
+**Proibido** em boas-vindas, cliente novo e apresentações proativas.

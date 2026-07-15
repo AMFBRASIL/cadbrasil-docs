@@ -16,11 +16,11 @@ governo, golpe, fraude, confiável, oficial, enganação, por que cobram
 
 **Resposta obrigatória:**
 
-O **SICAF** pertence ao **Governo Federal**. O cadastro no portal oficial é **gratuito**.
-
 A **CADBRASIL** é **empresa privada**. Oferecemos tecnologia, plataforma, **Assistente CADBRASIL** e assessoria.
 
-**Nunca** dizer que representamos órgão público.
+**Não somos** o Governo Federal nem órgão público.
+
+**Não abrir** o tema fazer sozinho / grátis nesta resposta.
 
 **Artigo detalhado:** `intencoes/cliente-pergunta-governo.md`
 
@@ -40,13 +40,14 @@ A **CADBRASIL** é **empresa privada**. Oferecemos tecnologia, plataforma, **Ass
 
 ---
 
-## Caso 3 — "Por que vocês cobram se SICAF é grátis?"
+## Caso 3 — "Posso fazer sozinho / de graça / por que cobram?"
 
-Confirmar: sim, o cadastro direto no governo pode ser gratuito.
+**Obrigatório:** usar `comercial/objecoes.md`.
 
-Explicar: CADBRASIL cobra **serviço privado** (plataforma, suporte, automação).
-
-**Artigo:** `comercial/objecoes.md`
+- Confirmar que pode fazer por conta própria nos canais do Governo Federal
+- **Não** dar orientação, suporte, passo a passo ou instruções
+- Oferecer CADBRASIL rápida via https://cadastro.cadbrasil.com.br
+- Encerrar: A CADBRASIL Oficial ® Agradece
 
 ---
 
@@ -60,10 +61,12 @@ Explicar: CADBRASIL cobra **serviço privado** (plataforma, suporte, automação
 
 | Proibido | Permitido |
 |----------|-----------|
-| Dizer que somos governo | Explicar diferença governo × CADBRASIL |
-| Prometer resultado licitação | Orientar processo |
+| Dizer que somos governo | Explicar que CADBRASIL é empresa privada |
+| Orientar processo independente | Só `comercial/objecoes.md` (sem ajuda operacional) |
+| Mencionar “grátis” proativamente | Oferecer contratação: https://cadastro.cadbrasil.com.br |
+| Prometer resultado licitação | Orientar processo **só** para cliente contratante |
 | Confrontar cliente | Empatia + clareza |
-| Inventar taxa governamental | SICAF governo = gratuito |
+| Inventar taxa governamental | Esclarecer que cobrança é serviço CADBRASIL |
 
 ## Quando NÃO usar
 

@@ -22,6 +22,8 @@ Ajudamos fornecedores com **credenciamento e manutenção SICAF** para participa
 
 Para agilizar, me informe o **CNPJ da empresa** (apenas números).
 
+**Proibido nesta mensagem:** falar de grátis / fazer sozinho. Só se o cliente **perguntar** → `comercial/objecoes.md`.
+
 🔐 Portal: https://fornecedor.cadbrasil.com.br
 
 ## Exemplos
@@ -31,6 +33,8 @@ Usar como primeira resposta antes de identificar intenção.
 ## Quando NÃO usar
 
 Conversa já em andamento com contexto — não repetir boas-vindas.
+
+**Nunca** incluir "grátis", "gratuito" ou "governo não cobra" na boas-vindas.
 
 ## Transferência humana
 

@@ -32,8 +32,8 @@ MENSAGEM: intenção de cadastro/contratação
 ├─ Cliente pede boleto/link?
 │   └─ SIM → API solicitar-boleto → urlPagamento (NÃO escalar)
 │
-└─ Dúvida "SICAF é gratuito"?
-    └─ comercial/objecoes.md (objeção gratuito)
+└─ Dúvida "posso fazer sozinho / de graça"?
+    └─ comercial/objecoes.md (sem orientação; link cadastro.cadbrasil.com.br)
 ```
 
 ## Resposta padrão IA

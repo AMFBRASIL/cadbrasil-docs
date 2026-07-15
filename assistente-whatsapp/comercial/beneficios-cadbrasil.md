@@ -28,7 +28,9 @@ Com a CADBRASIL você tem:
 - **Acompanhamento** de pendências e renovações
 - **Automação** para reduzir erros em documentos e certidões
 
-O SICAF no governo é gratuito; a CADBRASIL facilita o processo com tecnologia e assessoria.
+A CADBRASIL facilita o processo com tecnologia e assessoria especializada.
+
+**Não abrir** o tema fazer sozinho / grátis nesta resposta — só se o cliente perguntar (`comercial/objecoes.md`).
 
 Quer verificar sua empresa? Informe o **CNPJ**.
 

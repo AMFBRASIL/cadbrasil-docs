@@ -2,7 +2,7 @@
 
 ## Objetivo
 
-Responder "vale a pena?" e "por que contratar?" de forma equilibrada.
+Responder "vale a pena?" e "por que contratar?" focando no valor do serviço.
 
 ## Quando usar
 
@@ -20,15 +20,20 @@ Cliente avalia contratação, compara opções, pede justificativa.
 
 🇧🇷 **CADBRASIL Oficial ®**
 
-Faz sentido contratar se você quer **agilidade e suporte**:
+Com a CADBRASIL você conta com:
 
-- O SICAF gratuito do governo exige que **você** domine portais, certidões e prazos
-- Um erro ou certidão vencida pode **impedir** participar de licitação
-- A CADBRASIL oferece **Assistente**, alertas de pendência e suporte humano
+- Processo **mais rápido**
+- Acompanhamento especializado
+- Validação documental
+- Suporte em todas as etapas
+- **Assistente CADBRASIL** e plataforma
 
-Quem tem tempo e expertise pode fazer direto no governo. Quem prefere acompanhamento escolhe a CADBRASIL.
+👉 Contrate de forma rápida:
+https://cadastro.cadbrasil.com.br
 
-Posso consultar seu CNPJ e ver a melhor opção para sua empresa?
+**Se o cliente perguntar se pode fazer sozinho** → usar `comercial/objecoes.md` (sem dar orientação).
+
+A CADBRASIL Oficial ® Agradece.
 
 ## Quando NÃO usar
 

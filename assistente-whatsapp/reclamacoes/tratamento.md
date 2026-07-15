@@ -28,7 +28,7 @@ Menção a golpe, fraude, advogado, processo, Procon, Reclame Aqui, polícia.
 
 Lamento que esteja passando por isso. Quero esclarecer:
 
-A **CADBRASIL** é empresa **privada** de tecnologia e assessoria. **Não somos o Governo Federal.** O SICAF oficial do governo é gratuito.
+A **CADBRASIL** é empresa **privada** de tecnologia e assessoria. **Não somos o Governo Federal.**
 
 Vou encaminhar seu caso para um **consultor humano** que poderá analisar todos os detalhes.
 

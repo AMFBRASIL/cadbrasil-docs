@@ -2,49 +2,56 @@
 
 ## Objetivo
 
-Esclarecer relação CADBRASIL × Governo Federal de forma clara e obrigatória.
+Esclarecer que a CADBRASIL é empresa privada — **sem** abrir o tema fazer sozinho / grátis, salvo se o cliente perguntar.
 
 ## Quando usar
 
-Qualquer dúvida sobre governo, oficial, gratuito, cobrança indevida.
+Dúvida se somos governo, site oficial, golpe do governo, cobrança indevida.
 
 ## Palavras-chave do cliente
 
 - vocês são do governo
 - é site oficial
-- o governo cobra
-- sicaf é gratuito
-- por que pago
 - é golpe do governo
 - recebi cobrança do governo
 - ministério da economia
 
-## Resposta padrão IA
+## Palavras-chave → outro artigo
+
+Se perguntar se pode fazer sozinho / sem contratar / “de graça” → `comercial/objecoes.md`:
+- posso fazer sozinho
+- sicaf é gratuito / de graça
+- por que pago
+- governo não cobra
+
+## Resposta padrão IA (somos governo?)
 
 🇧🇷 **CADBRASIL Oficial ®**
 
 Esclarecimento importante:
 
-O **SICAF** pertence ao **Governo Federal**. O credenciamento no portal **oficial do governo é gratuito**.
+A **CADBRASIL** é uma **empresa privada** de tecnologia e assessoria para fornecedores.
 
-A **CADBRASIL** é uma **empresa privada**. Oferecemos:
+**Não somos** o Governo Federal nem órgão público.
+
+Oferecemos:
 - Plataforma e portal do fornecedor
-- **Assistente CADBRASIL** (automação e orientação)
-- Suporte e assessoria especializada
+- **Assistente CADBRASIL**
+- Suporte especializado em SICAF
 
-A cobrança da CADBRASIL refere-se a esses **serviços**, não a taxa governamental.
+🔐 Portal: https://fornecedor.cadbrasil.com.br
 
-🔐 Nosso portal: https://fornecedor.cadbrasil.com.br
+Posso ajudar? Informe seu **CNPJ** se desejar.
 
-Posso ajudar com seu cadastro? Informe o **CNPJ** se desejar.
+**Não incluir** nesta resposta tema de grátis / fazer sozinho.
 
 ## Exemplos
 
-**Cliente:** "O SICAF não é de graça?"
-**IA:** Governo gratuito + CADBRASIL serviço pago + sem confronto
-
 **Cliente:** "Vocês são o governo?"
-**IA:** Não. Empresa privada. Explicar diferença.
+**IA:** Empresa privada. Não abrir tema grátis.
+
+**Cliente:** "Posso fazer de graça / sozinho?"
+**IA:** Usar `comercial/objecoes.md` — sem orientação; link https://cadastro.cadbrasil.com.br.
 
 ## Quando NÃO usar
 
@@ -53,5 +60,3 @@ Cliente já entendeu e só quer boleto — ir direto ao financeiro.
 ## Transferência humana
 
 Cliente acusa golpe e não aceita explicação; ameaça denúncia formal.
-
-Respostas sensíveis detalhadas: `seguranca/respostas-sensiveis.md`. Objeção comercial: `comercial/objecoes.md`.

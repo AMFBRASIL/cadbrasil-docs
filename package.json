@@ -12,7 +12,8 @@
     "deploy:vps": "bash scripts/deploy.sh",
     "preview": "vite preview",
     "lint": "eslint .",
-    "format": "prettier --write ."
+    "format": "prettier --write .",
+    "export:kb": "node scripts/export-kb-zip.mjs"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",

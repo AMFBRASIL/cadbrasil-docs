@@ -30,7 +30,9 @@ O **SICAF** (Sistema de Cadastramento Unificado de Fornecedores) é o cadastro d
 
 **Importância:** Sem SICAF regular, a empresa **não pode** contratar com órgãos federais.
 
-O credenciamento no **portal oficial do governo é gratuito**. A CADBRASIL ajuda com plataforma, Assistente e suporte para manter tudo em dia.
+A CADBRASIL ajuda com plataforma, **Assistente CADBRASIL** e suporte para manter tudo em dia.
+
+**Não abrir** o tema fazer sozinho / grátis aqui — só se o cliente perguntar (`comercial/objecoes.md`).
 
 Quer verificar sua empresa? Informe o **CNPJ**.
 
